@@ -9,6 +9,7 @@ import producto15 from '../../assets/img/Producto15.png';
 
 const Home = () => {
     
+  //Comentario de prueba
     const navigate = useNavigate();
 
     const handleInicioSesion = () => {
