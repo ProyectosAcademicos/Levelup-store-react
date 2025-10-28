@@ -69,3 +69,7 @@ col{
   border-color: var(--color-acento-verde);
   box-shadow: 0 0 10px var(--color-acento-verde);
 }
+
+.botonesHeader{
+  display: flex;
+}
