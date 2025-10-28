@@ -41,7 +41,7 @@ const Header = () => {
                             Buscar
                         </button>
                     </form>
-                    <div class="botones-header">
+                    <div className={style.botonesHeader}>
                         {/* Botón Carrito */}
                       <button class="btn-carrito btn btn-outline-light d-flex align-items-center ms-3" type="button"
                           data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas" aria-controls="carritoOffcanvas">
