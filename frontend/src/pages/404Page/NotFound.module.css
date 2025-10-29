@@ -24,7 +24,15 @@ body{
   color: var(--color-texto-principal);
 }
 
-.cardBody,
-.cardText{
+
+.title,
+.button {
   color: var(--color-texto-principal);
+  font-family: var(--fuente-encabezado);
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.button{
+    border-radius: 20px;
 }

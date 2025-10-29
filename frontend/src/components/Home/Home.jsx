@@ -72,15 +72,15 @@ const Home = () => {
       <div className="col">
         <div className="card shadow-sm">
           <img src={producto15} className="imgCard" alt="Nintendo" />
-          <div className="card-body">
+          <div className={styles.cardBody}>
             <strong>Nintendo</strong>
-            <p className="card-text">
+            <p className={styles.cardText}>
               Nintendo Switch 2 + Mario Kart Deluxe <br /> World Pre-Cargado
             </p>
             <strong>$669.990 CLP</strong>
             <div className="d-flex justify-content-between align-items-center">
               <div className="btn-group mx-auto">
-                <button type="button" className="btn btn-sm btn-outline-secondary">
+                <button type="button" className="btn btn-sm btn-outline-light">
                   Agregar al carro
                 </button>
               </div>
@@ -93,15 +93,15 @@ const Home = () => {
         <div className="col">
             <div className="card shadow-sm">
             <img src={producto14} className="imgCard" alt="Xbox" />
-            <div className="card-body">
+            <div className={styles.cardBody}>
                 <strong>Xbox</strong>
-                <p className="card-text">
+                <p className={styles.cardText}>
                 Consola Serie S <br /> Nueva
                 </p>
                 <strong>$269.990 CLP</strong>
                 <div className="d-flex justify-content-between align-items-center">
                 <div className="btn-group mx-auto">
-                    <button type="button" className="btn btn-sm btn-outline-secondary">
+                    <button type="button" className="btn btn-sm btn-outline-light">
                     Agregar al carro
                     </button>
                 </div>
@@ -114,15 +114,15 @@ const Home = () => {
         <div className="col">
             <div className="card shadow-sm">
             <img src={producto13} className="imgCard" alt="Juego" />
-            <div className="card-body">
+            <div className={styles.cardBody}>
                 <strong>Juego</strong>
-                <p className="card-text">
+                <p className={styles.cardText}>
                 PS5 Death Stranding 2 <br /> On The Beach
                 </p>
                 <strong>$69.990 CLP</strong>
                 <div className="d-flex justify-content-between align-items-center">
                 <div className="btn-group mx-auto">
-                    <button type="button" className="btn btn-sm btn-outline-secondary">
+                    <button type="button" className="btn btn-sm btn-outline-light">
                     Agregar al carro
                     </button>
                 </div>

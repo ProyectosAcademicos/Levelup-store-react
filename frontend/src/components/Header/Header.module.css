@@ -73,3 +73,581 @@ col{
 .botonesHeader{
   display: flex;
 }
+
+
+/* Responsividad */
+
+/* Pantallas más grandes */
+
+@media (min-width: 1441px) and (max-width: 2560px)  {
+
+
+  .container-fluid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: row !important;
+    justify-content: end !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  /* .carousel,
+  .carousel-inner{
+    height: 700px !important;
+  } */
+
+  .container{
+    display: flex ;
+    justify-content: center;
+    height: 100vh !important;
+
+  }
+
+  .contenedor-productos{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    /* flex-wrap: wrap !important;
+    align-items: start !important; */
+    width: 100% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px;
+
+  }
+
+  .carousel-item{
+    height: 500px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 450px !important;
+  }
+
+  .imgCard{
+    height: 50% !important;
+  }
+}
+
+/* Pantallas hasta 1440px */
+
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+
+  .container-fluid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: row !important;
+    justify-content: end !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    /* flex-wrap: wrap !important;
+    align-items: start !important; */
+    width: 60% !important;
+  }
+
+
+  .botones-header {
+    display: flex;
+    flex-wrap: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 5px;
+
+  }
+
+  .carousel-item{
+    height: 300px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 250px !important;
+  }
+
+  .container{
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    height: 100vh !important;
+    margin: 50px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card{
+    width: 300px !important;
+  }
+
+  .imgCard{
+    height: 30% !important;
+  }
+
+}
+
+ /* Pantallas hasta 1024px */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: start !important;
+    width: 40% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: row !important;
+    justify-content: end !important;
+    align-items: center !important;
+    gap: 5px;
+
+  }
+
+  .carousel-item{
+    height: 300px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 250px !important;
+  }
+
+  .container{
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    height: 100vh !important;
+    margin: 50px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card{
+    width: 250px !important;
+  }
+
+
+  .imgCard{
+    height: 50% !important;
+  }
+
+}
+
+  /* Pantallas hasta 767px */
+
+@media (min-width: 426px) and (max-width: 767px)  {
+  
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    gap: 5px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 50% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    margin-top: 10px !important;
+    gap: 10px;
+
+  }
+
+  .carousel-item{
+    height: 300px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 250px !important;
+  }
+
+  h1, 
+  .btn-carousel{
+    display: none !important;
+  }
+
+  .container{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    margin: 0px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    /* width: 100% !important;
+    gap: 10px; */
+  }
+
+  .card{
+    width: 200px !important;
+  }
+
+
+  .imgCard{
+    height: 50% !important;
+  }
+
+
+}
+
+/* Pantallas hasta 435px */
+
+@media (min-width: 376px) and (max-width: 425px) {
+  
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    gap: 5px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 60% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    margin-top: 10px !important;
+    gap: 10px;
+
+  }
+
+  .carousel-item{
+    height: 300px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 120px !important;
+  }
+
+  h1, 
+  .btn-carousel{
+    display: none !important;
+  }
+
+  .container{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    margin: 0px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+  }
+
+  .card{
+    width: 200px !important;
+  }
+
+  .imgCard{
+    height: 50% !important;
+  }
+
+}
+
+/*  Pantallas entre 375px y 321 px */
+
+@media (min-width: 321px) and (max-width: 375px) {
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    gap: 5px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 60% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    margin-top: 10px !important;
+    gap: 10px;
+
+  }
+
+  .carousel-item{
+    height: 200px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 120px !important;
+  }
+
+  h1, 
+  .btn-carousel{
+    display: none !important;
+  }
+
+  .container{
+    display: flex !important;
+    justify-content: center;
+    align-items: center !important;
+    max-width: 100vw !important;
+    margin: 0px !important;
+    gap:20px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    gap: 10px;
+  }
+
+  .card{
+    width: 160px !important;
+  }
+
+  .imgCard{
+    height: 30% !important;
+  }
+
+
+}
+
+/*  Pantallas hasta 320 px */
+
+@media (min-width: 1px) and (max-width: 320px) {
+
+  .navbar-collapse {
+    width: 200px !important;
+  }
+
+
+  .navbar-nav{
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: end !important;
+  }
+
+  .barra-btn-buscador{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    gap: 5px !important;
+  }
+
+  .barra-placeholder,
+  .btn-buscador {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+
+  .botones-header {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: end !important;
+    margin-top: 10px !important;
+    gap: 10px;
+
+  }
+
+  .carousel-item{
+    height: 150px !important;
+  }
+
+  .img-carousel{
+    margin-top: 5px !important;
+    height: 110px !important;
+  }
+
+  h1, 
+  .btn-carousel{
+    display: none !important;
+  }
+
+  .container{
+    display: flex !important;
+    justify-content: center;
+    align-items: center !important;
+    max-width: 100vw !important;
+    margin: 0px !important;
+    gap:20px !important;
+
+  }
+
+   .contenedor-productos{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    gap: 10px;
+  }
+
+  .card{
+    width: 160px !important;
+  }
+
+  .imgCard{
+    height: 30% !important;
+  }
+
+}
