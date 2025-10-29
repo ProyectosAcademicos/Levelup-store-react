@@ -1,4 +1,14 @@
+# Node dependencies
 node_modules/
+frontend/node_modules/
+
+# Build outputs
 dist/
-.DS_Store
+frontend/dist/
+
+# Environment variables
 .env
+
+# macOS system files
+.DS_Store
+
