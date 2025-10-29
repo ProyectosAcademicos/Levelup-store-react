@@ -4,7 +4,7 @@ import logo from '../../assets/img/logo.png';
 
 const Header = () => {
     return (
-       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container-fluid">
                 <a href="../html/home.html">
                     <img width="40" height="40" src={logo} alt="Logo" />
@@ -43,33 +43,33 @@ const Header = () => {
                     </form>
                     <div className={style.botonesHeader}>
                         {/* Botón Carrito */}
-                      <button class="btn-carrito btn btn-outline-light d-flex align-items-center ms-3" type="button"
-                          data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas" aria-controls="carritoOffcanvas">
-                          <i class="bi bi-cart-fill me-2"></i> Carrito
-                      </button>
+                        <button class="btn-carrito btn btn-outline-light d-flex align-items-center ms-3" type="button"
+                            data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas" aria-controls="carritoOffcanvas">
+                            <i class="bi bi-cart-fill me-2"></i> Carrito
+                        </button>
                         {/* Botón Registrarse */}
-                      <a href="../html/registroUsuario.html">
-                          <button class="boton-registrarse btn btn-outline-light d-flex align-items-center ms-3" type="button"
-                              data-bs-toggle="offcanvas" data-bs-target="#inicioOffcanvas"
-                              aria-controls="inicioOffcanvas">
-                              Registrarse
-                          </button>
-                      </a>
-                      {/* Botón Iniciar Sesión */}
-                      <a href="../html/login.html">
-                          <button class="boton-iniciar-sesion btn btn-outline-light d-flex align-items-center ms-3" type="button"
-                              data-bs-toggle="offcanvas" data-bs-target="#inicioOffcanvas"
-                              aria-controls="inicioOffcanvas">
-                              Iniciar Sesión
-                          </button>
-                      </a>
+                        <a href="/register">
+                            <button class="boton-registrarse btn btn-outline-light d-flex align-items-center ms-3" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#inicioOffcanvas"
+                                aria-controls="inicioOffcanvas">
+                                Registrarse
+                            </button>
+                        </a>
+                        {/* Botón Iniciar Sesión */}
+                        <a href="../html/login.html">
+                            <button class="boton-iniciar-sesion btn btn-outline-light d-flex align-items-center ms-3" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#inicioOffcanvas"
+                                aria-controls="inicioOffcanvas">
+                                Iniciar Sesión
+                            </button>
+                        </a>
                     </div>
-                    
+
 
                 </div>
             </div>
         </nav>
-        
+
     );
 }
 
