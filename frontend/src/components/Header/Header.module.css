@@ -1,166 +1,82 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-
-.logo {
-  width: 72px;
-  height: auto;
-}
-
-/* Encabezados */
-h1, h2, h3 {
-  font-family: var(--fuente-encabezado);
-  color: var(--color-texto-principal);
-  text-align: left;
-}
-
-/* Estilos del carrusel */
-#myCarousel {
-  max-width: 100%;
-  max-height: 400px;
-  margin: auto;
-}
-
-.album {
-  background-color: var(--color-fondo-principal);
-}
-
-.carousel-item {
-  height: 400px;
-  background-color: rgba(255, 255, 255, 0.05); /* Transparencia elegante */
-  box-shadow: 0 0 20px rgba(30, 144, 255, 0.5); /* Sombra azul eléctrico */
-  border-radius: 15px;
-}
-
-
-col{
-  border-radius: 0px;
-}
-
-/* Estilos de las cards */
-.imgCard {
-  height: 590px;
-  border-radius: 10px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: rgba(255, 255, 255, 0.05); /* estilo similar al form-signin */
-  border-radius: 0px;
-  box-shadow: 0 0 15px rgba(30, 144, 255, 0.4);
-  transition: all 0.3s ease-in-out;
-}
-
-.card:hover {
-  box-shadow: 0 0 20px var(--color-acento-verde);
-  border: 1px solid var(--color-acento-verde);
-}
-
-.card-body {
-  height: 200px;
-}
-
-.card-body:hover {
-  border-color: var(--color-acento-verde);
-  box-shadow: 0 0 10px var(--color-acento-verde);
-}
-
-.botonesHeader{
+.header {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #212529;
+  color: white;
+  z-index: 10;
 }
 
-
-/* Responsividad */
-
-/* ================================
-   ✅ Desktop grande (1025px a 1440px)
-=================================== */
-@media (min-width: 1025px) and (max-width: 1440px) {
-  .barra-btn-buscador {
-    justify-content: end;
-    gap: 10px;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    width: 60%;
-  }
-
-  .botonesHeader {
-    justify-content: end;
-  }
+/* Logo */
+.logoContainer {
+  display: flex;
+  align-items: center;
 }
 
-/* ================================
-   ✅ Tablet (769px a 1024px)
-=================================== */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .navbar-nav {
-    flex-direction: row;
-    align-items: end;
-  }
-
-  .barra-btn-buscador {
-    justify-content: end;
-    gap: 10px;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    width: 40%;
-  }
-
-  .botonesHeader {
-    justify-content: end;
-  }
+.logo {
+  height: 40px;
 }
 
-/* ================================
-   ✅ Móvil (426px a 768px)
-=================================== */
-@media (max-width: 767.98px) {
-  .navbar-nav {
-    flex-direction: column;
-    align-items: end;
-  }
-
-  .barra-btn-buscador {
-    flex-wrap: wrap;
-    justify-content: end;
-    gap: 5px;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    width: 50%;
-  }
-
-  .botonesHeader {
-    flex-wrap: wrap;
-    justify-content: end;
-    margin-top: 10px;
-  }
+/* Botón de menú */
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 20;
 }
 
-/* ================================
-   ✅ Móvil pequeño (hasta 425px)
-=================================== */
-@media (max-width: 425px) {
-  .barra-placeholder,
-  .btn-buscador {
-    width: 100%;
-  }
+/* Menú lateral (oculto inicialmente) */
+.sideMenu {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Fuera de pantalla */
+  width: 250px;
+  height: 100%;
+  background-color: #343a40;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: right 0.3s ease;
+  z-index: 15;
+}
 
-  .botonesHeader {
-    flex-direction: column;
-    align-items: end;
-    gap: 8px;
-  }
+.sideMenu.active {
+  right: 0; /* Se muestra el menú */
+}
+
+.sideMenu ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.sideMenu li {
+  margin: 20px 0;
+}
+
+.sideMenu a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
+}
+
+.sideMenu a:hover {
+  color: #0dcaf0;
+}
+
+/* Fondo oscuro al activar el menú */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }

@@ -1,50 +1,43 @@
-import React from "react";
-import style from './Header.module.css';
-import logo from '../../assets/img/logo.png';
+import React, { useState } from "react";
+import style from "./Header.module.css";
+import logo from "../../assets/img/logo.png";
+import { FaBars } from "react-icons/fa"; // ícono hamburguesa
 
 const Header = () => {
-    return (
-        <nav className={`navbar navbar-expand-md navbar-dark bg-dark ${style.header}`}>
-            <div className="container-fluid">
-                <a href="/">
-                    <img width="40" height="40" src={logo} alt="Logo" />
-                </a>
+  const [menuOpen, setMenuOpen] = useState(false);
 
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-                <div className="collapse navbar-collapse" id="navbarCollapse">
-                    <ul className="navbar-nav me-auto mb-2 mb-md-0 gap-3">
-                        <li className="nav-item"><a className="nav-link active" href="/">Home</a></li>
-                        <li className="nav-item"><a className="nav-link active" href="/catalogo">Catálogo</a></li>
-                        <li className="nav-item"><a className="nav-link active" href="/nosotros">Nosotros</a></li>
-                        <li className="nav-item"><a className="nav-link active" href="/blog">Blog</a></li>
-                        <li className="nav-item"><a className="nav-link active" href="/contacto">Contacto</a></li>
-                    </ul>
+  return (
+    <header className={style.header}>
+      <div className={style.logoContainer}>
+        <img src={logo} alt="Logo" className={style.logo} />
+      </div>
 
-                    <form className="d-flex barra-btn-buscador" role="search">
-                        <input className="form-control barra-placeholder" type="search" placeholder="Escriba aquí" aria-label="Buscar" />
-                        <button className="btn btn-outline-success btn-buscador" type="submit">Buscar</button>
-                    </form>
+      <button className={style.menuButton} onClick={toggleMenu}>
+        <FaBars size={24} />
+      </button>
 
-                    <div className={style.botonesHeader}>
-                        <button className="btn btn-outline-light d-flex align-items-center ms-3">
-                            <i className="bi bi-cart-fill me-2"></i> Carrito
-                        </button>
-                        <a href="/register">
-                            <button className="btn btn-outline-light ms-3">Registrarse</button>
-                        </a>
-                        <a href="/login">
-                            <button className="btn btn-outline-light ms-3">Iniciar Sesión</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    );
+      {/* Menú lateral */}
+      <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
+        <ul>
+          <li><a href="#home">Inicio</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <div className={style.authButtons}>
+            <button className={style.loginButton}>Iniciar Sesión</button>
+            <button className={style.registerButton}>Registrarse</button>
+        </div>
+      </nav>
+
+      {/* Fondo semitransparente al abrir menú */}
+      {menuOpen && <div className={style.overlay} onClick={toggleMenu}></div>}
+    </header>
+  );
 };
 
 export default Header;
