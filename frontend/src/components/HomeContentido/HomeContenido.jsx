@@ -1,4 +1,4 @@
-import styles from './Home.module.css';
+import styles from './HomeContenido.module.css';
 import { useNavigate } from 'react-router-dom';
 import carousel2 from '../../assets/img/Carousel 2.png';
 import carousel3 from '../../assets/img/Carousel 3.png';
@@ -130,7 +130,6 @@ const Home = () => {
             </div>
             </div>
         </div>
-
         </div>
     </div>
     </div>

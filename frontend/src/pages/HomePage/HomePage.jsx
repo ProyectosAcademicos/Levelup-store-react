@@ -1,8 +1,7 @@
 import React from 'react'
 import Header from '../../components/Header/Header.jsx';
-import Home from '../../components/Home/Home.jsx';
+import HomeContenido from '../../components/HomeContentido/HomeContenido.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
-import HeaderTest from '../../components/Header/HeaderTest.jsx';
 
 
 
@@ -10,7 +9,7 @@ const HomePage = () => {
     return(
         <div>
             <Header/>
-            <Home/>
+            <HomeContenido/>
             <Footer/>
         </div>
         
