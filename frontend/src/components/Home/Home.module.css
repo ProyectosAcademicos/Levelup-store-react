@@ -28,3 +28,11 @@ body{
 .cardText{
   color: var(--color-texto-principal);
 }
+
+/* Responsividad */
+
+@media (max-width: 425px) {
+  :global(#myCarousel) { 
+    display: none !important;
+  }
+}

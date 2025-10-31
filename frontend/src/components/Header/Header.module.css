@@ -1,653 +1,112 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #212529;
+  color: white;
+  z-index: 10;
 }
 
+/* Logo */
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
 
 .logo {
-  width: 72px;
-  height: auto;
+  height: 40px;
 }
 
-/* Encabezados */
-h1, h2, h3 {
-  font-family: var(--fuente-encabezado);
-  color: var(--color-texto-principal);
-  text-align: left;
+/* Botón de menú */
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 20;
 }
 
-/* Estilos del carrusel */
-#myCarousel {
-  max-width: 100%;
-  max-height: 400px;
-  margin: auto;
+/* Menú lateral (oculto inicialmente) */
+.sideMenu {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Fuera de pantalla */
+  width: 250px;
+  height: 100%;
+  background-color: #343a40;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: right 0.3s ease;
+  z-index: 15;
 }
 
-.album {
-  background-color: var(--color-fondo-principal);
+.sideMenu.active {
+  right: 0; /* Se muestra el menú */
 }
 
-.carousel-item {
-  height: 400px;
-  background-color: rgba(255, 255, 255, 0.05); /* Transparencia elegante */
-  box-shadow: 0 0 20px rgba(30, 144, 255, 0.5); /* Sombra azul eléctrico */
-  border-radius: 15px;
+.sideMenu ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
 }
 
-
-col{
-  border-radius: 0px;
+.sideMenu li {
+  margin: 20px 0;
 }
 
-/* Estilos de las cards */
-.imgCard {
-  height: 590px;
-  border-radius: 10px;
+.sideMenu a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
 }
 
-.card {
+.sideMenu a:hover {
+  color: #0dcaf0;
+}
+
+/* Fondo oscuro al activar el menú */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Botones de autenticación */
+
+.authButtons {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.05); /* estilo similar al form-signin */
-  border-radius: 0px;
-  box-shadow: 0 0 15px rgba(30, 144, 255, 0.4);
-  transition: all 0.3s ease-in-out;
 }
 
-.card:hover {
-  box-shadow: 0 0 20px var(--color-acento-verde);
-  border: 1px solid var(--color-acento-verde);
+.loginButton,
+.registerButton,
+.cartButton {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 
-.card-body {
-  height: 200px;
-}
-
-.card-body:hover {
-  border-color: var(--color-acento-verde);
-  box-shadow: 0 0 10px var(--color-acento-verde);
-}
-
-.botonesHeader{
-  display: flex;
-}
-
-
-/* Responsividad */
-
-/* Pantallas más grandes */
-
-@media (min-width: 1441px) and (max-width: 2560px)  {
-
-
-  .container-fluid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: row !important;
-    justify-content: end !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  /* .carousel,
-  .carousel-inner{
-    height: 700px !important;
-  } */
-
-  .container{
-    display: flex ;
-    justify-content: center;
-    height: 100vh !important;
-
-  }
-
-  .contenedor-productos{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-  }
-
-  
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    /* flex-wrap: wrap !important;
-    align-items: start !important; */
-    width: 100% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 5px;
-
-  }
-
-  .carousel-item{
-    height: 500px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 450px !important;
-  }
-
-  .imgCard{
-    height: 50% !important;
-  }
-}
-
-/* Pantallas hasta 1440px */
-
-
-@media (min-width: 1025px) and (max-width: 1440px) {
-
-  .container-fluid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: row !important;
-    justify-content: end !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    /* flex-wrap: wrap !important;
-    align-items: start !important; */
-    width: 60% !important;
-  }
-
-
-  .botones-header {
-    display: flex;
-    flex-wrap: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 5px;
-
-  }
-
-  .carousel-item{
-    height: 300px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 250px !important;
-  }
-
-  .container{
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    height: 100vh !important;
-    margin: 50px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card{
-    width: 300px !important;
-  }
-
-  .imgCard{
-    height: 30% !important;
-  }
-
-}
-
- /* Pantallas hasta 1024px */
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: start !important;
-    width: 40% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: row !important;
-    justify-content: end !important;
-    align-items: center !important;
-    gap: 5px;
-
-  }
-
-  .carousel-item{
-    height: 300px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 250px !important;
-  }
-
-  .container{
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    height: 100vh !important;
-    margin: 50px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card{
-    width: 250px !important;
-  }
-
-
-  .imgCard{
-    height: 50% !important;
-  }
-
-}
-
-  /* Pantallas hasta 767px */
-
-@media (min-width: 426px) and (max-width: 767px)  {
-  
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    gap: 5px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 50% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    margin-top: 10px !important;
-    gap: 10px;
-
-  }
-
-  .carousel-item{
-    height: 300px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 250px !important;
-  }
-
-  h1, 
-  .btn-carousel{
-    display: none !important;
-  }
-
-  .container{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    margin: 0px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    /* width: 100% !important;
-    gap: 10px; */
-  }
-
-  .card{
-    width: 200px !important;
-  }
-
-
-  .imgCard{
-    height: 50% !important;
-  }
-
-
-}
-
-/* Pantallas hasta 435px */
-
-@media (min-width: 376px) and (max-width: 425px) {
-  
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    gap: 5px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 60% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    margin-top: 10px !important;
-    gap: 10px;
-
-  }
-
-  .carousel-item{
-    height: 300px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 120px !important;
-  }
-
-  h1, 
-  .btn-carousel{
-    display: none !important;
-  }
-
-  .container{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    margin: 0px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-  }
-
-  .card{
-    width: 200px !important;
-  }
-
-  .imgCard{
-    height: 50% !important;
-  }
-
-}
-
-/*  Pantallas entre 375px y 321 px */
-
-@media (min-width: 321px) and (max-width: 375px) {
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    gap: 5px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 60% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    margin-top: 10px !important;
-    gap: 10px;
-
-  }
-
-  .carousel-item{
-    height: 200px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 120px !important;
-  }
-
-  h1, 
-  .btn-carousel{
-    display: none !important;
-  }
-
-  .container{
-    display: flex !important;
-    justify-content: center;
-    align-items: center !important;
-    max-width: 100vw !important;
-    margin: 0px !important;
-    gap:20px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    gap: 10px;
-  }
-
-  .card{
-    width: 160px !important;
-  }
-
-  .imgCard{
-    height: 30% !important;
-  }
-
-
-}
-
-/*  Pantallas hasta 320 px */
-
-@media (min-width: 1px) and (max-width: 320px) {
-
-  .navbar-collapse {
-    width: 200px !important;
-  }
-
-
-  .navbar-nav{
-    margin-top: 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: end !important;
-  }
-
-  .barra-btn-buscador{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    gap: 5px !important;
-  }
-
-  .barra-placeholder,
-  .btn-buscador {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 100% !important;
-  }
-
-  .botones-header {
-    display: flex;
-    flex-wrap: wrap !important;
-    justify-content: end !important;
-    margin-top: 10px !important;
-    gap: 10px;
-
-  }
-
-  .carousel-item{
-    height: 150px !important;
-  }
-
-  .img-carousel{
-    margin-top: 5px !important;
-    height: 110px !important;
-  }
-
-  h1, 
-  .btn-carousel{
-    display: none !important;
-  }
-
-  .container{
-    display: flex !important;
-    justify-content: center;
-    align-items: center !important;
-    max-width: 100vw !important;
-    margin: 0px !important;
-    gap:20px !important;
-
-  }
-
-   .contenedor-productos{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    gap: 10px;
-  }
-
-  .card{
-    width: 160px !important;
-  }
-
-  .imgCard{
-    height: 30% !important;
-  }
-
+.loginButton,
+.registerButton,
+.cartButton :active {
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+  color: #212529;
 }
