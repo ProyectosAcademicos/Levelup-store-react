@@ -31,6 +31,7 @@ const Header = () => {
         <div className={style.authButtons}>
             <button className={style.loginButton}>Iniciar Sesión</button>
             <button className={style.registerButton}>Registrarse</button>
+            <button className={style.cartButton}>Carrito</button>
         </div>
       </nav>
 
