@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import style from "./Header.module.css";
 import logo from "../../assets/img/logo.png";
 import { FaBars } from "react-icons/fa"; // ícono hamburguesa
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const goToRegister = () => {
+    navigate("/register");
+  }
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -30,7 +36,7 @@ const Header = () => {
         </ul>
         <div className={style.authButtons}>
             <button className={style.loginButton}>Iniciar Sesión</button>
-            <button className={style.registerButton}>Registrarse</button>
+            <button onClick={goToRegister} className={style.registerButton}>Registrarse</button>
             <button className={style.cartButton}>Carrito</button>
         </div>
       </nav>
