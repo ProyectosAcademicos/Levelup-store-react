@@ -3,7 +3,7 @@ import style from './Footer.module.css';
 
 const Footer = () => {
   return (
-    <footer className={`footer-custom d-flex flex-wrap justify-content-between align-items-center py-3 border-top ${style.footer}`}>
+    <footer className={`footer-custom d-flex flex-wrap justify-content-between align-items-center p-3 border-top ${style.footer}`}>
       <div className="col-md-4 d-flex align-items-center">
         <span className={style.footerText}>© 2025 Level Up Gamer</span>
       </div>

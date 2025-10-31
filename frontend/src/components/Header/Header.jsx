@@ -7,6 +7,10 @@ import { FaBars } from "react-icons/fa"; // ícono hamburguesa
 const Header = () => {
   const navigate = useNavigate();
 
+  const goToHome = () => {
+    navigate("/home");
+  }
+
   const goToRegister = () => {
     navigate("/register");
   }
@@ -19,7 +23,7 @@ const Header = () => {
   return (
     <header className={style.header}>
       <div className={style.logoContainer}>
-        <img src={logo} alt="Logo" className={style.logo} />
+        <img onClick={goToHome} src={logo} alt="Logo" className={style.logo} />
       </div>
 
       <button className={style.menuButton} onClick={toggleMenu}>
@@ -29,10 +33,9 @@ const Header = () => {
       {/* Menú lateral */}
       <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
         <ul>
-          <li><a href="#home">Inicio</a></li>
-          <li><a href="#productos">Productos</a></li>
-          <li><a href="#servicios">Servicios</a></li>
-          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="home">Inicio</a></li>
+          <li><a href="productos">Productos</a></li>
+          <li><a href="contacto">Contacto</a></li>
         </ul>
         <div className={style.authButtons}>
             <button className={style.loginButton}>Iniciar Sesión</button>
