@@ -1,0 +1,194 @@
+/* Fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500&display=swap');
+
+/* Variables de color */
+:root {
+  --azul: #1E90FF;
+  --verde: #39FF14;
+  --negro: #000000;
+  --gris-oscuro: #111111;
+  --gris-texto: #D3D3D3;
+  --blanco: #FFFFFF;
+}
+
+/* Fondo general y tipografía */
+body {
+  background-color: var(--negro);
+  font-family: 'Roboto', sans-serif;
+  color: var(--blanco);
+}
+
+/* Títulos dentro del formulario */
+.form-signin h1,
+.form-signin h2,
+.form-signin h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--blanco);
+  text-align: center;
+}
+
+/* Caja del formulario principal */
+.form-signin {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Imagen del logo */
+.form-signin img {
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+/* Inputs */
+.form-control {
+  background-color: var(--gris-oscuro);
+  border: 1px solid var(--azul);
+  color: var(--blanco);
+}
+
+.form-control::placeholder {
+  color: #9aa0a6;
+}
+
+.form-control:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 8px var(--verde);
+  background-color: #1a1a1a;
+  color: var(--blanco);
+}
+
+/* Etiquetas flotantes */
+.form-floating label {
+  color: var(--gris-texto);
+}
+
+.form-control:focus + label {
+  color: var(--verde);
+}
+
+/* Checkbox */
+.form-check-label {
+  color: var(--gris-texto);
+}
+
+/* Botón principal */
+.btn-primary {
+  background-color: var(--azul);
+  border: none;
+  font-weight: bold;
+  transition: all 0.25s ease-in-out;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--verde);
+  color: #000;
+  transform: translateY(-1px);
+}
+
+/* Botones secundarios */
+.btn-outline-light {
+  border-color: var(--blanco);
+  color: var(--blanco);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+  background-color: var(--blanco);
+  color: #000;
+}
+
+.btn-outline-primary {
+  border-color: var(--azul);
+  color: var(--azul);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--azul);
+  color: #000;
+}
+
+/* Textos secundarios */
+.text-body-secondary {
+  color: var(--gris-texto) !important;
+  text-align: center;
+}
+
+/* -------- RESPONSIVE -------- */
+
+/* Pantallas muy pequeñas (hasta 435px) */
+@media (max-width: 435px) {
+  .form-signin {
+    max-width: 90%;
+    padding: 1rem;
+    margin: 0 auto;
+  }
+
+  .form-signin h1 {
+    font-size: 1.1rem;
+  }
+
+  .btn-primary {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+}
+
+/* Pantallas pequeñas (hasta 576px) */
+@media (max-width: 576px) {
+  .form-signin {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+
+  .form-signin h1 {
+    font-size: 1.3rem;
+  }
+
+  .btn-primary {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+}
+
+/* Pantallas medianas (577px a 991px) */
+@media (min-width: 577px) and (max-width: 991px) {
+  .form-signin {
+    max-width: 70%;
+    padding: 2rem;
+  }
+
+  .form-signin h1 {
+    font-size: 1.6rem;
+  }
+
+  .btn-primary {
+    font-size: 1rem;
+  }
+}
+
+/* Pantallas grandes (>= 992px) */
+@media (min-width: 992px) {
+  .form-signin {
+    max-width: 330px;
+  }
+
+  .form-signin h1 {
+    font-size: 1.8rem;
+  }
+
+  .btn-primary {
+    font-size: 1.05rem;
+  }
+}
