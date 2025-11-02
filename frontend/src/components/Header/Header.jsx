@@ -11,6 +11,10 @@ const Header = () => {
     navigate("/home");
   }
 
+  const goToLogin = () => {
+    navigate("/login");
+  }
+
   const goToRegister = () => {
     navigate("/register");
   }
@@ -38,7 +42,7 @@ const Header = () => {
           <li><a href="contacto">Contacto</a></li>
         </ul>
         <div className={style.authButtons}>
-            <button className={style.loginButton}>Iniciar Sesión</button>
+            <button onClick={goToLogin} className={style.loginButton}>Iniciar Sesión</button>
             <button onClick={goToRegister} className={style.registerButton}>Registrarse</button>
             <button className={style.cartButton}>Carrito</button>
         </div>
