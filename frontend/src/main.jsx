@@ -10,6 +10,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+import "./components/LoginContenido/LoginContenido.css";
+
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
