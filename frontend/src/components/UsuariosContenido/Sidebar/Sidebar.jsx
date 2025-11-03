@@ -1,7 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import season6Gif from "../assets/img/season6.gif";
-import avatar from "../assets/img/avatar.png";
 
 const Sidebar = () => {
   return (
@@ -30,7 +28,7 @@ const Sidebar = () => {
 
         <ul className="nav nav-pills flex-column mb-auto">
           <li className="nav-item">
-            <Link to="/datos" className="nav-link text-white">
+            <Link to="/cliente/datos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -44,7 +42,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/medios-pago" className="nav-link text-white">
+            <Link to="/cliente/medios-pago" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -58,7 +56,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/pedidos" className="nav-link text-white">
+            <Link to="/cliente/pedidos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -72,7 +70,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/historial" className="nav-link text-white">
+            <Link to="/cliente/historial" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -103,28 +101,10 @@ const Sidebar = () => {
         <hr />
 
         <div className="d-flex align-items-center text-white text-decoration-none">
-          <img
-            src={avatar}
-            alt="Usuario"
-            width="32"
-            height="32"
-            className="rounded-circle me-2"
-          />
           <strong>Usuario</strong>
         </div>
       </div>
 
-      {/* Imagen a la derecha */}
-      <img
-        src={season6Gif}
-        alt="gif"
-        style={{
-          padding: "50px",
-          width: "50%",
-          height: "50%",
-          objectFit: "cover",
-        }}
-      />
     </main>
   );
 };
