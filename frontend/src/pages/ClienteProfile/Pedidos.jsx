@@ -1,10 +1,11 @@
 
+import React from 'react';
+import ContentPedidos from '../../components/UsuariosContenido/Cliente/ContentPS/ContentPS';
 
 const Pedidos = () => {
     return (
         <div>
-            <h2>Pedidos</h2>
-            <p>Aquí se mostrarán los pedidos del cliente.</p>
+            <ContentPedidos />
         </div>
     );
 };

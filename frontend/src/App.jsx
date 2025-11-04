@@ -14,6 +14,13 @@ import MediosPago from "./pages/ClienteProfile/MediosPago.jsx";
 import Pedidos from "./pages/ClienteProfile/Pedidos.jsx";
 import HistorialCompras from "./pages/ClienteProfile/HistorialCompras.jsx";
 
+
+import Administrador from "./pages/AdminProfile/AdminProfile.jsx"
+import GestionInventario from "./pages/AdminProfile/GestionInventario.jsx"
+import GestionProductos from "./pages/AdminProfile/GestionProductos.jsx"
+import CompartirContenido from "./pages/AdminProfile/CompartirContenido.jsx";
+
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -28,6 +35,11 @@ function App() {
           <Route path="medios-pago" element={<MediosPago />} />
           <Route path="pedidos" element={<Pedidos />} />
           <Route path="historial" element={<HistorialCompras />} />
+        </Route>
+        <Route path="/administrador" element={<Administrador />} >
+          <Route path="productos" element={<GestionProductos />} />
+          <Route path="inventario" element={<GestionInventario />} />
+          <Route path="compartir" element={<CompartirContenido />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

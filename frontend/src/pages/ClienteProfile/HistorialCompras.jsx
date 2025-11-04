@@ -1,10 +1,10 @@
-
+import React from 'react';
+import ContentHC from '../../components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC';
 
 const HistorialCompras = () => {
     return (
         <div>
-            <h2>Historial de Compras</h2>
-            <p>Aquí se mostrará el historial de compras del cliente.</p>
+            <ContentHC />
         </div>
     );
 };
