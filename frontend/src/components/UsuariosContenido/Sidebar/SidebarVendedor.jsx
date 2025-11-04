@@ -28,7 +28,7 @@ const Sidebar = () => {
 
         <ul className="nav nav-pills flex-column mb-auto">
           <li>
-            <Link to="/administrador/usuarios" className="nav-link text-white">
+            <Link to="/vendedor/ordenesv" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -37,11 +37,11 @@ const Sidebar = () => {
               >
                 <use xlinkHref="#speedometer2"></use>
               </svg>
-              Usuarios
+              Ordenes
             </Link>
           </li>
           <li>
-            <Link to="/administrador/productos" className="nav-link text-white">
+            <Link to="/vendedor/inventariov" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -50,35 +50,7 @@ const Sidebar = () => {
               >
                 <use xlinkHref="#speedometer2"></use>
               </svg>
-              Productos
-            </Link>
-          </li>
-
-          <li>
-            <Link to="/administrador/inventario" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              inventario
-            </Link>
-          </li>
-
-          <li>
-            <Link to="/administrador/compartir" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#table"></use>
-              </svg>
-              Compartir
+               Inventario
             </Link>
           </li>
 

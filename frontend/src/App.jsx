@@ -19,6 +19,11 @@ import Administrador from "./pages/AdminProfile/AdminProfile.jsx"
 import GestionInventario from "./pages/AdminProfile/GestionInventario.jsx"
 import GestionProductos from "./pages/AdminProfile/GestionProductos.jsx"
 import CompartirContenido from "./pages/AdminProfile/CompartirContenido.jsx";
+import GestionUsuario from "./pages/AdminProfile/GestionUsuario.jsx";
+
+import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
+import OrdenesVendedor from "./pages/VendedorProfile/GestionOrdenesV.jsx";
+import InventarioVendedor from "./pages/VendedorProfile/GestionInventarioV.jsx";
 
 
 function App() {
@@ -37,9 +42,14 @@ function App() {
           <Route path="historial" element={<HistorialCompras />} />
         </Route>
         <Route path="/administrador" element={<Administrador />} >
+          <Route path="usuarios" element={<GestionUsuario />} />
           <Route path="productos" element={<GestionProductos />} />
           <Route path="inventario" element={<GestionInventario />} />
           <Route path="compartir" element={<CompartirContenido />} />
+        </Route>
+        <Route path="/vendedor" element={<VendedorProfile />} >
+          <Route path="ordenesv" element={<OrdenesVendedor />} />
+          <Route path="inventariov" element={<InventarioVendedor />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
