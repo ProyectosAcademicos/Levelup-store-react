@@ -12,7 +12,7 @@ const RegisterPage = () => {
             <RegisterContenido />
             <Footer/>
         </div>
-       
+    
     );
 }
 
