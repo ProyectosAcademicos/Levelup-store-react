@@ -56,6 +56,7 @@ const RegisterPage = () => {
 
   const validate = () => {
     const err = {};
+    console.log("RUT enviado:", form.rut);
     if (!form.rut) err.rut = "RUT obligatorio.";
     if (!form.nombre) err.nombre = "Nombre obligatorio.";
     if (!form.apellido) err.apellido = "Apellido obligatorio.";
@@ -69,23 +70,31 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setApiError("");
-    if (!validate()) return;
+  e.preventDefault();
+  setApiError("");
+  if (!validate()) return;
 
-    try {
-      await api.post("/api/auth/register", {
-        ...form,
-        regionId: Number(form.regionId),
-        comunaId: Number(form.comunaId),
-      });
-      alert("Registro exitoso. Redirigiendo al login...");
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      setApiError(err.response?.data?.message || "Error inesperado.");
-    }
-  };
+  try {
+    const rutLimpio = form.rut.replace(/\./g, "").toUpperCase(); // elimina puntos
+    const rutFormateado = rutLimpio.includes("-")
+      ? rutLimpio
+      : rutLimpio.slice(0, -1) + "-" + rutLimpio.slice(-1);
+
+    await api.post("/api/auth/register", {
+      ...form,
+      rut: rutFormateado,
+      regionId: Number(form.regionId),
+      comunaId: Number(form.comunaId),
+    });
+
+    alert("Registro exitoso. Redirigiendo al login...");
+    navigate("/login");
+  } catch (err) {
+    console.error(err);
+    setApiError(err.response?.data || "Error inesperado.");
+  }
+};
+
 
   return (
     <Container className={`my-5 ${styles.container}`}>
@@ -225,7 +234,7 @@ const RegisterPage = () => {
                       onChange={handleChange}
                       isInvalid={!!errors.comunaId}
                       required
-                      disabled={!comunas.length}
+                      //disabled={!comunas.length}
                     >
                       <option value="">Seleccione una comuna</option>
                       {comunas.map((c) => (
