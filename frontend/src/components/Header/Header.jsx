@@ -3,9 +3,16 @@ import { useNavigate } from "react-router-dom";
 import style from "./Header.module.css";
 import logo from "../../assets/img/logo.png";
 import { FaBars } from "react-icons/fa"; // ícono hamburguesa
+import { useCart } from "../../context/CartContext.jsx";
+
+
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const { cartItems } = useCart();
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const goToHome = () => {
     navigate("/home");
@@ -22,6 +29,11 @@ const Header = () => {
   const goToRegister = () => {
     navigate("/register");
   }
+
+  const gotToCarrito = () => {
+    navigate("/carrito");
+  }
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -49,7 +61,10 @@ const Header = () => {
             <button onClick={goToLogin} className={style.loginButton}>Iniciar Sesión</button>
             <button onClick={goToRegister} className={style.registerButton}>Registrarse</button>
             <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
-            <button className={style.cartButton}>Carrito</button>
+            <button onClick={gotToCarrito} className={style.cartButton}>Carrito
+              {totalItems > 0 && <span className={style.cartBadge}>{totalItems}</span>}
+            </button>
+            {/* Agrega más botones o enlaces según sea necesario */}
         </div>
       </nav>
 
