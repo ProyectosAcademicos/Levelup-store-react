@@ -53,6 +53,7 @@ public class AuthController {
             usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
             usuario.setTelefono(usuarioDTO.getTelefono());
             usuario.setDireccion(usuarioDTO.getDireccion());
+            usuario.setRol(usuarioDTO.getRol());
             usuario.setRegion(region);
             usuario.setComuna(comuna);
 

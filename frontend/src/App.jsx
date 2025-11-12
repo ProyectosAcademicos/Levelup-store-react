@@ -25,6 +25,9 @@ import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
 import OrdenesVendedor from "./pages/VendedorProfile/GestionOrdenesV.jsx";
 import InventarioVendedor from "./pages/VendedorProfile/GestionInventarioV.jsx";
 
+// import { AuthProvider } from "./context/AuthContext.jsx";
+// import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute.jsx";
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -32,10 +35,12 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/** Rutas públicas */}
         <Route path="/home" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/cliente" element={<ClienteProfile />}>
+        {/** Rutas del cliente */}
+        <Route path="/cliente/*" element={<ClienteProfile />}>
           <Route path="datos" element={<DatosPersonales />} />
           <Route path="medios-pago" element={<MediosPago />} />
           <Route path="pedidos" element={<Pedidos />} />

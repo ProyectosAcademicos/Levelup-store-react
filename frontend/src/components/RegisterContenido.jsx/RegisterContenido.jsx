@@ -56,7 +56,6 @@ const RegisterPage = () => {
 
   const validate = () => {
     const err = {};
-    console.log("RUT enviado:", form.rut);
     if (!form.rut) err.rut = "RUT obligatorio.";
     if (!form.nombre) err.nombre = "Nombre obligatorio.";
     if (!form.apellido) err.apellido = "Apellido obligatorio.";
