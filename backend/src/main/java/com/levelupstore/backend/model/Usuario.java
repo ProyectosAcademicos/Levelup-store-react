@@ -40,4 +40,7 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "comuna_id", nullable = false)
     private Comuna comuna;
+
+    @Column(nullable = false)
+    private String rol; // Ejemplo: "CLIENTE", "VENDEDOR", "ADMIN"
 }
