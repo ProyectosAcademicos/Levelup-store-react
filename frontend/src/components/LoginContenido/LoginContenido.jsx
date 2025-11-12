@@ -1,8 +1,5 @@
-//import styles from "./RegisterContenido.module.css";
+
 import React, { useEffect, useState } from "react";
-// Si prefieres CSS global, NO importes el CSS aquí.
-// Si prefieres módulo/por componente, importa así:
-// import "./LoginContenido.css";
 import logo from "../../assets/img/logo.png"; // ajusta si tu imagen está en otro lado
 import { useNavigate } from "react-router-dom";
 

@@ -13,6 +13,7 @@ import DatosPersonales from "./pages/ClienteProfile/DatosPersonales.jsx";
 import MediosPago from "./pages/ClienteProfile/MediosPago.jsx";
 import Pedidos from "./pages/ClienteProfile/Pedidos.jsx";
 import HistorialCompras from "./pages/ClienteProfile/HistorialCompras.jsx";
+import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
 
 
 import Administrador from "./pages/AdminProfile/AdminProfile.jsx"
@@ -35,6 +36,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/catalogo" element={<CatalogoPage />} />
         <Route path="/cliente" element={<ClienteProfile />}>
           <Route path="datos" element={<DatosPersonales />} />
           <Route path="medios-pago" element={<MediosPago />} />
