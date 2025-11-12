@@ -1,5 +1,3 @@
-//Maneja el estado global (por ejemplo, usuario autenticado, carrito, tema oscuro).
-
 import { createContext, useState, useContext } from "react";
 
 const AuthContext = createContext();
@@ -17,7 +15,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
-
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
@@ -25,5 +22,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook para acceder fácilmente al contexto
+// ✅ Hook personalizado para acceder fácilmente al contexto
 export const useAuth = () => useContext(AuthContext);
