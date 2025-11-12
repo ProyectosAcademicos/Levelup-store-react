@@ -1,0 +1,174 @@
+/* ===== Tipografías ===== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500&display=swap');
+
+/* ===== Variables de color ===== */
+:root{
+  --bg: #000000;
+  --text: #FFFFFF;
+  --muted: #D3D3D3;
+  --blue: #1E90FF;
+  --green: #39FF14;
+  --card: rgba(255,255,255,0.05);
+}
+
+* { box-sizing: border-box; }
+
+/* Cambiamos .catalog -> .catalogo para que coincida con tu contenedor */
+.catalogo .card.is-hidden { display: none; }
+
+/* ===== Base ===== */
+.catalogo {
+  background-color: var(--bg);
+  font-family: 'Roboto', sans-serif;
+  color: var(--text);
+}
+
+.catalogo h1,
+.catalogo h2,
+.catalogo h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--text);
+}
+
+/* ===== Layout ===== */
+/* Tu JSX usa Bootstrap (d-grid + inline style). No forzamos un grid propio aquí. */
+/* Si algún día quieres usar tu propio grid, crea un wrapper .wrap en JSX y activa: */
+
+.catalogo .wrap {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+
+.catalogo aside {
+  border: 1px solid var(--blue);
+  border-radius: 12px;
+  padding: 12px;
+  align-self: start;
+  background: var(--card);
+  box-shadow: 0 0 20px rgba(30,144,255,0.2);
+}
+
+/* ===== Alineación del texto dentro del panel de filtros ===== */
+.catalogo aside {
+  text-align: left;          /* alinea todo el contenido a la izquierda */
+}
+
+.catalogo aside .grupo,
+.catalogo aside label,
+.catalogo aside strong {
+  display: block;
+  text-align: left;          /* refuerza que las etiquetas y grupos se alineen a la izquierda */
+  margin-left: 4px;          /* pequeño margen para que no quede pegado al borde */
+}
+
+.catalogo aside input[type="checkbox"] {
+  margin-right: 6px;         /* separa el cuadradito del texto */
+  vertical-align: middle;
+}
+
+
+.catalogo .grupo { margin-bottom: 12px; }
+.catalogo .grupo label { 
+  display: block;
+  margin: 6px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ===== Checkboxes ===== */
+.catalogo .grupo input[type="checkbox"] {
+  width: auto;
+  display: inline-block;
+  margin-right: 8px;
+  accent-color: var(--blue, #1E90FF);
+  vertical-align: middle;
+}
+.catalogo .grupo input[type="checkbox"]:checked {
+  accent-color: var(--green, #39FF14);
+  box-shadow: 0 0 6px var(--green, #39FF14);
+}
+.catalogo .grupo input[type="checkbox"]:focus:not(:checked) {
+  accent-color: var(--blue, #1E90FF);
+  box-shadow: none;
+}
+
+/* ===== Grid de productos ===== */
+/* Tu sección tiene class="grid row …". Para no pelear con Bootstrap, NO cambiamos display */
+.catalogo .grid { gap: 16px; }
+
+/* ===== Tarjeta de producto ===== */
+.catalogo .card { 
+  border: 1px solid var(--blue);
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 0 20px rgba(30,144,255,0.2);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.catalogo .card:hover { 
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(30, 143, 255, 0.619);
+}
+
+/* Imagen: tu JSX usa .card-img-top (Bootstrap) */
+.catalogo .card-img-top {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+  background: #111111;
+  border-radius: 6px;
+}
+
+/* Título y precio en tu estructura actual */
+.catalogo .card,
+.catalogo .card-body { min-width: 0; }
+
+.catalogo .h6 {
+  white-space: normal;
+  word-break: keep-all;       
+  overflow-wrap: break-word;  
+  line-height: 1.25;
+}
+
+.catalogo .precio { 
+  font-weight: 700; 
+  margin: 6px 0 10px; 
+  color: var(--blue);
+}
+
+/* Botón: tu JSX usa .btn .btn-outline-primary. Estilizamos .btn directamente. */
+.catalogo .btn { 
+  font-size: 14px; 
+  padding: 8px 10px; 
+  border-width: 2px; 
+  border-radius: 8px; 
+  box-shadow: 0 0 20px rgba(49, 255, 30, 0.16);
+  font-weight: 700;
+  transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.catalogo .btn:hover{
+  background-color: var(--green);
+  color: #000000;
+  border-color: var(--green);
+}
+.catalogo .btn:active { transform: scale(0.98); }
+
+/* ===== Responsivo ===== */
+@media (max-width: 992px){
+  /* si usas Bootstrap cols, no necesitas tocar aquí el grid */
+  .catalogo .card-img-top { height: 260px; }
+}
+
+@media (max-width: 540px){
+  .catalogo .card-img-top { height: 240px; }
+}
+
+/* Teléfonos típicos */
+@media (max-width: 414px){
+  .catalogo .card-img-top { height: 240px; }
+}

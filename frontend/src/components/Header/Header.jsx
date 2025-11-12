@@ -15,6 +15,10 @@ const Header = () => {
     navigate("/login");
   }
 
+  const goToCatalogo = () => {
+    navigate("/catalogo");
+  }
+
   const goToRegister = () => {
     navigate("/register");
   }
@@ -44,6 +48,7 @@ const Header = () => {
         <div className={style.authButtons}>
             <button onClick={goToLogin} className={style.loginButton}>Iniciar Sesión</button>
             <button onClick={goToRegister} className={style.registerButton}>Registrarse</button>
+            <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
             <button className={style.cartButton}>Carrito</button>
         </div>
       </nav>
