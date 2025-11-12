@@ -16,10 +16,7 @@ public class ComunaService {
     private ComunaRepository comunaRepository;
 
     public List<ComunaDTO> obtenerComunasPorRegion(Long regionId) {
-        List<Comuna> comunas = comunaRepository.findAll()
-                .stream()
-                .filter(c -> c.getRegion().getId().equals(regionId))
-                .toList();
+        List<Comuna> comunas = comunaRepository.findByRegionId(regionId);
 
         return comunas.stream()
                 .map(c -> new ComunaDTO(c.getId(), c.getNombre()))

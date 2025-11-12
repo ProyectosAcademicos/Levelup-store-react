@@ -26,36 +26,58 @@ import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
 import OrdenesVendedor from "./pages/VendedorProfile/GestionOrdenesV.jsx";
 import InventarioVendedor from "./pages/VendedorProfile/GestionInventarioV.jsx";
 
+import {AuthProvider}  from "./context/AuthContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
+
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/catalogo" element={<CatalogoPage />} />
-        <Route path="/cliente" element={<ClienteProfile />}>
-          <Route path="datos" element={<DatosPersonales />} />
-          <Route path="medios-pago" element={<MediosPago />} />
-          <Route path="pedidos" element={<Pedidos />} />
-          <Route path="historial" element={<HistorialCompras />} />
-        </Route>
-        <Route path="/administrador" element={<Administrador />} >
-          <Route path="usuarios" element={<GestionUsuario />} />
-          <Route path="productos" element={<GestionProductos />} />
-          <Route path="inventario" element={<GestionInventario />} />
-          <Route path="compartir" element={<CompartirContenido />} />
-        </Route>
-        <Route path="/vendedor" element={<VendedorProfile />} >
-          <Route path="ordenesv" element={<OrdenesVendedor />} />
-          <Route path="inventariov" element={<InventarioVendedor />} />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+    
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/catalogo" element={<CatalogoPage />} />
+
+          {/* CLIENTE */}
+          <Route
+            path="/cliente/*"
+            element={
+              <ProtectedRoute allowedRoles={["CLIENTE"]}>
+                <ClienteProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ADMINISTRADOR */}
+          <Route
+            path="/administrador/*"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <Administrador />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* VENDEDOR */}
+          <Route
+            path="/vendedor/*"
+            element={
+              <ProtectedRoute allowedRoles={["VENDEDOR"]}>
+                <VendedorProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

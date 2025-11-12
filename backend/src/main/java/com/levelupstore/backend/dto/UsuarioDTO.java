@@ -11,6 +11,7 @@ public class UsuarioDTO {
     private String contrasena;
     private String telefono;
     private String direccion;
+    private String rol;
     private Long regionId;
     private Long comunaId;
 }

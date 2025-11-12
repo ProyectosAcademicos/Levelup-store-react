@@ -1,14 +1,20 @@
 
+
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/img/logo.png"; // ajusta si tu imagen está en otro lado
+
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/img/logo.png";
+import { useAuth } from "../../context/AuthContext"; 
 
 const LoginContenido = () => {
   const navigate = useNavigate();
-  const irHome = () => navigate("/home");
+  const { login } = useAuth(); 
+
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [loading, setLoading] = useState(false);
 
+  // Recuperar email recordado (si existe)
   useEffect(() => {
     const remembered = localStorage.getItem("rememberedEmail");
     if (remembered) setForm((f) => ({ ...f, email: remembered, remember: true }));
@@ -33,14 +39,30 @@ const LoginContenido = () => {
 
     try {
       setLoading(true);
-      alert("Inicio de sesión exitoso");
-      navigate("/home");
+
+      let role = "";
+
+      if (email.includes("admin")) role = "ADMIN";
+      else if (email.includes("vendedor")) role = "VENDEDOR";
+      else role = "CLIENTE";
+
+      // Guardamos usuario en el contexto global
+      login({ email, role });
+
+      // 🔹 Redirección según el rol
+      if (role === "ADMIN") navigate("/administrador");
+      else if (role === "VENDEDOR") navigate("/vendedor");
+      else navigate("/cliente");
+
+      alert(`Inicio de sesión exitoso como ${role}`);
     } catch (err) {
       alert("Usuario o contraseña incorrectos.");
     } finally {
       setLoading(false);
     }
   };
+
+  const irHome = () => navigate("/home");
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center">
@@ -99,7 +121,11 @@ const LoginContenido = () => {
             </label>
           </div>
 
-          <button className="btn btn-primary w-100 py-2 mb-3" type="submit" disabled={loading}>
+          <button
+            className="btn btn-primary w-100 py-2 mb-3"
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Ingresando..." : "Entrar"}
           </button>
 
