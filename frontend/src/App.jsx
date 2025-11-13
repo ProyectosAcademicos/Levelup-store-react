@@ -21,7 +21,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 function App() {
   return (
     <AuthProvider>
-      <CartProvider> {/* ✅ Envolver con CartProvider */}
+      <CartProvider> 
         <Router>
           <Routes>
             {/* Rutas públicas */}
@@ -29,14 +29,14 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
-            <Route path="/carrito" element={<CarritoPage />} /> {/* ✅ Agregar ruta del carrito */}
+            <Route path="/carrito" element={<CarritoPage />} /> 
 
             {/* CLIENTE */}
             <Route
               path="/cliente/*"
               element={
                 <ProtectedRoute allowedRoles={["CLIENTE"]}>
-                  <ClienteProfile />
+                  <HomePage />
                 </ProtectedRoute>
               }
             />
@@ -46,7 +46,7 @@ function App() {
               path="/administrador/*"
               element={
                 <ProtectedRoute allowedRoles={["ADMIN"]}>
-                  <Administrador />
+                  <HomePage />
                 </ProtectedRoute>
               }
             />
@@ -56,7 +56,7 @@ function App() {
               path="/vendedor/*"
               element={
                 <ProtectedRoute allowedRoles={["VENDEDOR"]}>
-                  <VendedorProfile />
+                  <HomePage />
                 </ProtectedRoute>
               }
             />
