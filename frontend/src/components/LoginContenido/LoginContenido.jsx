@@ -6,6 +6,21 @@ import logo from "../../assets/img/logo.png"; // ajusta si tu imagen está en ot
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; 
 
+const loginUser = async ({ email, password }) => { //llamada al backend
+  const response = await fetch("http://localhost:8080/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al iniciar sesión");
+  }
+
+  return await response.json();
+};
+
+
 const LoginContenido = () => {
   const navigate = useNavigate();
   const { login } = useAuth(); 
@@ -37,28 +52,30 @@ const LoginContenido = () => {
     else localStorage.removeItem("rememberedEmail");
 
     try {
-      setLoading(true);
+    setLoading(true);
 
-      let role = "";
+    // 🔹 Llamada real al backend
+    const userData = await loginUser({ email, password });
 
-      if (email.includes("admin")) role = "ADMIN";
-      else if (email.includes("vendedor")) role = "VENDEDOR";
-      else role = "CLIENTE";
+    // 🔹 Guardar en contexto global
+    login(userData);
 
-      // Guardamos usuario en el contexto global
-      login({ email, role });
+      console.log("Respuesta backend:", userData);
 
-      // 🔹 Redirección según el rol
-      if (role === "ADMIN") navigate("/administrador");
-      else if (role === "VENDEDOR") navigate("/vendedor");
-      else navigate("/cliente");
+    // 🔹 Redirigir según el rol recibido desde el backend
+    if (userData.rol === "ADMIN") navigate("/administrador");
+    else if (userData.rol === "VENDEDOR") navigate("/vendedor");
+    else navigate("/cliente");
 
-      alert(`Inicio de sesión exitoso como ${role}`);
-    } catch (err) {
-      alert("Usuario o contraseña incorrectos.");
-    } finally {
-      setLoading(false);
-    }
+    alert(`Inicio de sesión exitoso como ${userData.rol}`);
+  } catch (err) {
+    console.error(err);
+    alert("Usuario o contraseña incorrectos.");
+  } finally {
+    setLoading(false);
+  }
+
+
   };
 
   const irHome = () => navigate("/home");

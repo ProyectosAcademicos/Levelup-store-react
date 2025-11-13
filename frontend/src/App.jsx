@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // ✅ Importaciones de páginas
 import HomePage from "./pages/HomePage/HomePage.jsx";
+import HomePageAdmin from "./pages/HomePage/HomePageAdmin/index.jsx";
+import AdministradorProfile from "./pages/AdminProfile/AdminProfile.jsx";
+import HomePageVendedor from "./pages/HomePage/HomePageVendedor/index.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
@@ -46,7 +49,17 @@ function App() {
               path="/administrador/*"
               element={
                 <ProtectedRoute allowedRoles={["ADMIN"]}>
-                  <HomePage />
+                  <HomePageAdmin />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ADMINISTRADOR — RUTA HIJA (PERFIL) */}
+            <Route
+              path="/administrador/perfil-administrador"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <AdministradorProfile />
                 </ProtectedRoute>
               }
             />
@@ -56,7 +69,7 @@ function App() {
               path="/vendedor/*"
               element={
                 <ProtectedRoute allowedRoles={["VENDEDOR"]}>
-                  <HomePage />
+                  <HomePageVendedor />
                 </ProtectedRoute>
               }
             />

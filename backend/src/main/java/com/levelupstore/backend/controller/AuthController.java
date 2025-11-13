@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.levelupstore.backend.dto.UsuarioDTO;
+import java.util.Map;
+
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -67,5 +70,26 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * Endpoint para autenticar un usuario.
+     * Escucha en la URL: POST /api/auth/login
+     */
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credentials) {
+
+        String correo = credentials.get("email");
+        String contrasena = credentials.get("password");
+
+        Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
+
+        if (usuario == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo o contraseña incorrectos.");
+        }
+
+        usuario.setContrasena(null); // No devolver la contraseña
+        return ResponseEntity.ok(usuario);
     }
 }

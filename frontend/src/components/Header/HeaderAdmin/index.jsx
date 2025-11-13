@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import style from "./Header.module.css";
-import logo from "../../assets/img/logo.png";
+import style from "../../../components/Header/HeaderAdmin/index.module.css";
+import logo from "../../../../src/assets/img/logo.png";
 import { FaBars } from "react-icons/fa"; // ícono hamburguesa
-import { useCart } from "../../context/CartContext.jsx";
+import { useCart } from "../../../context/CartContext.jsx";
 
 
 
@@ -15,23 +15,15 @@ const HeaderAdmin = () => {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const goToHome = () => {
+    navigate("/administrador");
+  }
+
+  const goToProfile = () => {
+    navigate("/administrador/perfil-administrador");
+  }
+
+  const goToLogout = () => {
     navigate("/home");
-  }
-
-  const goToLogin = () => {
-    navigate("/login");
-  }
-
-  const goToCatalogo = () => {
-    navigate("/catalogo");
-  }
-
-  const goToRegister = () => {
-    navigate("/register");
-  }
-
-  const gotToCarrito = () => {
-    navigate("/carrito");
   }
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,18 +45,11 @@ const HeaderAdmin = () => {
       {/* Menú lateral */}
       <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
         <ul>
-          <li><a href="home">Inicio</a></li>
-          <li><a href="productos">Productos</a></li>
-          <li><a href="contacto">Contacto</a></li>
+          <li><a href="administrador">Inicio</a></li>
         </ul>
         <div className={style.authButtons}>
-            <button onClick={goToLogin} className={style.loginButton}>Iniciar Sesión</button>
-            <button onClick={goToRegister} className={style.registerButton}>Registrarse</button>
-            <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
-            <button onClick={gotToCarrito} className={style.cartButton}>Carrito
-              {totalItems > 0 && <span className={style.cartBadge}>{totalItems}</span>}
-            </button>
-            {/* Agrega más botones o enlaces según sea necesario */}
+            <button onClick={goToProfile} className={style.profileButton}>Perfil</button>
+            <button onClick={goToLogout} className={style.logoutButton}>Cerrar Sesión</button>
         </div>
       </nav>
 
