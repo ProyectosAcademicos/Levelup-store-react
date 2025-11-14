@@ -19,7 +19,7 @@ const HeaderAdmin = () => {
   }
 
   const goToProfile = () => {
-    navigate("/administrador/perfil-administrador");
+    navigate("/administrador/perfil");
   }
 
   const goToLogout = () => {
@@ -45,10 +45,9 @@ const HeaderAdmin = () => {
       {/* Menú lateral */}
       <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
         <ul>
-          <li><a href="administrador">Inicio</a></li>
+          <li><button onClick={goToHome}>Inicio</button></li>
         </ul>
         <div className={style.authButtons}>
-            <button onClick={goToProfile} className={style.profileButton}>Perfil</button>
             <button onClick={goToLogout} className={style.logoutButton}>Cerrar Sesión</button>
         </div>
       </nav>

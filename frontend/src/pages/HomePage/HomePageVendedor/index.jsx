@@ -1,16 +1,16 @@
 import React from 'react'
-import HeaderAdmin from '../../../components/Header/HeaderAdmin';
+import HeaderVen from '../../../components/Header/HeaderVendedor/index.jsx';
 import HomeContenido from '../../../components/HomeContentido/HomeContenido.jsx';
-import FooterAdmin from '../../../components/Footer/Footer.jsx';
+import Footer from '../../../components/Footer/Footer.jsx';
 
 
 
 const HomePageVendedor = () => {
     return(
         <div>
-            <HeaderAdmin/>
+            <HeaderVen/>
             <HomeContenido/>
-            <FooterAdmin/>
+            <Footer/>
         </div>
         
     )
