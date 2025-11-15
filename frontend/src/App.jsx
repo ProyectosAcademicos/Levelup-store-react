@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Páginas
 import HomePage from "./pages/HomePage/HomePage.jsx";
+import HomeCliente from "./pages/HomePage/HomeCliente/index.jsx";
 import HomePageAdmin from "./pages/HomePage/HomePageAdmin/index.jsx";
 import AdministradorProfile from "./pages/AdminProfile/AdminProfile.jsx";
 import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
@@ -46,7 +47,7 @@ function App() {
               path="/cliente/*"
               element={
                 <ProtectedRoute allowedRoles={["CLIENTE"]}>
-                  <HomePage />
+                  <HomeCliente />
                 </ProtectedRoute>
               }
             />
