@@ -6,7 +6,7 @@ const Sidebar = () => {
     <main className="d-flex">
       {/* Sidebar */}
       <div
-        className="d-flex flex-column justify-content-center flex-shrink-0 p-3 text-bg-dark"
+        className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark"
         style={{ width: "280px", height: "100vh" }}
       >
         <Link
@@ -21,13 +21,13 @@ const Sidebar = () => {
           >
             <use xlinkHref="#bootstrap"></use>
           </svg>
-          <span className="fs-4">Herramientas</span>
+          <span className="fs-4">Sidebar</span>
         </Link>
 
         <hr />
 
-        <ul className="nav nav-pills flex-column mb-auto d-flex gap-2">
-          <li>
+        <ul className="nav nav-pills flex-column mb-auto">
+          <li className="nav-item">
             <Link to="inicio" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
@@ -35,53 +35,27 @@ const Sidebar = () => {
                 height="16"
                 aria-hidden="true"
               >
-                <use xlinkHref="#speedometer2"></use>
+                <use xlinkHref="#home"></use>
               </svg>
               Inicio
             </Link>
           </li>
-          <li>
-            <Link to="perfil" className="nav-link text-white">
+          <li className="nav-item">
+            <Link to="datos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
                 height="16"
                 aria-hidden="true"
               >
-                <use xlinkHref="#speedometer2"></use>
+                <use xlinkHref="#home"></use>
               </svg>
-              Perfil
-            </Link>
-          </li>
-          <li>
-            <Link to="usuarios" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Usuarios
-            </Link>
-          </li>
-          <li>
-            <Link to="productos" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Productos
+              Datos personales
             </Link>
           </li>
 
           <li>
-            <Link to="inventario" className="nav-link text-white">
+            <Link to="medios-pago" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -90,12 +64,26 @@ const Sidebar = () => {
               >
                 <use xlinkHref="#speedometer2"></use>
               </svg>
-              inventario
+              Medios de pago
             </Link>
           </li>
 
           <li>
-            <Link to="compartir" className="nav-link text-white">
+            <Link to="pedidos" className="nav-link text-white">
+              <svg
+                className="bi pe-none me-2"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <use xlinkHref="#speedometer2"></use>
+              </svg>
+              Pedidos
+            </Link>
+          </li>
+
+          <li>
+            <Link to="historial" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -104,7 +92,7 @@ const Sidebar = () => {
               >
                 <use xlinkHref="#table"></use>
               </svg>
-              Compartir
+              Historial de compras
             </Link>
           </li>
 
@@ -125,7 +113,6 @@ const Sidebar = () => {
 
         <hr />
       </div>
-
     </main>
   );
 };

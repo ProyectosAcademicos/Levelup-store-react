@@ -7,7 +7,7 @@ import { useCart } from "../../../context/CartContext.jsx";
 
 
 
-const Header = () => {
+const HeaderCliente = () => {
   const navigate = useNavigate();
 
   const { cartItems } = useCart();
@@ -18,16 +18,12 @@ const Header = () => {
     navigate("/cliente");
   }
 
-  const goToLogin = () => {
-    navigate("/login");
+  const goToPerfil = () =>{
+    navigate("/perfil-cliente");
   }
 
   const goToCatalogo = () => {
     navigate("/catalogo");
-  }
-
-  const goToRegister = () => {
-    navigate("/register");
   }
 
   const gotToCarrito = () => {
@@ -60,11 +56,12 @@ const Header = () => {
           <li><button onClick={goToHome} className={style.catalogoButton}>Inicio</button></li>
         </ul>
         <div className={style.authButtons}>
-            <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
-            <button onClick={gotToCarrito} className={style.cartButton}>Carrito
-              {totalItems > 0 && <span className={style.cartBadge}>{totalItems}</span>}
-            </button>
-            {/* Agrega más botones o enlaces según sea necesario */}
+          <button onClick={goToPerfil} className={style.catalogoButton}>Perfil</button>
+          <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
+          <button onClick={gotToCarrito} className={style.cartButton}>Carrito
+            {totalItems > 0 && <span className={style.cartBadge}>{totalItems}</span>}
+          </button>
+          {/* Agrega más botones o enlaces según sea necesario */}
         </div>
         <div className={style.authButtons}>
             <button onClick={goToLogout} className={style.logoutButton}>Cerrar Sesión</button>
@@ -77,4 +74,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderCliente;

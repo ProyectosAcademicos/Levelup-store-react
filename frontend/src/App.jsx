@@ -21,6 +21,11 @@ import DetalleP from "./pages/AdminProfile/DetallePerfil.jsx";
 import ContentIvVend from "./components/UsuariosContenido/Vendedor/ContentIvVend/index.jsx";
 import ContentOrdenes from "./components/UsuariosContenido/Vendedor/ContentOrdenes/index.jsx";
 import DetallePerfilV from "./components/UsuariosContenido/Vendedor/ContentPerfil/index.jsx";
+import PerfilCliente from "./pages/ClienteProfile/ClienteProfile.jsx";
+import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPersonales.jsx/ContentDP.jsx";
+import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
+import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
+import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 
@@ -44,13 +49,21 @@ function App() {
 
             {/* CLIENTE */}
             <Route
-              path="/cliente/*"
+              path="/cliente"
               element={
                 <ProtectedRoute allowedRoles={["CLIENTE"]}>
-                  <HomeCliente />
+                  <PerfilCliente />   {/* Sidebar + Outlet */}
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<HomeCliente />} />
+              <Route path="inicio" element={<HomeCliente />} />
+              <Route path="perfil" element={<PerfilCliente />} />
+              <Route path="datos" element={<DatosCliente />} />
+              <Route path="medios-pago" element={<MediosPago />} />
+              <Route path="pedidos" element={<PedidosCliente />} />
+              <Route path="historial" element={<HistorialCliente />} />
+            </Route>
 
             {/* ADMINISTRADOR - LAYOUT */}
             <Route
