@@ -9,7 +9,7 @@ const renderSidebar = () =>
     </MemoryRouter>
   );
 
-describe("SidebarCliente Component", () => {
+describe("SidebarCliente Component", () => { // agrupa tests
   
   test("renderiza el título 'Sidebar'", () => {
     renderSidebar();
