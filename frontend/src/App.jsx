@@ -13,7 +13,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
-import CarritoPage from "./components/CarritoContenido/CarritoContenido.jsx";
+import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
 import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
 import ContentRS from "./components/UsuariosContenido/Administrador/ContentRS/ContentRS.jsx";

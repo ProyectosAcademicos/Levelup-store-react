@@ -22,4 +22,19 @@ public class JwtUtil {
                 .signWith(SECRET_KEY) // ✔ método correcto para jjwt 0.11.x
                 .compact();
     }
+
+    public String getCorreoDesdeToken(String token) {
+        try {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    
 }

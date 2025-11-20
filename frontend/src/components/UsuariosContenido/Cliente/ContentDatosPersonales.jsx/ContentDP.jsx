@@ -14,7 +14,9 @@ const ContentDP = () => {
     useEffect(() =>{
         const fetchUserData = async () => {
             try {
-                const token = localStorage.getItem("token");
+                const storedUser = localStorage.getItem("user");
+                const token = storedUser ? JSON.parse(storedUser).token : null;
+
 
                 const response = await fetch("http://localhost:8080/api/usuarios/me", {
                     headers: {
@@ -22,7 +24,14 @@ const ContentDP = () => {
                     }
                 });
 
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const data = await response.json().catch(() => {
+                    throw new Error("Respuesta vacía del servidor");
+                });
+
 
                 setFormData({
                     nombre: data.nombre || "",
@@ -65,6 +74,7 @@ const ContentDP = () => {
                         name="nombre"
                         value={formData.nombre}
                         onChange={handleChange}
+                        readOnly
                     />
                 </div>
 
@@ -76,6 +86,7 @@ const ContentDP = () => {
                         name="apellido"
                         value={formData.apellido}
                         onChange={handleChange}
+                        readOnly
                     />
                 </div>
 
@@ -87,6 +98,7 @@ const ContentDP = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        readOnly
                     />
                 </div>
 
@@ -98,6 +110,7 @@ const ContentDP = () => {
                         name="telefono"
                         value={formData.telefono}
                         onChange={handleChange}
+                        readOnly
                     />
                 </div>
 
@@ -109,12 +122,13 @@ const ContentDP = () => {
                         name="direccion"
                         value={formData.direccion}
                         onChange={handleChange}
+                        readOnly
                     />
                 </div>
 
-                <button type="submit" className={style.submitButton}>
+                {/* <button type="submit" className={style.submitButton}>
                     Guardar Cambios
-                </button>
+                </button> */}
             </form>
         </div>
     )
