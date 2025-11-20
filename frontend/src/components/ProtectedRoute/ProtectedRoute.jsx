@@ -8,10 +8,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
+  // Verificación del rol normalizado
   if (!allowedRoles.includes(user.rol)) {
     return <Navigate to="/home" replace />;
   }
-  
+
+  console.log("ROLE AUTH:", user.rol);
+  console.log("allowed:", allowedRoles);
 
   return children;
 };

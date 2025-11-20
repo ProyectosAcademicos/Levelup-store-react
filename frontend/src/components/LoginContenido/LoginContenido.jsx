@@ -57,17 +57,31 @@ const LoginContenido = () => {
     // 🔹 Llamada real al backend
     const userData = await loginUser({ email, password });
 
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("user", JSON.stringify({
+      token: userData.token,
+      rol: userData.usuario.rol,
+      usuario: userData.usuario
+    }));
+
+
     // 🔹 Guardar en contexto global
-    login(userData);
+    login({
+      token: userData.token,
+      usuario: userData.usuario
+    });
 
       console.log("Respuesta backend:", userData);
+      console.log("Token recibido:", userData.token);
+    
+    const rol = userData.usuario.rol;
 
     // 🔹 Redirigir según el rol recibido desde el backend
-    if (userData.rol === "ADMIN") navigate("/administrador");
-    else if (userData.rol === "VENDEDOR") navigate("/vendedor");
+    if (rol === "ADMIN") navigate("/administrador");
+    else if (rol === "VENDEDOR") navigate("/vendedor");
     else navigate("/cliente");
 
-    alert(`Inicio de sesión exitoso como ${userData.rol}`);
+    alert(`Inicio de sesión exitoso como ${rol}`);
   } catch (err) {
     console.error(err);
     alert("Usuario o contraseña incorrectos.");

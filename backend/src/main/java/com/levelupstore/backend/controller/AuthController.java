@@ -33,6 +33,10 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
     /**
      * Endpoint para registrar un nuevo usuario.
      * Escucha en la URL: POST /api/auth/register
@@ -80,16 +84,26 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credentials) {
 
-        String correo = credentials.get("email");
-        String contrasena = credentials.get("password");
+    String correo = credentials.get("email");
+    String contrasena = credentials.get("password");
 
-        Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
+    Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
 
-        if (usuario == null) {
+    if (usuario == null) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo o contraseña incorrectos.");
-        }
-
-        usuario.setContrasena(null); // No devolver la contraseña
-        return ResponseEntity.ok(usuario);
     }
+
+    usuario.setContrasena(null);
+
+    // 🔥 Generar el token JWT
+    String token = jwtUtil.generarToken(usuario.getCorreo());
+
+    // 🔥 Devolver el token + datos del usuario
+    Map<String, Object> response = Map.of(
+            "token", token,
+            "usuario", usuario
+    );
+
+    return ResponseEntity.ok(response);
+}
 }

@@ -18,10 +18,6 @@ const HeaderCliente = () => {
     navigate("/cliente");
   }
 
-  const goToPerfil = () =>{
-    navigate("/perfil-cliente");
-  }
-
   const goToCatalogo = () => {
     navigate("/catalogo");
   }
@@ -56,7 +52,6 @@ const HeaderCliente = () => {
           <li><button onClick={goToHome} className={style.catalogoButton}>Inicio</button></li>
         </ul>
         <div className={style.authButtons}>
-          <button onClick={goToPerfil} className={style.catalogoButton}>Perfil</button>
           <button onClick={goToCatalogo} className={style.catalogoButton}>Catalogo</button>
           <button onClick={gotToCarrito} className={style.cartButton}>Carrito
             {totalItems > 0 && <span className={style.cartBadge}>{totalItems}</span>}
