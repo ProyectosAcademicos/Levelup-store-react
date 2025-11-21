@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/img/logo.png"; // ajusta si tu imagen está en otro lado
+
 
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo.png";

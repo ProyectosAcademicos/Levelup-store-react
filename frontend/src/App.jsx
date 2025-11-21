@@ -14,7 +14,7 @@ import MediosPago from "./pages/ClienteProfile/MediosPago.jsx";
 import Pedidos from "./pages/ClienteProfile/Pedidos.jsx";
 import HistorialCompras from "./pages/ClienteProfile/HistorialCompras.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
-
+import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
 import Administrador from "./pages/AdminProfile/AdminProfile.jsx"
 import GestionInventario from "./pages/AdminProfile/GestionInventario.jsx"
@@ -43,6 +43,11 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/catalogo" element={<CatalogoPage />} />
+
+           {/* CRUD */}
+           <Route path="/crud-productos" 
+            element={<CrudProductos />} 
+           />
 
           {/* CLIENTE */}
           <Route
