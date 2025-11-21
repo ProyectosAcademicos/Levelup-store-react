@@ -1,25 +1,223 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { useCart } from "../../context/CartContext";
+import * as apiService from "../../services/api";
 
-/* =====================  CARGA AUTOMÁTICA DE IMÁGENES  ===================== *
+export default function CatalogoContenido() {
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [catsSel, setCatsSel] = useState([]);
+  const [pricesSel, setPricesSel] = useState([]);
+  
+  const { addToCart } = useCart();
+
+  const CATS = [
+    "juegos de mesa",
+    "accesorios",
+    "consola",
+    "pc",
+    "silla",
+    "mouse",
+    "mousepad",
+    "poleras"
+  ];
+
+  const priceRules = {
+    "lt100": (p) => p < 100000,
+    "100-300": (p) => p >= 100000 && p <= 300000,
+    "gt300": (p) => p > 300000,
+  };
+
+  // Cargar productos desde la API
+  useEffect(() => {
+    const cargarProductos = async () => {
+      try {
+        setLoading(true);
+        const data = await apiService.getProductos();
+        setProductos(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error cargando productos:", err);
+        setError("Error al cargar los productos");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarProductos();
+  }, []);
+
+  // Filtrado memorizado
+  const filtrados = useMemo(() => {
+    const priceFns = pricesSel
+      .map((k) => priceRules[k])
+      .filter(Boolean);
+
+    return productos.filter((p) => {
+      const okCat =
+        catsSel.length === 0 || catsSel.includes(p.categoria);
+      const okPrice =
+        priceFns.length === 0 || priceFns.some((fn) => fn(p.precio));
+      return okCat && okPrice;
+    });
+  }, [productos, catsSel, pricesSel]);
+
+  const toggleFrom = (arr, v) =>
+    arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
+
+  const onToggleCat = (v) => setCatsSel((prev) => toggleFrom(prev, v));
+  const onTogglePrice = (v) => setPricesSel((prev) => toggleFrom(prev, v));
+
+  const handleAgregarAlCarrito = (producto) => {
+    // Transformar producto al formato esperado por addToCart
+    const productoFormateado = {
+      id: producto.id,
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
+      imagen: producto.imagenFile,
+      categoria: producto.categoria,
+      stock: producto.stock
+    };
+    addToCart(productoFormateado);
+  };
+
+  if (error) {
+    return <div className="alert alert-danger">{error}</div>;
+  }
+
+  return (
+    <div className="container py-4 catalogo">
+      <div className="row g-4">
+        {/* FILTROS */}
+        <aside id="filtros" className="col-12 col-lg-3">
+          <h2 className="h5">Filtros</h2>
+          
+          <div className="mb-3">
+            <strong>Categoría</strong>
+            <div className="d-flex flex-column gap-1 mt-2">
+              {CATS.map((cat) => (
+                <label key={cat}>
+                  <input
+                    type="checkbox"
+                    checked={catsSel.includes(cat)}
+                    onChange={() => onToggleCat(cat)}
+                  />
+                  {" "}{cat}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <strong>Precio</strong>
+            <div className="d-flex flex-column gap-1 mt-2">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={pricesSel.includes("lt100")}
+                  onChange={() => onTogglePrice("lt100")}
+                />
+                {" "}
+                &lt; $100.000
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={pricesSel.includes("100-300")}
+                  onChange={() => onTogglePrice("100-300")}
+                />
+                {" "}
+                $100.000 -- $300.000
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={pricesSel.includes("gt300")}
+                  onChange={() => onTogglePrice("gt300")}
+                />
+                {" "}
+                &gt; $300.000
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        {/* GRID DE PRODUCTOS */}
+        <main className="col-12 col-lg-9">
+          <h1 className="h6 mb-3">Catálogo</h1>
+          
+          {loading ? (
+            <div className="text-center">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+          ) : (
+            <section className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+              {filtrados.map((p) => (
+                <div key={p.id} className="col">
+                  <article
+                    className="card shadow-sm h-100"
+                    data-categoria={p.categoria}
+                    data-price={p.precio}
+                  >
+                    <img
+                      src={`/img/${p.imagenFile || p.imagenUrl || p.img_file}`}
+                      alt={p.nombre}
+                      className="card-img-top"
+                      loading="lazy"
+                    />
+                    <div className="card-body d-flex flex-column">
+                      <h3 className="h6">{p.nombre}</h3>
+                      <div className="precio mb-2">
+                        ${typeof p.precio === 'string' 
+                          ? parseFloat(p.precio).toLocaleString() 
+                          : p.precio.toLocaleString()} CLP
+                      </div>
+                      <button
+                        className="btn btn-outline-primary mt-auto"
+                        onClick={() => handleAgregarAlCarrito(p)}
+                      >
+                        Agregar al carrito
+                      </button>
+                    </div>
+                  </article>
+                </div>
+              ))}
+            </section>
+          )}
+        </main>
+      </div>
+      <style>{`.is-hidden{display:none !important}`}</style>
+    </div>
+  );
+}
+
+// CODIGO DE DIANA
+
+/*import React, { useMemo, useState } from "react";
+
+=====================  CARGA AUTOMÁTICA DE IMÁGENES  ===================== *
  * Esto prepara las imágenes “tras bambalinas”.
  * Vite escanea /src/assets/img y nos da la URL final (con hash)
  *                    para cada archivo; así podemos usarlas sin rutas frágiles.
- */
+
 const images = import.meta.glob('../../assets/img/*.{png,jpg,jpeg,webp,svg}', {
   eager: true,          // Las importa al cargar el módulo (no de forma perezosa)
   import: 'default',    // Devuélveme la URL final (string) de cada imagen
 });
 
-/* Helper: recibe "Producto1.png" y devuelve la URL final procesada por Vite */
+Helper: recibe "Producto1.png" y devuelve la URL final procesada por Vite 
 function getImg(name) {
   return images[`../../assets/img/${name}`];
 }
 
-/* =====================  DATOS DEL CATÁLOGO  ===================== *
+ =====================  DATOS DEL CATÁLOGO  ===================== *
  * Las tarjetas de productos con título, precio y foto.
  * Fuente de verdad de los productos (id, nombre, precio, etc.)
  *                    Guardamos solo el nombre del archivo (imgFile).
- */
+
 const CATALOGO = [
   { id:"p2",  imgFile:"Producto2.png",  titulo:"Silla Secretlab Titan",                precio:349990,  categoria:"silla" },
   { id:"p1",  imgFile:"Producto1.png",  titulo:"PlayStation 5",                        precio:549990,  categoria:"consola" },
@@ -35,34 +233,34 @@ const CATALOGO = [
   { id:"p14", imgFile:"Producto14.png", titulo:"Xbox Consola Serie S",                 precio:269990,  categoria:"consola" },
 ];
 
-/* =====================  REGLAS DE PRECIO  ===================== *
+=====================  REGLAS DE PRECIO  ===================== *
  *  Checkboxes de precio; al marcarlos, el grid se filtra.
  * Mapear cada “rango” a una función que evalúa si un precio entra.
- */
+
 const priceRules = {
   "lt100":   (p) => p < 100000,
   "100-300": (p) => p >= 100000 && p <= 300000,
   "gt300":   (p) => p > 300000,
 };
 
-/* Lista de categorías disponibles para los filtros (UI: checkboxes) */
+Lista de categorías disponibles para los filtros (UI: checkboxes)
 const CATS = [
   "juegos de mesa","accesorios","consola","pc","silla","mouse","mousepad","poleras"
 ];
 
 export default function CatalogoContenido() {
-  /* =====================  ESTADO DE FILTROS  ===================== *
+=====================  ESTADO DE FILTROS  ===================== *
    * Cuando marcas/desmarcas checkboxes, estos arrays se actualizan.
    *  Guardar qué filtros están activos para volver a renderizar el grid.
-   */
+   * 
   const [catsSel, setCatsSel] = useState([]);     // categorías seleccionadas
   const [pricesSel, setPricesSel] = useState([]); // rangos de precio seleccionados
 
-  /* =====================  FILTRADO MEMORIZADO  ===================== *
+=====================  FILTRADO MEMORIZADO  ===================== *
    * El grid muestra solo los productos que pasan los filtros.
    *  Calcular una versión “filtrada” del catálogo de forma eficiente.
    *                    Solo se recalcula cuando cambian catsSel o pricesSel.
-   */
+   * 
   const filtrados = useMemo(() => {
     const priceFns = pricesSel.map((k) => priceRules[k]).filter(Boolean);
     return CATALOGO.filter((p) => {
@@ -72,10 +270,10 @@ export default function CatalogoContenido() {
     });
   }, [catsSel, pricesSel]);
 
-  /* =====================  HANDLERS DE CHECKBOX  ===================== *
+ =====================  HANDLERS DE CHECKBOX  ===================== *
    *  Al hacer click en un checkbox, se agrega/quita el filtro.
    *  Alternar un valor dentro de un array del estado (toggle).
-   */
+   * 
   const toggleFrom = (arr, v) => (arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]);
   const onToggleCat = (v) => setCatsSel(prev => toggleFrom(prev, v));
   const onTogglePrice = (v) => setPricesSel(prev => toggleFrom(prev, v));
@@ -83,7 +281,7 @@ export default function CatalogoContenido() {
   /* =====================  CARRITO (LOCALSTORAGE)  ===================== *
    *  Botón “Agregar al carrito” en cada tarjeta (no muestra carrito aquí).
    * Persistir un arreglo "carrito" en localStorage con cantidades.
-   */
+  
   const addToCart = (prod) => {
     const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
     const i = carrito.findIndex((x) => x.id === prod.id);
@@ -94,19 +292,19 @@ export default function CatalogoContenido() {
     localStorage.setItem("cartCount", String(count)); // útil si tienes un badge en el header
   };
 
-  /* =====================  RENDER (LO QUE VES EN PANTALLA)  ===================== *
+  =====================  RENDER (LO QUE VES EN PANTALLA)  ===================== *
    * Estructura de dos columnas:
    * - Izquierda: panel de Filtros (categoría, precio)
    * - Derecha:  grid de tarjetas (imagen, título, precio, botón)
-   */
+  
   return (
     <div className="container py-4 catalogo">
-      {/* 2 columnas: aside de filtros (280px) + main con el grid */}
+      {/* 2 columnas: aside de filtros (280px) + main con el grid }
       <div className="row g-4">                
         {/* =====================  ASIDE: FILTROS  ===================== *
          * Título “Filtros”, checkboxes de Categoría y Precio.
          * Actualiza catsSel y pricesSel para que el grid se filtre.
-         */}
+        }
         <aside id="filtros" className="col-12 col-lg-3">
           <h2 className="h5">Filtros</h2>
 
@@ -168,11 +366,11 @@ export default function CatalogoContenido() {
         {/* =====================  MAIN: GRID DE PRODUCTOS  ===================== *
          * Título “Catálogo” y tarjetas en 1-2-3 columnas (según pantalla).
          *  Mostrar solo los productos que pasaron los filtros (filtrados).
-         */}
-         <main className="col-12 col-lg-9">
+        }
+        <main className="col-12 col-lg-9">
           <h1 className="h6 mb-3">Catálogo</h1>
 
-          {/* Grid responsive con clases de Bootstrap */}
+          {/* Grid responsive con clases de Bootstrap }
           <section className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {filtrados.map((p) => (
               <div key={p.id} className="col">
@@ -181,7 +379,7 @@ export default function CatalogoContenido() {
                   data-categoria={p.categoria}  // útil para pruebas o estilos avanzados
                   data-price={p.precio}
                 >
-                  {/* Imagen del producto*/}
+                  {/* Imagen del producto}
                   <img
                     src={getImg(p.imgFile) || '/img/placeholder.png'} // fallback opcional si quieres
                     alt={p.titulo}
@@ -189,7 +387,7 @@ export default function CatalogoContenido() {
                     loading="lazy"
                   />
 
-                  {/* Cuerpo de la tarjeta: título, precio y botón */}
+                  {/* Cuerpo de la tarjeta: título, precio y botón }
                   <div className="card-body d-flex flex-column">
                     <h3 className="h6">{p.titulo}</h3>
                     <div className="precio mb-2">
@@ -206,14 +404,15 @@ export default function CatalogoContenido() {
               </div>
             ))}
 
-            {/* Slot futuro: por si quieres “huecos” o tarjetas fantasma para placeholders */}
-            {/* <div className="col"><article className="card">...</article></div> */}
+            {/* Slot futuro: por si quieres “huecos” o tarjetas fantasma para placeholders }
+            {/* <div className="col"><article className="card">...</article></div> }
           </section>
         </main>
       </div>
 
-      {/* Utilidad rápida: si en algún punto marcas algo como .is-hidden, lo ocultas altiro */}
+      {/* Utilidad rápida: si en algún punto marcas algo como .is-hidden, lo ocultas altiro }
       <style>{`.is-hidden{display:none !important}`}</style>
     </div>
   );
-}
+} */
+

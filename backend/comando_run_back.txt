@@ -1,0 +1,10 @@
+Si estás en Windows:
+mvnw spring-boot:run
+
+
+Si estás en Linux o Mac:
+./mvnw spring-boot:run
+
+
+Alternativa (si tienes Maven instalado globalmente):
+mvn spring-boot:run

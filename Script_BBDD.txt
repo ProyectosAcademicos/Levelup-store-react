@@ -1,0 +1,93 @@
+-- Tabla de productos
+CREATE TABLE productos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    descripcion VARCHAR(1000),
+    precio DECIMAL(10, 2) NOT NULL,
+    imagen_url VARCHAR(500),
+    img_file VARCHAR(255),
+    stock INT NOT NULL DEFAULT 0,
+    categoria VARCHAR(100),
+    activo BOOLEAN DEFAULT TRUE,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_categoria (categoria),
+    INDEX idx_activo (activo)
+);
+
+-- Tabla de órdenes
+CREATE TABLE ordenes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id BIGINT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    estado VARCHAR(50) NOT NULL DEFAULT 'PENDIENTE',
+    metodo_pago VARCHAR(100),
+    direccion_envio VARCHAR(500),
+    telefono VARCHAR(20),
+    notas VARCHAR(500),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_estado (estado)
+);
+
+-- Tabla de detalles de orden
+CREATE TABLE orden_detalles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    orden_id BIGINT NOT NULL,
+    producto_id BIGINT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10, 2) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (orden_id) REFERENCES ordenes(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id),
+    INDEX idx_orden (orden_id),
+    INDEX idx_producto (producto_id)
+);
+
+-- Tabla de carrito (para persistir entre sesiones)
+CREATE TABLE carritos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id BIGINT NOT NULL,
+    producto_id BIGINT NOT NULL,
+    cantidad INT NOT NULL DEFAULT 1,
+    agregado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_product (usuario_id, producto_id),
+    INDEX idx_usuario (usuario_id)
+);
+
+-- ============================================
+-- DATOS DE PRUEBA - PRODUCTOS
+-- ============================================
+INSERT INTO productos (nombre, descripcion, precio, img_file, stock, categoria) VALUES
+('Silla Secretlab Titan', 'Silla gamer ergonómica de alta calidad', 349990, 'Producto2.png', 15, 'silla'),
+('PlayStation 5', 'Consola de última generación', 549990, 'Producto1.png', 10, 'consola'),
+('PC Gamer ASUS ROG Strix', 'PC de alto rendimiento para gaming', 1299990, 'Producto16.png', 5, 'pc'),
+('Catan', 'Juego de estrategia clásico', 29990, 'Producto4.png', 50, 'juegos de mesa'),
+('Carcassonne', 'Juego de construcción medieval', 24990, 'Producto5.png', 40, 'juegos de mesa'),
+('Mouse Logitech G502 HERO', 'Mouse gaming de precisión', 49990, 'Producto7.png', 30, 'mouse'),
+('Auriculares HyperX Cloud II', 'Auriculares gaming con sonido envolvente', 79990, 'Producto8.png', 25, 'accesorios'),
+('Mousepad Razer Goliathus', 'Superficie de control óptima', 29990, 'Producto10.png', 60, 'mousepad'),
+('Polera Personalizada Level-Up', 'Polera gamer personalizable', 14990, 'Producto11.png', 100, 'poleras'),
+('Controlador Inalámbrico Xbox Series X', 'Control inalámbrico de nueva generación', 59990, 'Producto12.png', 20, 'accesorios'),
+('PS5 Death Stranding 2', 'Juego exclusivo de PS5', 69990, 'Producto13.png', 30, 'consola'),
+('Xbox Consola Serie S', 'Consola compacta y potente', 269990, 'Producto14.png', 12, 'consola'),
+('Nintendo Switch 2', 'Nintendo Switch 2 con Mario Kart', 669990, 'Producto15.png', 8, 'consola');
+
+Luego de haber realizado los insert se ejecuta este update para que se visualicen las imagenes.
+UPDATE productos SET imagen_file = 'Producto2.png' WHERE id = 1;
+UPDATE productos SET imagen_file = 'Producto1.png' WHERE id = 2;
+UPDATE productos SET imagen_file = 'Producto16.png' WHERE id = 3;
+UPDATE productos SET imagen_file = 'Producto4.png' WHERE id = 4;
+UPDATE productos SET imagen_file = 'Producto5.png' WHERE id = 5;
+UPDATE productos SET imagen_file = 'Producto7.png' WHERE id = 6;
+UPDATE productos SET imagen_file = 'Producto8.png' WHERE id = 7;
+UPDATE productos SET imagen_file = 'Producto10.png' WHERE id = 8;
+UPDATE productos SET imagen_file = 'Producto11.png' WHERE id = 9;
+UPDATE productos SET imagen_file = 'Producto12.png' WHERE id = 10;
+UPDATE productos SET imagen_file = 'Producto13.png' WHERE id = 11;
+UPDATE productos SET imagen_file = 'Producto14.png' WHERE id = 12;
+UPDATE productos SET imagen_file = 'Producto15.png' WHERE id = 13;
