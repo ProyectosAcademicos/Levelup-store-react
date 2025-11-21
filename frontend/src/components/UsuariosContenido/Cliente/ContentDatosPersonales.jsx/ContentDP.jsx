@@ -1,12 +1,137 @@
 import style from "./ContentDP.module.css";
+import { useEffect, useState } from "react";
 
 const ContentDP = () => {
-    return (
+    
+    const [formData, setFormData] = useState({
+        nombre: "",
+        apellido: "",
+        email: "",
+        telefono: "",
+        direccion: "",
+    });
+
+    useEffect(() =>{
+        const fetchUserData = async () => {
+            try {
+                const storedUser = localStorage.getItem("user");
+                const token = storedUser ? JSON.parse(storedUser).token : null;
+
+
+                const response = await fetch("http://localhost:8080/api/auth/me", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const data = await response.json().catch(() => {
+                    throw new Error("Respuesta vacía del servidor");
+                });
+
+
+                setFormData({
+                    nombre: data.nombre || "",
+                    apellido: data.apellido || "",
+                    email: data.correo || "",
+                    telefono: data.telefono || "",
+                    direccion: data.direccion || ""
+                });
+
+            } catch (error) {
+                console.error("Error al obtener los datos del usuario:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Datos enviados:", formData);
+    };
+
+    return(
         <div className={style.contentDP}>
             <h2>Datos Personales</h2>
-            <p>Aquí se mostrarán los datos personales del cliente.</p>
+
+            <form onSubmit={handleSubmit} className={style.form}>
+                <div className={style.formGroup}>
+                    <label htmlFor="nombre">Nombre:</label>
+                    <input 
+                        type="text" 
+                        id="nombre"
+                        name="nombre"
+                        value={formData.nombre}
+                        onChange={handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className={style.formGroup}>
+                    <label htmlFor="apellido">Apellido:</label>
+                    <input 
+                        type="text" 
+                        id="apellido"
+                        name="apellido"
+                        value={formData.apellido}
+                        onChange={handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className={style.formGroup}>
+                    <label htmlFor="email">Email:</label>
+                    <input 
+                        type="email" 
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className={style.formGroup}>
+                    <label htmlFor="telefono">Teléfono:</label>
+                    <input 
+                        type="tel" 
+                        id="telefono"
+                        name="telefono"
+                        value={formData.telefono}
+                        onChange={handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className={style.formGroup}>
+                    <label htmlFor="direccion">Dirección:</label>
+                    <input 
+                        type="text" 
+                        id="direccion"
+                        name="direccion"
+                        value={formData.direccion}
+                        onChange={handleChange}
+                        readOnly
+                    />
+                </div>
+
+                {/* <button type="submit" className={style.submitButton}>
+                    Guardar Cambios
+                </button> */}
+            </form>
         </div>
-    );
+    )
 };
 
 export default ContentDP;

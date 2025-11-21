@@ -28,7 +28,7 @@ const Sidebar = () => {
 
         <ul className="nav nav-pills flex-column mb-auto">
           <li className="nav-item">
-            <Link to="/cliente/datos" className="nav-link text-white">
+            <Link to="datos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"

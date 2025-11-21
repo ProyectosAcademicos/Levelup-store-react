@@ -3,12 +3,22 @@ import { createContext, useState, useContext } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
 
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  const normalized = {
+    token: userData.token,
+    rol: userData.usuario.rol,   
+    usuario: userData.usuario,
   };
+
+  setUser(normalized);
+  localStorage.setItem("user", JSON.stringify(normalized));
+};
+
 
   const logout = () => {
     setUser(null);
@@ -22,5 +32,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+
 // ✅ Hook personalizado para acceder fácilmente al contexto
 export const useAuth = () => useContext(AuthContext);
+

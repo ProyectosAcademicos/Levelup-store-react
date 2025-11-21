@@ -1,11 +1,26 @@
-
-
 import React, { useEffect, useState } from "react";
 
 
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/img/logo.png";
 import { useAuth } from "../../context/AuthContext"; 
+
+const loginUser = async ({ email, password }) => { //llamada al backend
+  const response = await fetch("http://localhost:8080/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+
+    
+  })
+  console.log("Cuerpo de la solicitud:", JSON.stringify({ email, password }));;
+
+  if (!response.ok) {
+    throw new Error("Error al iniciar sesión");
+  }
+
+  return await response.json();
+};
+
 
 const LoginContenido = () => {
   const navigate = useNavigate();
@@ -38,28 +53,48 @@ const LoginContenido = () => {
     else localStorage.removeItem("rememberedEmail");
 
     try {
-      setLoading(true);
+    setLoading(true);
 
-      let role = "";
+    // 🔹 Llamada real al backend
+    const userData = await loginUser({
+      email: email,
+      password: password
+    });
 
-      if (email.includes("admin")) role = "ADMIN";
-      else if (email.includes("vendedor")) role = "VENDEDOR";
-      else role = "CLIENTE";
 
-      // Guardamos usuario en el contexto global
-      login({ email, role });
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("user", JSON.stringify({
+      token: userData.token,
+      rol: userData.usuario.rol,
+      usuario: userData.usuario
+    }));
 
-      // 🔹 Redirección según el rol
-      if (role === "ADMIN") navigate("/administrador");
-      else if (role === "VENDEDOR") navigate("/vendedor");
-      else navigate("/cliente");
 
-      alert(`Inicio de sesión exitoso como ${role}`);
-    } catch (err) {
-      alert("Usuario o contraseña incorrectos.");
-    } finally {
-      setLoading(false);
-    }
+    // 🔹 Guardar en contexto global
+    login({
+      token: userData.token,
+      usuario: userData.usuario
+    });
+
+      console.log("Respuesta backend:", userData);
+      console.log("Token recibido:", userData.token);
+    
+    const rol = userData.usuario.rol;
+
+    // 🔹 Redirigir según el rol recibido desde el backend
+    if (rol === "ADMIN") navigate("/administrador");
+    else if (rol === "VENDEDOR") navigate("/vendedor");
+    else navigate("/cliente");
+
+    alert(`Inicio de sesión exitoso`);
+  } catch (err) {
+    console.error(err);
+    alert("Usuario o contraseña incorrectos.");
+  } finally {
+    setLoading(false);
+  }
+
+
   };
 
   const irHome = () => navigate("/home");

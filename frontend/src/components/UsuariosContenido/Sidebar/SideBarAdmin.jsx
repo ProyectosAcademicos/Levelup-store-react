@@ -6,7 +6,7 @@ const Sidebar = () => {
     <main className="d-flex">
       {/* Sidebar */}
       <div
-        className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark"
+        className="d-flex flex-column justify-content-center flex-shrink-0 p-3 text-bg-dark"
         style={{ width: "280px", height: "100vh" }}
       >
         <Link
@@ -21,14 +21,40 @@ const Sidebar = () => {
           >
             <use xlinkHref="#bootstrap"></use>
           </svg>
-          <span className="fs-4">Sidebar</span>
+          <span className="fs-4">Herramientas</span>
         </Link>
 
         <hr />
 
-        <ul className="nav nav-pills flex-column mb-auto">
+        <ul className="nav nav-pills flex-column mb-auto d-flex gap-2">
           <li>
-            <Link to="/administrador/usuarios" className="nav-link text-white">
+            <Link to="inicio" className="nav-link text-white">
+              <svg
+                className="bi pe-none me-2"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <use xlinkHref="#speedometer2"></use>
+              </svg>
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link to="perfil" className="nav-link text-white">
+              <svg
+                className="bi pe-none me-2"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <use xlinkHref="#speedometer2"></use>
+              </svg>
+              Perfil
+            </Link>
+          </li>
+          <li>
+            <Link to="usuarios" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -41,7 +67,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/administrador/productos" className="nav-link text-white">
+            <Link to="productos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -55,7 +81,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/administrador/inventario" className="nav-link text-white">
+            <Link to="inventario" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -69,7 +95,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/administrador/compartir" className="nav-link text-white">
+            <Link to="compartir" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -98,10 +124,6 @@ const Sidebar = () => {
         </ul>
 
         <hr />
-
-        <div className="d-flex align-items-center text-white text-decoration-none">
-          <strong>Usuario</strong>
-        </div>
       </div>
 
     </main>

@@ -1,48 +1,46 @@
-import { useState } from "react";
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Importación global de Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// ✅ Importaciones de páginas
+// Páginas
 import HomePage from "./pages/HomePage/HomePage.jsx";
+import HomeCliente from "./pages/HomePage/HomeCliente/index.jsx";
+import HomePageAdmin from "./pages/HomePage/HomePageAdmin/index.jsx";
+import AdministradorProfile from "./pages/AdminProfile/AdminProfile.jsx";
+import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
+import HomePageVendedor from "./pages/HomePage/HomePageVendedor/index.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
-import ClienteProfile from "./pages/ClienteProfile/ClienteProfile.jsx";
-import DatosPersonales from "./pages/ClienteProfile/DatosPersonales.jsx";
-import MediosPago from "./pages/ClienteProfile/MediosPago.jsx";
-import Pedidos from "./pages/ClienteProfile/Pedidos.jsx";
-import HistorialCompras from "./pages/ClienteProfile/HistorialCompras.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
 import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
-import Administrador from "./pages/AdminProfile/AdminProfile.jsx"
-import GestionInventario from "./pages/AdminProfile/GestionInventario.jsx"
-import GestionProductos from "./pages/AdminProfile/GestionProductos.jsx"
-import CompartirContenido from "./pages/AdminProfile/CompartirContenido.jsx";
-import GestionUsuario from "./pages/AdminProfile/GestionUsuario.jsx";
+import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
+import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
+import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
+import ContentRS from "./components/UsuariosContenido/Administrador/ContentRS/ContentRS.jsx";
+import DetalleP from "./pages/AdminProfile/DetallePerfil.jsx";
+import ContentIvVend from "./components/UsuariosContenido/Vendedor/ContentIvVend/index.jsx";
+import ContentOrdenes from "./components/UsuariosContenido/Vendedor/ContentOrdenes/index.jsx";
+import DetallePerfilV from "./components/UsuariosContenido/Vendedor/ContentPerfil/index.jsx";
+import PerfilCliente from "./pages/ClienteProfile/ClienteProfile.jsx";
+import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPersonales.jsx/ContentDP.jsx";
+import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
+import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
+import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 
-import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
-import OrdenesVendedor from "./pages/VendedorProfile/GestionOrdenesV.jsx";
-import InventarioVendedor from "./pages/VendedorProfile/GestionInventarioV.jsx";
+import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 
-import {AuthProvider}  from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
-
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Rutas públicas */}
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/catalogo" element={<CatalogoPage />} />
+      <CartProvider>
+        <Router>
+          <Routes>
 
            {/* CRUD */}
            <Route path="/crud-productos" 
@@ -59,29 +57,64 @@ function App() {
             }
           />
 
-          {/* ADMINISTRADOR */}
-          <Route
-            path="/administrador/*"
-            element={
-              <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <Administrador />
-              </ProtectedRoute>
-            }
-          />
+            {/* CLIENTE */}
+            <Route
+              path="/cliente"
+              element={
+                <ProtectedRoute allowedRoles={["CLIENTE"]}>
+                  <PerfilCliente />   {/* Sidebar + Outlet */}
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<HomeCliente />} />
+              <Route path="inicio" element={<HomeCliente />} />
+              <Route path="perfil" element={<PerfilCliente />} />
+              <Route path="datos" element={<DatosCliente />} />
+              <Route path="medios-pago" element={<MediosPago />} />
+              <Route path="pedidos" element={<PedidosCliente />} />
+              <Route path="historial" element={<HistorialCliente />} />
+            </Route>
 
-          {/* VENDEDOR */}
-          <Route
-            path="/vendedor/*"
-            element={
-              <ProtectedRoute allowedRoles={["VENDEDOR"]}>
-                <VendedorProfile />
-              </ProtectedRoute>
-            }
-          />
+            {/* ADMINISTRADOR - LAYOUT */}
+            <Route
+              path="/administrador"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <AdministradorProfile /> {/* Sidebar + Outlet */}
+                </ProtectedRoute>
+              }
+            >
+              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
+              <Route index element={<HomePageAdmin />} />
+              <Route path="inicio" element={<HomePageAdmin />} />
+              <Route path="perfil" element={<DetalleP />} />
+              <Route path="usuarios" element={<ContentGU />} />
+              <Route path="productos" element={<ContentGP />} />
+              <Route path="inventario" element={<ContentIV />} />
+              <Route path="compartir" element={<ContentRS />} />
+            </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Router>
+            {/* VENDEDOR - LAYOUT */}
+            <Route
+              path="/vendedor"
+              element={
+                <ProtectedRoute allowedRoles={["VENDEDOR"]}>
+                  <VendedorProfile /> {/* Sidebar + Outlet */}
+                </ProtectedRoute>
+              }
+            >
+              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
+              <Route index element={<HomePageVendedor />} />
+              <Route path="inicio" element={<HomePageVendedor />} />
+              <Route path="perfil" element={<DetallePerfilV />} />
+              <Route path="ordenesv" element={<ContentOrdenes />} />
+              <Route path="inventariov" element={<ContentIvVend />} />
+            </Route>
+            {/* 404 */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 }
