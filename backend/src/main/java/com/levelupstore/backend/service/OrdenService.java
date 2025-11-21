@@ -177,6 +177,5 @@ public class OrdenService {
         dto.setSubtotal(detalle.getSubtotal());
         return dto;
     }
-    
-    // ✅ ELIMINADA CLASE INTERNA OrdenRequest (ya existe como DTO separado)
+
 }

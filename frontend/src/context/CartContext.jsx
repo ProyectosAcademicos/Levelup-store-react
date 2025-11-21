@@ -1,77 +1,165 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import * as apiService from '../services/api';
+import { useAuth } from "../context/AuthContext";
 
 
-// 1. Crear el Contexto
 const CartContext = createContext();
 
-// 2. Crear el "Hook" personalizado para usar el contexto fácilmente
-// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);
 
-// 3. Crear el Proveedor (El componente que envuelve nuestra App)
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Función para agregar un producto
-    const addToCart = (product) => {
-        setCartItems(prevItems => {
-            // 1. Verificar si el producto ya está en el carrito
-            const itemFound = prevItems.find(item => item.id === product.id);
+    const { user } = useAuth();
+    const token = user?.token;
 
-            if (itemFound) {
-                // Si está, incrementa la cantidad
-                return prevItems.map(item =>
-                    item.id === product.id 
-                        ? { ...item, quantity: item.quantity + 1 } 
-                        : item
-                );
+
+    // Cargar carrito desde la API cuando hay token
+    useEffect(() => {
+        if (token) {
+            cargarCarritoDesdeAPI();
+        }
+    }, [token]);
+
+
+    const cargarCarritoDesdeAPI = async () => {
+        try {
+            setLoading(true);
+
+            const response = await apiService.obtenerCarrito(token);
+
+            console.log("Carrito recibido desde API:", response);
+
+            // Si response.data NO es array → convertirlo en []
+            const items = Array.isArray(response.data) ? response.data : [];
+
+            const itemsFormateados = items.map(item => ({
+                id: item.id,
+                productoId: item.productoId,
+                nombre: item.nombre,
+                descripcion: item.descripcion,
+                precio: typeof item.precio === "string" ? parseFloat(item.precio) : item.precio,
+                imagen: item.imagenFile,
+                quantity: item.cantidad,
+                subtotal: item.subtotal
+            }));
+
+            setCartItems(itemsFormateados);
+            setError(null);
+        } catch (err) {
+            console.error('Error cargando carrito:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    const addToCart = async (product) => {
+        if (!token) {
+            alert('Debes iniciar sesión para agregar productos al carrito');
+            return;
+        }
+
+        try {
+            // debug: mostrar token y payload
+            console.log("Añadir al carrito - token:", token);
+            const payload = { productoId: product.id, cantidad: 1 };
+            console.log("Payload agregarAlCarrito:", payload);
+
+            const response = await apiService.agregarAlCarrito(
+                token,
+                product.id,
+                1
+            );
+
+            console.log("Response agregarAlCarrito:", response);
+
+            if (response && (response.success === true || response.id || response.data)) {
+                // si tu API devuelve ApiResponse {success,message,data}
+                await cargarCarritoDesdeAPI();
+            } else {
+                console.warn("Respuesta inesperada al agregar al carrito:", response);
+                // intenta recargar de todas formas para sincronizar
+                await cargarCarritoDesdeAPI();
             }
-            // Si no está, lo agrega con cantidad 1
-            return [...prevItems, { ...product, quantity: 1 }];
-        });
-        console.log("Producto agregado:", product.nombre);
+        } catch (err) {
+            console.error('Error agregando al carrito:', err);
+            // mostrar error detallado
+            const apiMsg = err.response?.data || err.message;
+            setError(apiMsg);
+            alert("Error agregando al carrito: " + (apiMsg?.message || JSON.stringify(apiMsg)));
+        }
     };
 
-    // Función para eliminar un producto
-    const removeFromCart = (productId) => {
-        setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    const removeFromCart = async (itemId) => {
+        try {
+            await apiService.eliminarDelCarrito(token, itemId);
+            await cargarCarritoDesdeAPI();
+        } catch (err) {
+            console.error('Error eliminando del carrito:', err);
+            setError(err.message);
+        }
     };
 
-    // Función para vaciar el carrito
-    const clearCart = () => {
-        setCartItems([]);
+    const increaseQuantity = async (itemId) => {
+        const item = cartItems.find(i => i.id === itemId);
+        if (item) {
+            try {
+                await apiService.actualizarCantidadCarrito(
+                    token,
+                    itemId,
+                    item.quantity + 1
+                );
+                await cargarCarritoDesdeAPI();
+            } catch (err) {
+                console.error('Error aumentando cantidad:', err);
+            }
+        }
     };
 
-    // (Opcional) Funciones para + y - cantidad
-    const increaseQuantity = (productId) => {
-        setCartItems(prevItems => 
-            prevItems.map(item =>
-                item.id === productId 
-                    ? { ...item, quantity: item.quantity + 1 } 
-                    : item
-            )
-        );
+    const decreaseQuantity = async (itemId) => {
+        const item = cartItems.find(i => i.id === itemId);
+        if (item && item.quantity > 1) {
+            try {
+                await apiService.actualizarCantidadCarrito(
+                    token,
+                    itemId,
+                    item.quantity - 1
+                );
+                await cargarCarritoDesdeAPI();
+            } catch (err) {
+                console.error('Error disminuyendo cantidad:', err);
+            }
+        }
     };
 
-    const decreaseQuantity = (productId) => {
-        setCartItems(prevItems => 
-            prevItems.map(item =>
-                item.id === productId && item.quantity > 1
-                    ? { ...item, quantity: item.quantity - 1 } 
-                    : item
-            ).filter(item => item.quantity > 0) 
-        );
+    const clearCart = async () => {
+        try {
+            await apiService.limpiarCarrito(token);
+            setCartItems([]);
+        } catch (err) {
+            console.error('Error limpiando carrito:', err);
+        }
     };
 
-    // 4. Exponer el estado y las funciones al resto de la App
     const value = {
         cartItems,
+        loading,
+        error,
         addToCart,
         removeFromCart,
         clearCart,
         increaseQuantity,
-        decreaseQuantity
+        decreaseQuantity,
+        cargarCarritoDesdeAPI // Exponer para recargar manual
     };
 
-    return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+    return (
+        <CartContext.Provider value={value}>
+            {children}
+        </CartContext.Provider>
+    );
 };

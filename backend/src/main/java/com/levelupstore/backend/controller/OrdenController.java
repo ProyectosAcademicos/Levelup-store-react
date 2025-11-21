@@ -17,13 +17,13 @@ import java.util.List;
 @RequestMapping("/api/ordenes")
 @CrossOrigin(origins = "http://localhost:5173")
 public class OrdenController {
-    
+
     @Autowired
     private OrdenService ordenService;
-    
+
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
+
     /**
      * POST /api/ordenes/crear
      * Crear nueva orden
@@ -35,13 +35,13 @@ public class OrdenController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             OrdenDTO orden = ordenService.crearOrden(usuario, request);
-            return ResponseEntity.ok(new ApiResponse(true, "Orden creada exitosamente", orden));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Orden creada exitosamente", orden));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-    
+
     /**
      * GET /api/ordenes/mis-ordenes
      * Ver mis órdenes
@@ -51,13 +51,13 @@ public class OrdenController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             List<OrdenDTO> ordenes = ordenService.obtenerOrdenesUsuario(usuario);
-            return ResponseEntity.ok(ordenes);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Listado de órdenes", ordenes));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-    
+
     /**
      * GET /api/ordenes/{id}
      * Ver detalle de una orden
@@ -69,13 +69,13 @@ public class OrdenController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             OrdenDTO orden = ordenService.obtenerOrdenPorId(id, usuario);
-            return ResponseEntity.ok(orden);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Orden encontrada", orden));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-    
+
     /**
      * PUT /api/ordenes/{id}/cambiar-estado
      * Cambiar estado de una orden
@@ -88,13 +88,13 @@ public class OrdenController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             OrdenDTO orden = ordenService.cambiarEstado(id, estado, usuario);
-            return ResponseEntity.ok(new ApiResponse(true, "Estado actualizado", orden));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Estado actualizado", orden));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-    
+
     /**
      * DELETE /api/ordenes/{id}/cancelar
      * Cancelar una orden
@@ -106,19 +106,19 @@ public class OrdenController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             OrdenDTO orden = ordenService.cancelarOrden(id, usuario);
-            return ResponseEntity.ok(new ApiResponse(true, "Orden cancelada", orden));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Orden cancelada", orden));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-    
+
     /**
      * Helper: Obtener usuario autenticado
      */
     private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
         String email = authentication.getName();
         return usuarioRepository.findByCorreo(email)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }

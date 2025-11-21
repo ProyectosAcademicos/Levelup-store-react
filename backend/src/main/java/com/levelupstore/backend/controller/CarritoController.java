@@ -32,10 +32,10 @@ public class CarritoController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             List<CarritoItemDTO> carrito = carritoService.obtenerCarrito(usuario);
-            return ResponseEntity.ok(carrito);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Carrito obtenido", carrito));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
     
@@ -50,14 +50,14 @@ public class CarritoController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             CarritoItemDTO item = carritoService.agregarProducto(
-                usuario, 
-                request.getProductoId(), 
-                request.getCantidad()
+                    usuario,
+                    request.getProductoId(),
+                    request.getCantidad()
             );
-            return ResponseEntity.ok(new ApiResponse(true, "Producto agregado al carrito", item));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Producto agregado al carrito", item));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
     
@@ -73,14 +73,14 @@ public class CarritoController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             CarritoItemDTO item = carritoService.actualizarCantidad(
-                usuario, 
-                itemId, 
-                request.getCantidad()
+                    usuario,
+                    itemId,
+                    request.getCantidad()
             );
-            return ResponseEntity.ok(new ApiResponse(true, "Cantidad actualizada", item));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cantidad actualizada", item));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
     
@@ -95,10 +95,10 @@ public class CarritoController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             carritoService.eliminarItem(usuario, itemId);
-            return ResponseEntity.ok(new ApiResponse(true, "Item eliminado del carrito"));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Item eliminado", null));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
     
@@ -111,10 +111,10 @@ public class CarritoController {
         try {
             Usuario usuario = obtenerUsuarioAutenticado(authentication);
             carritoService.limpiarCarrito(usuario);
-            return ResponseEntity.ok(new ApiResponse(true, "Carrito limpiado"));
+            return ResponseEntity.ok(new ApiResponse<>(true, "Carrito limpiado", null));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
     
