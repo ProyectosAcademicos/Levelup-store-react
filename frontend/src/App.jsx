@@ -13,6 +13,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
+
 import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
 import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
@@ -26,8 +27,8 @@ import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPer
 import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
 import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
-
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
+import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
@@ -46,6 +47,12 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
             <Route path="/carrito" element={<CarritoPage />} />
+
+             {/* CRUD */}
+             <Route path="/crud-productos" 
+             element={<CrudProductos />} 
+            />
+
 
             {/* CLIENTE */}
             <Route
