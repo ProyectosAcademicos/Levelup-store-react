@@ -1,16 +1,39 @@
-
-
-.contentDP{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
+/* Contenedor principal */
+.contentHC {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  color: var(--blanco);
+  font-family: 'Roboto', sans-serif;
 }
 
-h2{
-    margin-bottom: 20px;
-    color: aliceblue;
+/* Título */
+.contentHC h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--blanco);
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px var(--azul);
+}
+
+/* Tarjeta tipo "glass" */
+.card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  font-size: 1rem;
+
+  box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+  backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(30, 144, 255, 0.4);
+}
+
+/* Texto dentro de la tarjeta */
+.card p {
+  color: var(--gris-texto);
 }

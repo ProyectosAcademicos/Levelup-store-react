@@ -5,6 +5,7 @@ import com.levelupstore.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
 
 /**
  * Servicio que contiene la lógica de negocio para manejar usuarios:
@@ -73,6 +74,7 @@ public class UsuarioService {
 
         // Tomamos la contraseña en texto plano
         String contrasenaPlana = usuario.getContrasena();
+        usuario.setContrasena(passwordEncoder.encode(contrasenaPlana));
 
 
         // --- GUARDADO EN BASE DE DATOS ---
@@ -148,4 +150,12 @@ public class UsuarioService {
 
         return null; // Contraseña incorrecta
     }
+
+    
+    public List<Usuario> obtenerTodos() {
+        return usuarioRepository.findAll();
+    }
+
+
+    
 }
