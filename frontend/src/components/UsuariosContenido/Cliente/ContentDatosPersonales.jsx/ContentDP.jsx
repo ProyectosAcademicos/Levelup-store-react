@@ -18,7 +18,7 @@ const ContentDP = () => {
                 const token = storedUser ? JSON.parse(storedUser).token : null;
 
 
-                const response = await fetch("http://localhost:8080/api/usuarios/me", {
+                const response = await fetch("http://localhost:8080/api/auth/me", {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
