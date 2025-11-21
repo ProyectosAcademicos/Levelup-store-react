@@ -11,7 +11,10 @@ const loginUser = async ({ email, password }) => { //llamada al backend
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-  });
+
+    
+  })
+  console.log("Cuerpo de la solicitud:", JSON.stringify({ email, password }));;
 
   if (!response.ok) {
     throw new Error("Error al iniciar sesión");
@@ -55,7 +58,11 @@ const LoginContenido = () => {
     setLoading(true);
 
     // 🔹 Llamada real al backend
-    const userData = await loginUser({ email, password });
+    const userData = await loginUser({
+      email: email,
+      password: password
+    });
+
 
     localStorage.setItem("token", userData.token);
     localStorage.setItem("user", JSON.stringify({
@@ -81,7 +88,7 @@ const LoginContenido = () => {
     else if (rol === "VENDEDOR") navigate("/vendedor");
     else navigate("/cliente");
 
-    alert(`Inicio de sesión exitoso como ${rol}`);
+    alert(`Inicio de sesión exitoso`);
   } catch (err) {
     console.error(err);
     alert("Usuario o contraseña incorrectos.");

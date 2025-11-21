@@ -16,6 +16,7 @@ import java.util.Map;
 
 
 
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:5173") // Permite peticiones desde Vite (React)
@@ -41,6 +42,63 @@ public class AuthController {
      * Endpoint para registrar un nuevo usuario.
      * Escucha en la URL: POST /api/auth/register
      */
+
+    @GetMapping("/me")
+    public ResponseEntity<?> obtenerDatosUsuario(@RequestHeader("Authorization") String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401)
+        .body(Map.of("error", "Token no proporcionado."));
+        }
+
+        String token = authHeader.replace("Bearer ", "");
+
+        // Obtener el correo desde el JWT
+        String correo = jwtUtil.getCorreoDesdeToken(token);
+
+        if (correo == null) {
+            return ResponseEntity
+            .status(403)
+            .body(Map.of("error", "Token inválido"));
+        }
+
+        Usuario usuario = usuarioService.findByCorreo(correo);
+
+        if (usuario == null) {
+            return ResponseEntity.status(404).body("Usuario no encontrado.");
+        }
+
+        usuario.setContrasena(null); // 👈 nunca enviar contraseñas
+
+        return ResponseEntity.ok(usuario);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> obtenerTodosLosUsuarios(@RequestHeader("Authorization") String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", "Token no proporcionado."));
+        }
+
+        String token = authHeader.replace("Bearer ", "");
+        String correo = jwtUtil.getCorreoDesdeToken(token);
+
+        if (correo == null) {
+            return ResponseEntity.status(403)
+                    .body(Map.of("error", "Token inválido"));
+        }
+
+        // Aquí verificas si el usuario existe y tiene permiso
+        Usuario usuario = usuarioService.findByCorreo(correo);
+
+        if (usuario == null) {
+            return ResponseEntity.status(404).body("Usuario no encontrado.");
+        }
+
+        return ResponseEntity.ok(usuarioService.obtenerTodos());
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
@@ -57,7 +115,7 @@ public class AuthController {
             usuario.setApellido(usuarioDTO.getApellido());
             usuario.setCorreo(usuarioDTO.getCorreo());
 
-            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
+            usuario.setContrasena(usuarioDTO.getContrasena()); 
             usuario.setTelefono(usuarioDTO.getTelefono());
             usuario.setDireccion(usuarioDTO.getDireccion());
             usuario.setRol(usuarioDTO.getRol());
@@ -82,28 +140,42 @@ public class AuthController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-    String correo = credentials.get("email");
-    String contrasena = credentials.get("password");
+        Usuario usuario = usuarioService.autenticarUsuario(
+                request.getEmail(),
+                request.getPassword()
+        );
 
-    Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
+        if (usuario == null) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
+        }
 
-    if (usuario == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo o contraseña incorrectos.");
+        String token = jwtUtil.generarToken(usuario.getCorreo());
+
+        return ResponseEntity.ok(new LoginResponse(token, usuario));
     }
 
-    usuario.setContrasena(null);
+    // DTOs internos
+    static class LoginRequest {
+        private String email;
+        private String password;
 
-    // 🔥 Generar el token JWT
-    String token = jwtUtil.generarToken(usuario.getCorreo());
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
 
-    // 🔥 Devolver el token + datos del usuario
-    Map<String, Object> response = Map.of(
-            "token", token,
-            "usuario", usuario
-    );
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+    }
 
-    return ResponseEntity.ok(response);
-}
+    static class LoginResponse {
+        public String token;
+        public Usuario usuario;
+
+        public LoginResponse(String token, Usuario usuario) {
+            this.token = token;
+            this.usuario = usuario;
+            this.usuario.setContrasena(null);
+        }
+    }
 }

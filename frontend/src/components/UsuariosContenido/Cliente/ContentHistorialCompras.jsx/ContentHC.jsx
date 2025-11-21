@@ -3,9 +3,12 @@ import style from './ContentHC.module.css';
 
 const ContentHC = () => {
     return (
-        <div className={style.contentDP}>
+        <div className={style.contentHC}>
             <h2>Historial de Compras</h2>
-            <p>Aquí se mostrará el historial de compras del cliente.</p>
+
+            <div className={style.card}>
+                <p>Aquí se mostrará el historial de compras del cliente.</p>
+            </div>
         </div>
     );
 };

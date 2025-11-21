@@ -54,7 +54,7 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          <li>
+          {/* <li>
             <Link to="medios-pago" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
@@ -66,9 +66,9 @@ const Sidebar = () => {
               </svg>
               Medios de pago
             </Link>
-          </li>
+          </li> */}
 
-          <li>
+          {/* <li>
             <Link to="pedidos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
@@ -80,7 +80,7 @@ const Sidebar = () => {
               </svg>
               Pedidos
             </Link>
-          </li>
+          </li> */}
 
           <li>
             <Link to="historial" className="nav-link text-white">
