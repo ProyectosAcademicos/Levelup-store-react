@@ -1,0 +1,124 @@
+package com.levelupstore.backend.controller;
+
+import com.levelupstore.backend.dto.OrdenRequest;
+import com.levelupstore.backend.dto.OrdenDTO;
+import com.levelupstore.backend.dto.ApiResponse;
+import com.levelupstore.backend.model.Usuario;
+import com.levelupstore.backend.model.EstadoOrden;
+import com.levelupstore.backend.service.OrdenService;
+import com.levelupstore.backend.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/ordenes")
+@CrossOrigin(origins = "http://localhost:5173")
+public class OrdenController {
+    
+    @Autowired
+    private OrdenService ordenService;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
+    /**
+     * POST /api/ordenes/crear
+     * Crear nueva orden
+     */
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearOrden(
+            @RequestBody OrdenRequest request,
+            Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            OrdenDTO orden = ordenService.crearOrden(usuario, request);
+            return ResponseEntity.ok(new ApiResponse(true, "Orden creada exitosamente", orden));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+    
+    /**
+     * GET /api/ordenes/mis-ordenes
+     * Ver mis órdenes
+     */
+    @GetMapping("/mis-ordenes")
+    public ResponseEntity<?> obtenerMisOrdenes(Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            List<OrdenDTO> ordenes = ordenService.obtenerOrdenesUsuario(usuario);
+            return ResponseEntity.ok(ordenes);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+    
+    /**
+     * GET /api/ordenes/{id}
+     * Ver detalle de una orden
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerOrden(
+            @PathVariable Long id,
+            Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            OrdenDTO orden = ordenService.obtenerOrdenPorId(id, usuario);
+            return ResponseEntity.ok(orden);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+    
+    /**
+     * PUT /api/ordenes/{id}/cambiar-estado
+     * Cambiar estado de una orden
+     */
+    @PutMapping("/{id}/cambiar-estado")
+    public ResponseEntity<?> cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam EstadoOrden estado,
+            Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            OrdenDTO orden = ordenService.cambiarEstado(id, estado, usuario);
+            return ResponseEntity.ok(new ApiResponse(true, "Estado actualizado", orden));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+    
+    /**
+     * DELETE /api/ordenes/{id}/cancelar
+     * Cancelar una orden
+     */
+    @DeleteMapping("/{id}/cancelar")
+    public ResponseEntity<?> cancelarOrden(
+            @PathVariable Long id,
+            Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            OrdenDTO orden = ordenService.cancelarOrden(id, usuario);
+            return ResponseEntity.ok(new ApiResponse(true, "Orden cancelada", orden));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+    
+    /**
+     * Helper: Obtener usuario autenticado
+     */
+    private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
+        String email = authentication.getName();
+        return usuarioRepository.findByCorreo(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+}
