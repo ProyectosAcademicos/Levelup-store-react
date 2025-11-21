@@ -15,6 +15,7 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
 import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
+
 import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
 import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
@@ -28,7 +29,6 @@ import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPer
 import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
 import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
-
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -56,6 +56,12 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+             {/* CRUD */}
+             <Route path="/crud-productos" 
+             element={<CrudProductos />} 
+            />
+
 
             {/* CLIENTE */}
             <Route
