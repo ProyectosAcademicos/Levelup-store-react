@@ -28,6 +28,19 @@ const Sidebar = () => {
 
         <ul className="nav nav-pills flex-column mb-auto">
           <li className="nav-item">
+            <Link to="inicio" className="nav-link text-white">
+              <svg
+                className="bi pe-none me-2"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <use xlinkHref="#home"></use>
+              </svg>
+              Inicio
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link to="datos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
@@ -42,7 +55,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/cliente/medios-pago" className="nav-link text-white">
+            <Link to="medios-pago" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -56,7 +69,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/cliente/pedidos" className="nav-link text-white">
+            <Link to="pedidos" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -70,7 +83,7 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <Link to="/cliente/historial" className="nav-link text-white">
+            <Link to="historial" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
                 width="16"
@@ -99,12 +112,7 @@ const Sidebar = () => {
         </ul>
 
         <hr />
-
-        <div className="d-flex align-items-center text-white text-decoration-none">
-          <strong>Usuario</strong>
-        </div>
       </div>
-
     </main>
   );
 };

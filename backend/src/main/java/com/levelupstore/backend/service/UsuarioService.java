@@ -4,6 +4,7 @@ import com.levelupstore.backend.model.Usuario;
 import com.levelupstore.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Servicio que contiene la lógica de negocio para manejar usuarios:
@@ -16,6 +17,9 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * Registra un nuevo usuario en la base de datos.
      * Incluye validaciones de RUT, correo, contraseña y cifrado de seguridad.
@@ -24,6 +28,16 @@ public class UsuarioService {
      * @return Usuario guardado en la base de datos (con la contraseña encriptada).
      * @throws Exception si alguna validación falla.
      */
+
+    /**
+     * Autentica a un usuario verificando su correo y contraseña.
+     * 
+     * @param correo correo del usuario
+     * @param contrasena contraseña en texto plano
+     * @return el usuario autenticado si las credenciales son correctas, o null si no lo son
+     */
+
+
     public Usuario registrarUsuario(Usuario usuario) throws Exception {
 
         // --- VALIDACIONES DE NEGOCIO ---
@@ -67,6 +81,11 @@ public class UsuarioService {
         // Spring Data JPA genera automáticamente el ID.
         return usuarioRepository.save(usuario);
     }
+
+        public Usuario findByCorreo(String correo) {
+        return usuarioRepository.findByCorreo(correo).orElse(null);
+    }
+
 
     /**
      * Valida un RUT chileno verificando su dígito verificador (DV).
@@ -113,5 +132,20 @@ public class UsuarioService {
             // Si ocurre cualquier error (por ejemplo, caracteres no numéricos)
             return false;
         }
+    }
+
+    public Usuario autenticarUsuario(String correo, String contrasena) {
+        Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
+
+        if (usuario == null) {
+            return null; // No existe usuario con ese correo
+        }
+
+        // Verificar la contraseña cifrada
+        if (passwordEncoder.matches(contrasena, usuario.getContrasena())) {
+            return usuario;
+        }
+
+        return null; // Contraseña incorrecta
     }
 }

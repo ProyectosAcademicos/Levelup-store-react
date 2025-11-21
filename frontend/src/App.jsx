@@ -2,65 +2,105 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// ✅ Importaciones de páginas
+// Páginas
 import HomePage from "./pages/HomePage/HomePage.jsx";
+import HomeCliente from "./pages/HomePage/HomeCliente/index.jsx";
+import HomePageAdmin from "./pages/HomePage/HomePageAdmin/index.jsx";
+import AdministradorProfile from "./pages/AdminProfile/AdminProfile.jsx";
+import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
+import HomePageVendedor from "./pages/HomePage/HomePageVendedor/index.jsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
-import ClienteProfile from "./pages/ClienteProfile/ClienteProfile.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
-import CarritoPage from "./components/CarritoContenido/CarritoContenido.jsx"; // ✅ Importar CarritoPage
+import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
+import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
+import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
+import ContentRS from "./components/UsuariosContenido/Administrador/ContentRS/ContentRS.jsx";
+import DetalleP from "./pages/AdminProfile/DetallePerfil.jsx";
+import ContentIvVend from "./components/UsuariosContenido/Vendedor/ContentIvVend/index.jsx";
+import ContentOrdenes from "./components/UsuariosContenido/Vendedor/ContentOrdenes/index.jsx";
+import DetallePerfilV from "./components/UsuariosContenido/Vendedor/ContentPerfil/index.jsx";
+import PerfilCliente from "./pages/ClienteProfile/ClienteProfile.jsx";
+import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPersonales.jsx/ContentDP.jsx";
+import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
+import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
+import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 
-import Administrador from "./pages/AdminProfile/AdminProfile.jsx";
-import VendedorProfile from "./pages/VendedorProfile/VendedorProfile.jsx";
+import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
-import { CartProvider } from "./context/CartContext.jsx"; // ✅ Importar CartProvider
+import { CartProvider } from "./context/CartContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
 function App() {
   return (
     <AuthProvider>
-      <CartProvider> {/* ✅ Envolver con CartProvider */}
+      <CartProvider>
         <Router>
           <Routes>
-            {/* Rutas públicas */}
+
+            {/* RUTAS PUBLICAS */}
             <Route path="/home" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
-            <Route path="/carrito" element={<CarritoPage />} /> {/* ✅ Agregar ruta del carrito */}
+            <Route path="/carrito" element={<CarritoPage />} />
 
             {/* CLIENTE */}
             <Route
-              path="/cliente/*"
+              path="/cliente"
               element={
                 <ProtectedRoute allowedRoles={["CLIENTE"]}>
-                  <ClienteProfile />
+                  <PerfilCliente />   {/* Sidebar + Outlet */}
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<HomeCliente />} />
+              <Route path="inicio" element={<HomeCliente />} />
+              <Route path="perfil" element={<PerfilCliente />} />
+              <Route path="datos" element={<DatosCliente />} />
+              <Route path="medios-pago" element={<MediosPago />} />
+              <Route path="pedidos" element={<PedidosCliente />} />
+              <Route path="historial" element={<HistorialCliente />} />
+            </Route>
 
-            {/* ADMINISTRADOR */}
+            {/* ADMINISTRADOR - LAYOUT */}
             <Route
-              path="/administrador/*"
+              path="/administrador"
               element={
                 <ProtectedRoute allowedRoles={["ADMIN"]}>
-                  <Administrador />
+                  <AdministradorProfile /> {/* Sidebar + Outlet */}
                 </ProtectedRoute>
               }
-            />
+            >
+              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
+              <Route index element={<HomePageAdmin />} />
+              <Route path="inicio" element={<HomePageAdmin />} />
+              <Route path="perfil" element={<DetalleP />} />
+              <Route path="usuarios" element={<ContentGU />} />
+              <Route path="productos" element={<ContentGP />} />
+              <Route path="inventario" element={<ContentIV />} />
+              <Route path="compartir" element={<ContentRS />} />
+            </Route>
 
-            {/* VENDEDOR */}
+            {/* VENDEDOR - LAYOUT */}
             <Route
-              path="/vendedor/*"
+              path="/vendedor"
               element={
                 <ProtectedRoute allowedRoles={["VENDEDOR"]}>
-                  <VendedorProfile />
+                  <VendedorProfile /> {/* Sidebar + Outlet */}
                 </ProtectedRoute>
               }
-            />
-
+            >
+              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
+              <Route index element={<HomePageVendedor />} />
+              <Route path="inicio" element={<HomePageVendedor />} />
+              <Route path="perfil" element={<DetallePerfilV />} />
+              <Route path="ordenesv" element={<ContentOrdenes />} />
+              <Route path="inventariov" element={<ContentIvVend />} />
+            </Route>
+            {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

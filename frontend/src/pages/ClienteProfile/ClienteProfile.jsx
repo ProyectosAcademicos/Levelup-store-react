@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Sidebar from "../../components/UsuariosContenido/Sidebar/Sidebar.jsx";
+import Sidebar from "../../components/UsuariosContenido/Sidebar/SidebarCliente.jsx";
 
 const ClienteProfile = () => {
     return(

@@ -1,7 +1,7 @@
 /* Estilos para la página del carrito de compras */
 
 .carrito-container {
-    min-height: 80vh;
+    height: 100vh;
     padding: 2rem 1rem;
 }
 
