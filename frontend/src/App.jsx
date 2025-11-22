@@ -28,8 +28,8 @@ import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPer
 import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
 import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
-
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
+import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
@@ -56,6 +56,12 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+             {/* CRUD */}
+             <Route path="/crud-productos" 
+             element={<CrudProductos />} 
+            />
+
 
             {/* CLIENTE */}
             <Route

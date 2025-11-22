@@ -121,4 +121,16 @@ public class OrdenController {
         return usuarioRepository.findByCorreo(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+
+    @GetMapping("/historial")
+    public ResponseEntity<?> obtenerHistorialCompras(Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            List<OrdenDTO> historial = ordenService.obtenerHistorialCompras(usuario);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Historial de compras", historial));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
 }
