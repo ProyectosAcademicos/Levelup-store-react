@@ -178,4 +178,11 @@ public class OrdenService {
         return dto;
     }
 
+    public List<OrdenDTO> obtenerHistorialCompras(Usuario usuario) {
+    return ordenRepository.findByUsuarioOrderByCreadoEnDesc(usuario)
+            .stream()
+            .map(this::convertirADTO)
+            .collect(Collectors.toList());
+    }
+
 }
