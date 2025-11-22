@@ -178,6 +178,7 @@ public class OrdenService {
         return dto;
     }
 
+    //Se arregla el metodo para obtener el historial de compras del usuario
     public List<OrdenDTO> obtenerHistorialCompras(Usuario usuario) {
     return ordenRepository.findByUsuarioOrderByCreadoEnDesc(usuario)
             .stream()
