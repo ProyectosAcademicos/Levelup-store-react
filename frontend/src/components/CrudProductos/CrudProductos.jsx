@@ -1,138 +1,141 @@
-import { useState, useEffect } from "react";
+// src/components/CrudProductos.jsx
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/productos";
 
 export default function CrudProductos() {
   const [productos, setProductos] = useState([]);
+  const [modoEdicion, setModoEdicion] = useState(false);
 
-  const [formData, setFormData] = useState({
-    idProd: null,
+  // Estado del formulario, basado en tu entidad Producto
+  const [form, setForm] = useState({
+    id: null,
     nombre: "",
     descripcion: "",
     precio: "",
+    stock: "",
+    categoria: "",
+    imagenUrl: "",
+    activo: true,
   });
 
-  const [editando, setEditando] = useState(false); 
-
+  // Cargar productos al iniciar
+  useEffect(() => {
+    cargarProductos();
+  }, []);
 
   const cargarProductos = async () => {
     try {
       const res = await axios.get(API_URL);
       setProductos(res.data);
     } catch (err) {
-      console.error(err);
-      alert("Error al cargar productos");
+      console.error("Error al cargar productos", err);
     }
   };
 
-  useEffect(() => {
-    cargarProductos();
-  }, []);
-
-  const handleDelete = async (idProd) => {
-    const confirmar = window.confirm("¿Seguro que quieres eliminar este producto?");
-    if (!confirmar) return;
-     try {
-      await axios.delete(`${API_URL}/${idProd}`); // DELETE /api/productos/{id}
-    // Quitar el producto del estado
-     setProductos((prev) => prev.filter((p) => p.idProd !== idProd));
-    } catch (err) {
-    console.error(err);
-    alert("Error al eliminar el producto");
-    }
-  };
-
-
+  // Manejo de inputs
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const empezarEdicion = (producto) => {
-   setEditando(true);
-    setFormData({
-     idProd: producto.idProd,
-     nombre: producto.nombre,
-     descripcion: producto.descripcion,
-     precio: producto.precio,
-    });
- };
-
-
-  const handleSubmit = async (e) => {
-   e.preventDefault();
-
-   if (!formData.nombre || !formData.descripcion || !formData.precio) {
-     alert("Completa todos los campos");
-     return;
-    }
-
-    try {
-      const productoAEnviar = {
-       nombre: formData.nombre,
-       descripcion: formData.descripcion,
-       precio: formData.precio,
-    };
-
-    if (editando) {
-      // MODO EDICIÓN: hacemos PUT
-      const res = await axios.put(
-        `${API_URL}/${formData.idProd}`,
-        productoAEnviar
-      );
-
-      // Actualizar en el estado la fila modificada
-      setProductos((prev) =>
-        prev.map((p) =>
-          p.idProd === formData.idProd ? res.data : p
-        )
-      );
-
-      setEditando(false);
-    } else {
-      // MODO CREACIÓN: hacemos POST
-      const res = await axios.post(API_URL, productoAEnviar);
-      setProductos((prev) => [...prev, res.data]);
-    }
-
-    // Limpiar formulario al final
-    setFormData({
-      idProd: null,
+  const limpiarFormulario = () => {
+    setForm({
+      id: null,
       nombre: "",
       descripcion: "",
       precio: "",
+      stock: "",
+      categoria: "",
+      imagenUrl: "",
+      activo: true,
     });
-  } catch (err) {
-    console.error(err);
-    alert("Error al guardar el producto");
-  }
-};
+    setModoEdicion(false);
+  };
+
+  // Crear / Actualizar
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const dataParaEnviar = {
+      ...form,
+      precio: Number(form.precio),
+      stock: Number(form.stock),
+    };
+
+    try {
+      if (modoEdicion && form.id) {
+        // PUT /api/productos/{id}
+        await axios.put(`${API_URL}/${form.id}`, dataParaEnviar);
+      } else {
+        // POST /api/productos
+        await axios.post(API_URL, dataParaEnviar);
+      }
+
+      await cargarProductos();
+      limpiarFormulario();
+    } catch (err) {
+      console.error("Error al guardar producto", err);
+    }
+  };
+
+  // Cargar datos al formulario para editar
+  const handleEditar = (prod) => {
+    setForm({
+      id: prod.id,
+      nombre: prod.nombre || "",
+      descripcion: prod.descripcion || "",
+      precio: prod.precio || "",
+      stock: prod.stock || "",
+      categoria: prod.categoria || "",
+      imagenUrl: prod.imagenUrl || "",
+      activo: prod.activo ?? true,
+    });
+    setModoEdicion(true);
+  };
+
+  // Eliminar
+  const handleEliminar = async (id) => {
+    const confirmar = window.confirm("¿Seguro que quieres eliminar este producto?");
+    if (!confirmar) return;
+
+    try {
+      // DELETE /api/productos/{id}
+      await axios.delete(`${API_URL}/${id}`);
+      await cargarProductos();
+    } catch (err) {
+      console.error("Error al eliminar producto", err);
+    }
+  };
 
   return (
     <div style={{ padding: "1rem" }}>
-      <h1>Ingreso de productos</h1>
+      <h2>CRUD de Productos</h2>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      {/* FORMULARIO */}
+      <form onSubmit={handleSubmit} style={{ marginBottom: "2rem" }}>
+        <h3>{modoEdicion ? "Editar producto" : "Crear producto"}</h3>
+
         <div>
           <label>Nombre: </label>
           <input
             type="text"
             name="nombre"
-            value={formData.nombre}
+            value={form.nombre}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div>
           <label>Descripción: </label>
-          <input
-            type="text"
+          <textarea
             name="descripcion"
-            value={formData.descripcion}
+            value={form.descripcion}
             onChange={handleChange}
           />
         </div>
@@ -141,48 +144,111 @@ export default function CrudProductos() {
           <label>Precio: </label>
           <input
             type="number"
+            step="0.01"
             name="precio"
-            value={formData.precio}
+            value={form.precio}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Stock: </label>
+          <input
+            type="number"
+            name="stock"
+            value={form.stock}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Categoría: </label>
+          <input
+            type="text"
+            name="categoria"
+            value={form.categoria}
             onChange={handleChange}
           />
         </div>
 
-        <button type="submit">Guardar</button>
+        <div>
+          <label>URL Imagen: </label>
+          <input
+            type="text"
+            name="imagenUrl"
+            value={form.imagenUrl}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              name="activo"
+              checked={form.activo}
+              onChange={handleChange}
+            />
+            Activo
+          </label>
+        </div>
+
+        <button type="submit">
+          {modoEdicion ? "Actualizar" : "Crear"}
+        </button>
+
+        {modoEdicion && (
+          <button type="button" onClick={limpiarFormulario} style={{ marginLeft: "0.5rem" }}>
+            Cancelar
+          </button>
+        )}
       </form>
 
-      {productos.length === 0 ? (
-        <p>No hay productos aún.</p>
-      ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <th>Acciones</th>
+      {/* TABLA SIMPLE */}
+      <h3>Listado de productos</h3>
+      <table border="1" cellPadding="6" cellSpacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Activo</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productos.map((p) => (
+            <tr key={p.id}>
+              <td>{p.id}</td>
+              <td>{p.nombre}</td>
+              <td>{p.categoria}</td>
+              <td>{p.precio}</td>
+              <td>{p.stock}</td>
+              <td>{p.activo ? "Sí" : "No"}</td>
+              <td>
+                {p.imagenUrl && (
+                  <img src={p.imagenUrl} alt={p.nombre} style={{ width: "50px" }} />
+                )}
+              </td>
+              <td>
+                <button onClick={() => handleEditar(p)}>Editar</button>
+                <button onClick={() => handleEliminar(p.id)}>Eliminar</button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {productos.map((p) => (
-              <tr key={p.idProd}>
-                <td>{p.idProd}</td>
-                <td>{p.nombre}</td>
-                <td>{p.descripcion}</td>
-                <td>{p.precio}</td>
-                <td>
-                  <button onClick={() => empezarEdicion(p)}>
-                    Editar
-                    </button>
-                  <button onClick={() => handleDelete(p.idProd)}>
-                    Eliminar
-                    </button>
-                  </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+
+          {productos.length === 0 && (
+            <tr>
+              <td colSpan="8">No hay productos.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
