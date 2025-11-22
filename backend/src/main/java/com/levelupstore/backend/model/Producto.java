@@ -50,3 +50,4 @@ public class Producto {
     private LocalDateTime actualizadoEn = LocalDateTime.now();
 
 }
+

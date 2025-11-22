@@ -13,6 +13,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
+import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
 
 import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
@@ -41,12 +42,20 @@ function App() {
         <Router>
           <Routes>
 
-            {/* RUTAS PUBLICAS */}
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/catalogo" element={<CatalogoPage />} />
-            <Route path="/carrito" element={<CarritoPage />} />
+           {/* CRUD */}
+           <Route path="/crud-productos" 
+            element={<CrudProductos />} 
+           />
+
+          {/* CLIENTE */}
+          <Route
+            path="/cliente/*"
+            element={
+              <ProtectedRoute allowedRoles={["CLIENTE"]}>
+                <ClienteProfile />
+              </ProtectedRoute>
+            }
+          />
 
              {/* CRUD */}
              <Route path="/crud-productos" 
