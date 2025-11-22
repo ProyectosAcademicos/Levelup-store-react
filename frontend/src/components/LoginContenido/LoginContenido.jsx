@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/img/logo.png"; // ajusta si tu imagen está en otro lado
+
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext"; 
+import { useAuth } from "../../context/AuthContext";
+import logo from "../../assets/img/logo.png";
+
 
 const loginUser = async ({ email, password }) => { //llamada al backend
   const response = await fetch("http://localhost:8080/api/auth/login", {

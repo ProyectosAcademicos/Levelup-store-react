@@ -2,7 +2,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Páginas
+// Páginas públicas
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import HomeCliente from "./pages/HomePage/HomeCliente/index.jsx";
 import HomePageAdmin from "./pages/HomePage/HomePageAdmin/index.jsx";
@@ -13,6 +13,8 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
+import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
+
 import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
 import ContentIV from "./components/UsuariosContenido/Administrador/ContentInventario/ContentInventario.jsx";
@@ -26,7 +28,6 @@ import DatosCliente from "./components/UsuariosContenido/Cliente/ContentDatosPer
 import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/ContentMP.jsx";
 import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
-
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -39,20 +40,23 @@ function App() {
       <CartProvider>
         <Router>
           <Routes>
-
-            {/* RUTAS PUBLICAS */}
+            {/* RUTAS PÚBLICAS */}
+            <Route path="/" element={<HomePage />} />       {/* landing */}
             <Route path="/home" element={<HomePage />} />
-            <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
             <Route path="/carrito" element={<CarritoPage />} />
 
-            {/* CLIENTE */}
+            {/* CRUD (puede ser pública o protegida, según lo que quieran) */}
+            <Route path="/crud-productos" element={<CrudProductos />} />
+
+            {/* CLIENTE - LAYOUT PROTEGIDO */}
             <Route
               path="/cliente"
               element={
                 <ProtectedRoute allowedRoles={["CLIENTE"]}>
-                  <PerfilCliente />   {/* Sidebar + Outlet */}
+                  <PerfilCliente /> {/* Sidebar + Outlet */}
                 </ProtectedRoute>
               }
             >
@@ -65,7 +69,7 @@ function App() {
               <Route path="historial" element={<HistorialCliente />} />
             </Route>
 
-            {/* ADMINISTRADOR - LAYOUT */}
+            {/* ADMINISTRADOR - LAYOUT PROTEGIDO */}
             <Route
               path="/administrador"
               element={
@@ -74,7 +78,6 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
               <Route index element={<HomePageAdmin />} />
               <Route path="inicio" element={<HomePageAdmin />} />
               <Route path="perfil" element={<DetalleP />} />
@@ -84,7 +87,7 @@ function App() {
               <Route path="compartir" element={<ContentRS />} />
             </Route>
 
-            {/* VENDEDOR - LAYOUT */}
+            {/* VENDEDOR - LAYOUT PROTEGIDO */}
             <Route
               path="/vendedor"
               element={
@@ -93,13 +96,13 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              {/* RUTAS HIJAS QUE SE RENDERIZAN EN <Outlet /> */}
               <Route index element={<HomePageVendedor />} />
               <Route path="inicio" element={<HomePageVendedor />} />
               <Route path="perfil" element={<DetallePerfilV />} />
               <Route path="ordenesv" element={<ContentOrdenes />} />
               <Route path="inventariov" element={<ContentIvVend />} />
             </Route>
+
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

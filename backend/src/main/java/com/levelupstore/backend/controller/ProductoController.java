@@ -1,12 +1,23 @@
 package com.levelupstore.backend.controller;
 
-import com.levelupstore.backend.dto.ProductoDTO;
-import com.levelupstore.backend.dto.ApiResponse;
-import com.levelupstore.backend.service.ProductoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.levelupstore.backend.dto.ProductoDTO;
+import com.levelupstore.backend.service.ProductoService;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -56,4 +67,38 @@ public class ProductoController {
         List<ProductoDTO> productos = productoService.buscarPorNombre(nombre);
         return ResponseEntity.ok(productos);
     }
+
+        /**
+     * POST /api/productos
+     * Crear un nuevo producto
+     */
+    @PostMapping
+    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO dto) {
+        ProductoDTO creado = productoService.crearProducto(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    }
+
+    /**
+     * PUT /api/productos/{id}
+     * Actualizar un producto existente
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoDTO> actualizarProducto(
+            @PathVariable Long id,
+            @RequestBody ProductoDTO dto) {
+
+        ProductoDTO actualizado = productoService.actualizarProducto(id, dto);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    /**
+     * DELETE /api/productos/{id}
+     * Eliminar un producto por ID
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
+        productoService.eliminarProducto(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
