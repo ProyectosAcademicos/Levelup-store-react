@@ -3,22 +3,24 @@ import style from './ContentHC.module.css';
 import { useEffect, useState } from "react";
 
 const ContentHC = () => {
-    const [formData, setFormData] = useState({
-        nombre: "",
-        apellido: "",
-        email: "",
-        telefono: "",
-        direccion: "",
-    });
+
+    const [historiales, setHistoriales] = useState([]);
+
+    // const [formData, setFormData] = useState({
+    //     id: "",
+    //     accion: "",
+    //     fecha: "",
+    //     usuario_id: "",
+    // });
 
     useEffect(() =>{
-        const fetchUserData = async () => {
+        const fetchHistorial = async () => {
             try {
                 const storedUser = localStorage.getItem("user");
                 const token = storedUser ? JSON.parse(storedUser).token : null;
 
 
-                const response = await fetch("http://localhost:8080/api/ordenes/historial", {
+                const response = await fetch("http://localhost:8080/api/historial", {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -28,109 +30,62 @@ const ContentHC = () => {
                     throw new Error(`Error HTTP: ${response.status}`);
                 }
 
-                const data = await response.json().catch(() => {
-                    throw new Error("Respuesta vacía del servidor");
-                });
+                const data = await response.json();
+                setHistoriales(data); // GUARDAMOS LA LISTA COMPLETA
 
 
-                setFormData({
-                    nombre: data.nombre || "",
-                    apellido: data.apellido || "",
-                    email: data.correo || "",
-                    telefono: data.telefono || "",
-                    direccion: data.direccion || ""
-                });
+                // setFormData({
+                //     id: data.id || "",
+                //     accion: data.accion || "",
+                //     fecha: data.fecha || "",
+                //     usuario_id: data.usuario_id || ""
+                // });
 
             } catch (error) {
                 console.error("Error al obtener los datos del usuario:", error);
             }
         };
 
-        fetchUserData();
+        fetchHistorial();
     }, []);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+    // const handleChange = (e) => {
+    //     setFormData({
+    //         ...formData,
+    //         [e.target.name]: e.target.value
+    //     });
+    // };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Datos enviados:", formData);
-    };
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log("Datos enviados:", formData);
+    // };
 
     return(
-        <div className={style.contentDP}>
+        <div className={style.contentHC}>
             <h2>Historial de compras</h2>
-
-            <form onSubmit={handleSubmit} className={style.form}>
-                <div className={style.formGroup}>
-                    <label htmlFor="nombre">Nombre:</label>
-                    <input 
-                        type="text" 
-                        id="nombre"
-                        name="nombre"
-                        value={formData.nombre}
-                        onChange={handleChange}
-                        readOnly
-                    />
-                </div>
-
-                <div className={style.formGroup}>
-                    <label htmlFor="apellido">Apellido:</label>
-                    <input 
-                        type="text" 
-                        id="apellido"
-                        name="apellido"
-                        value={formData.apellido}
-                        onChange={handleChange}
-                        readOnly
-                    />
-                </div>
-
-                <div className={style.formGroup}>
-                    <label htmlFor="email">Email:</label>
-                    <input 
-                        type="email" 
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        readOnly
-                    />
-                </div>
-
-                <div className={style.formGroup}>
-                    <label htmlFor="telefono">Teléfono:</label>
-                    <input 
-                        type="tel" 
-                        id="telefono"
-                        name="telefono"
-                        value={formData.telefono}
-                        onChange={handleChange}
-                        readOnly
-                    />
-                </div>
-
-                <div className={style.formGroup}>
-                    <label htmlFor="direccion">Dirección:</label>
-                    <input 
-                        type="text" 
-                        id="direccion"
-                        name="direccion"
-                        value={formData.direccion}
-                        onChange={handleChange}
-                        readOnly
-                    />
-                </div>
-
-                {/* <button type="submit" className={style.submitButton}>
-                    Guardar Cambios
-                </button> */}
-            </form>
+            <table className={style.table}>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Acción</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {historiales.map((item) => (
+                        <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.accion}</td>
+                            <td>{new Date(item.fecha).toLocaleString()}</td>
+                            <td>{item.usuarioId}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
+
     )
 };
 
