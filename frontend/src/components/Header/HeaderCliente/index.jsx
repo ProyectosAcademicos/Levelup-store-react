@@ -33,6 +33,16 @@ const HeaderCliente = () => {
     navigate("/home"); // ← redirige al home
   };
 
+  const goToLogin = () => {
+    navigate("/login");
+  };
+
+  const goToRegister = () => {
+    navigate("/register");
+  
+  };
+
+
 
   const [menuOpen, setMenuOpen] = useState(false);
 
