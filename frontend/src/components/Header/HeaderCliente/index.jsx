@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./index.module.css";
 import logo from "../../../assets/img/logo.png";
 import { FaBars } from "react-icons/fa"; // ícono hamburguesa
-  import { useCart } from "../../../context/CartContext.jsx";
+import { useCart } from "../../../context/CartContext.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
 
 

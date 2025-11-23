@@ -1,14 +1,52 @@
-.contentDP{
+/* CONTENEDOR GENERAL */
+.containerRS {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
     padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    color: var(--blanco);
 }
 
-h2{
+/* TÍTULO */
+.containerRS h2 {
+    font-family: 'Orbitron', sans-serif;
     margin-bottom: 20px;
-    color: aliceblue;
+    text-shadow: 0 0 10px var(--azul);
+}
+
+/* CONTENEDOR DE BOTONES */
+.botonesRS {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* BOTONES */
+.btnRS {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: 0.2s;
+}
+
+.instagram { background-color: #E1306C; }
+.instagram:hover { box-shadow: 0 0 10px #E1306C; }
+
+.facebook { background-color: #1877F2; }
+.facebook:hover { box-shadow: 0 0 10px #1877F2; }
+
+.twitter { background-color: #1DA1F2; }
+.twitter:hover { box-shadow: 0 0 10px #1DA1F2; }
+
+/* MENSAJE */
+.mensajeRS {
+    font-size: 1rem;
+    color: var(--verde);
+    margin-top: 10px;
 }

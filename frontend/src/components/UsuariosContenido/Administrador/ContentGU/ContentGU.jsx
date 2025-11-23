@@ -4,7 +4,7 @@ import style from "./ContentGU.module.css";
 const ContentGU = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [editUser, setEditUser] = useState(null);
-  const [formData, setFormData] = useState({ nombre: "", email: "" });
+  const [formData, setFormData] = useState({ nombre: "", correo: "" });
   const [mensaje, setMensaje] = useState("");
 
   const fetchUsuarios = async () => {
@@ -14,6 +14,7 @@ const ContentGU = () => {
 
     const res = await fetch("http://localhost:8080/api/auth/all", {
       headers: {
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       }
     });
@@ -39,13 +40,13 @@ const ContentGU = () => {
 
   const handleEdit = (usuario) => {
     setEditUser(usuario.id);
-    setFormData({ nombre: usuario.nombre, email: usuario.email });
+    setFormData({ nombre: usuario.nombre, correo: usuario.correo });
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:8080/api/usuarios/${editUser}`, {
+      const res = await fetch(`http://localhost:8080/api/auth/update/${editUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -66,7 +67,7 @@ const ContentGU = () => {
     if (!confirmar) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
+      const res = await fetch(`http://localhost:8080/api/auth/delete/${id}`, {
         method: "DELETE",
       });
 
@@ -102,7 +103,7 @@ const ContentGU = () => {
             <tr key={u.id}>
               <td>{u.id}</td>
               <td>{u.nombre}</td>
-              <td>{u.email}</td>
+              <td>{u.correo}</td>
 
               <td>
                 <button onClick={() => handleEdit(u)} className={style.btnEditar}>
@@ -131,11 +132,11 @@ const ContentGU = () => {
               onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
             />
 
-            <label>Email:</label>
+            <label>Correo:</label>
             <input
               type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              value={formData.correo}
+              onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
             />
 
             <button type="submit" className={style.btnGuardar}>Guardar cambios</button>

@@ -79,20 +79,6 @@ const Sidebar = () => {
                Inventario
             </Link>
           </li>
-
-          <li>
-            <Link to="/home" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#grid"></use>
-              </svg>
-              Cerrar sesión
-            </Link>
-          </li>
         </ul>
 
         <hr />

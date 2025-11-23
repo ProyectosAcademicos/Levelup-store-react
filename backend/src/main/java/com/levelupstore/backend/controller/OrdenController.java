@@ -25,6 +25,23 @@ public class OrdenController {
     private UsuarioRepository usuarioRepository;
 
     /**
+    * GET /api/ordenes
+    * Obtener listado de órdenes del usuario autenticado
+    */
+    @GetMapping
+    public ResponseEntity<?> listarOrdenes(Authentication authentication) {
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            List<OrdenDTO> ordenes = ordenService.obtenerOrdenesUsuario(usuario);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Listado de órdenes", ordenes));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
+
+
+    /**
      * POST /api/ordenes/crear
      * Crear nueva orden
      */
@@ -133,4 +150,6 @@ public class OrdenController {
                     .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
+
+
 }

@@ -68,7 +68,7 @@ public class UsuarioService {
             throw new Exception("El formato del correo electrónico no es válido.");
         }
 
-        usuario.setRol("CLIENTE"); // Asigna el rol por defecto
+        usuario.setRol("VENDEDOR"); // Asigna el rol por defecto
 
         // --- CIFRADO DE CONTRASEÑA ---
 
@@ -88,6 +88,19 @@ public class UsuarioService {
         return usuarioRepository.findByCorreo(correo).orElse(null);
     }
 
+
+    public Usuario obtenerPorId(Long id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
+
+    public Usuario actualizarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    public void eliminarUsuario(Long id) {
+        usuarioRepository.deleteById(id);
+    }
 
     /**
      * Valida un RUT chileno verificando su dígito verificador (DV).

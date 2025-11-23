@@ -31,7 +31,7 @@ public class Producto {
     @Column(name = "imagen_url")
     private String imagenUrl;
 
-    @Column(name = "imagen_file")
+    @Column(name = "img_file")
     private String imagenFile;
 
     @Column(nullable = false)
@@ -43,10 +43,10 @@ public class Producto {
     @Column(name = "activo")
     private Boolean activo = true;
 
-    @Column(name = "creado_en")
+    @Column(name = "creado_en", insertable = false, updatable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();
 
-    @Column(name = "actualizado_en")
+    @Column(name = "actualizado_en", insertable = false, updatable = false)
     private LocalDateTime actualizadoEn = LocalDateTime.now();
 
 }

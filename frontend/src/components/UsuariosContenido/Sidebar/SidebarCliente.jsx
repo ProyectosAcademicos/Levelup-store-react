@@ -1,10 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 const Sidebar = () => {
+
+  const navigate = useNavigate();    
+  const { user, logout } = useAuth();
+
+  const goToLogout = () => {
+    logout();                         // ← Cierra sesión real
+    navigate("/home");                // ← Redirige al home
+  };
+
   return (
     <main className="d-flex">
-      {/* Sidebar */}
       <div
         className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark"
         style={{ width: "280px", height: "100vh" }}
@@ -27,86 +36,31 @@ const Sidebar = () => {
         <hr />
 
         <ul className="nav nav-pills flex-column mb-auto">
+
           <li className="nav-item">
             <Link to="inicio" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
+              <svg className="bi pe-none me-2" width="16" height="16">
                 <use xlinkHref="#home"></use>
               </svg>
               Inicio
             </Link>
           </li>
+
           <li className="nav-item">
             <Link to="datos" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
+              <svg className="bi pe-none me-2" width="16" height="16">
                 <use xlinkHref="#home"></use>
               </svg>
               Datos personales
             </Link>
           </li>
 
-          {/* <li>
-            <Link to="medios-pago" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Medios de pago
-            </Link>
-          </li> */}
-
-          {/* <li>
-            <Link to="pedidos" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Pedidos
-            </Link>
-          </li> */}
-
           <li>
             <Link to="historial" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
+              <svg className="bi pe-none me-2" width="16" height="16">
                 <use xlinkHref="#table"></use>
               </svg>
               Historial de compras
-            </Link>
-          </li>
-
-          <li>
-            <Link to="/home" className="nav-link text-white">
-              <svg
-                className="bi pe-none me-2"
-                width="16"
-                height="16"
-                aria-hidden="true"
-              >
-                <use xlinkHref="#grid"></use>
-              </svg>
-              Cerrar sesión
             </Link>
           </li>
         </ul>

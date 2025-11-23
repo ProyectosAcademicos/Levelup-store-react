@@ -1,15 +1,175 @@
-
-.contentGP{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
+/* CONTENEDOR GENERAL */
+.containerGP {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 20px;
+  color: var(--blanco);
+  font-family: 'Roboto', sans-serif;
 }
 
-h2{
-    margin-bottom: 20px;
-    color: aliceblue;
+/* TÍTULO PRINCIPAL */
+.containerGP h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--blanco);
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px var(--azul);
+}
+
+/* MENSAJES */
+.mensajeGP {
+  margin-bottom: 15px;
+  color: var(--verde);
+  font-size: 0.9rem;
+}
+
+/* TABLA ESTILOS */
+.tablaGP {
+  width: 100%;
+  max-width: 900px;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(30, 144, 255, 0.4);
+}
+
+.tablaGP th,
+.tablaGP td {
+  padding: 12px;
+  text-align: center;
+  color: var(--gris-texto);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tablaGP th {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--blanco);
+  text-shadow: 0 0 6px var(--azul);
+}
+
+.tablaGP tr:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: 0.2s ease-in-out;
+}
+
+/* IMAGEN EN TABLA */
+.imagenTablaGP {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* BOTONES */
+.btnEditarGP,
+.btnEliminarGP {
+  padding: 8px 14px;
+  margin: 0 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border: 1px solid var(--azul);
+  background-color: var(--gris-oscuro);
+  color: var(--blanco);
+  transition: 0.2s;
+}
+
+.btnEditarGP:hover {
+  box-shadow: 0 0 10px var(--azul);
+}
+
+.btnEliminarGP {
+  border-color: var(--rojo);
+}
+
+.btnEliminarGP:hover {
+  box-shadow: 0 0 10px var(--rojo);
+}
+
+/* FORMULARIO DE CREAR / EDITAR */
+.formContainerGP {
+  margin-top: 30px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.formContainerGP h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--blanco);
+  text-shadow: 0 0 10px var(--azul);
+  margin-bottom: 15px;
+}
+
+/* Etiquetas */
+.formContainerGP label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: var(--gris-texto);
+}
+
+/* INPUTS */
+.formContainerGP input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: var(--gris-oscuro);
+  color: var(--blanco);
+  border: 1px solid var(--azul);
+  margin-bottom: 10px;
+  transition: 0.2s;
+}
+
+.formContainerGP input:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 10px var(--verde);
+  outline: none;
+}
+
+/* BOTONES DEL FORMULARIO */
+.btnGuardarGP,
+.btnCancelarGP {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btnGuardarGP {
+  background-color: var(--azul);
+  color: white;
+  box-shadow: 0 0 10px var(--azul);
+}
+
+.btnGuardarGP:hover {
+  background-color: var(--azul-claro);
+}
+
+.btnCancelarGP {
+  background-color: var(--gris-oscuro);
+  color: var(--gris-texto);
+}
+
+.btnCancelarGP:hover {
+  box-shadow: 0 0 10px var(--rojo);
+}
+
+/* DESCRIPCIÓN EN TABLA */
+.descripcionGP {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

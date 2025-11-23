@@ -178,4 +178,45 @@ public class AuthController {
             this.usuario.setContrasena(null);
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuario) 
+    {
+        try {
+            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
+            if (usuarioExistente == null) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            // Actualizar los campos del usuario existente
+            usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setCorreo(usuario.getCorreo());
+            if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+                usuarioExistente.setContrasena(usuario.getContrasena());
+            }
+
+            // Guardar los cambios
+            Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuarioExistente);
+            usuarioActualizado.setContrasena(null); // Nunca enviar contraseñas
+            return new ResponseEntity<>(usuarioActualizado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
+        try {
+            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
+            if (usuarioExistente == null) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            usuarioService.eliminarUsuario(id);
+            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
