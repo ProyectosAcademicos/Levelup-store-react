@@ -4,6 +4,7 @@ import style from "../../../components/Header/HeaderAdmin/index.module.css";
 import logo from "../../../../src/assets/img/logo.png";
 import { FaBars } from "react-icons/fa"; // ícono hamburguesa
 import { useCart } from "../../../context/CartContext.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 
 
@@ -11,6 +12,7 @@ const HeaderAdmin = () => {
   const navigate = useNavigate();
 
   const { cartItems } = useCart();
+  const { user, logout } = useAuth();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -23,8 +25,10 @@ const HeaderAdmin = () => {
   }
 
   const goToLogout = () => {
-    navigate("/home");
-  }
+    logout();          // ← cierra sesión REAL del contexto
+    navigate("/home"); // ← redirige al home
+  };
+
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,11 +48,30 @@ const HeaderAdmin = () => {
 
       {/* Menú lateral */}
       <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
-        <ul>
-          <li><button onClick={goToHome}>Inicio</button></li>
-        </ul>
         <div className={style.authButtons}>
-            <button onClick={goToLogout} className={style.logoutButton}>Cerrar Sesión</button>
+          {/* Si NO hay usuario → muestra login y registro */}
+          {!user ? (
+            <>
+              <button onClick={goToLogin} className={style.loginButton}>
+                Iniciar Sesión
+              </button>
+
+              <button onClick={goToRegister} className={style.registerButton}>
+                Registrarse
+              </button>
+            </>
+          ) : (
+            /* Si hay usuario → muestra saludo y cerrar sesión */
+            <>
+              <span className={style.userText}>
+                Hola, {user.usuario?.nombre || "Usuario"}
+              </span>
+
+              <button onClick={goToLogout} className={style.logoutButton}>
+                Cerrar sesión
+              </button>
+            </>
+          )}
         </div>
       </nav>
 

@@ -78,16 +78,16 @@ INSERT INTO productos (nombre, descripcion, precio, img_file, stock, categoria) 
 ('Nintendo Switch 2', 'Nintendo Switch 2 con Mario Kart', 669990, 'Producto15.png', 8, 'consola');
 
 Luego de haber realizado los insert se ejecuta este update para que se visualicen las imagenes.
-UPDATE productos SET imagen_file = 'Producto2.png' WHERE id = 1;
-UPDATE productos SET imagen_file = 'Producto1.png' WHERE id = 2;
-UPDATE productos SET imagen_file = 'Producto16.png' WHERE id = 3;
-UPDATE productos SET imagen_file = 'Producto4.png' WHERE id = 4;
-UPDATE productos SET imagen_file = 'Producto5.png' WHERE id = 5;
-UPDATE productos SET imagen_file = 'Producto7.png' WHERE id = 6;
-UPDATE productos SET imagen_file = 'Producto8.png' WHERE id = 7;
-UPDATE productos SET imagen_file = 'Producto10.png' WHERE id = 8;
-UPDATE productos SET imagen_file = 'Producto11.png' WHERE id = 9;
-UPDATE productos SET imagen_file = 'Producto12.png' WHERE id = 10;
-UPDATE productos SET imagen_file = 'Producto13.png' WHERE id = 11;
-UPDATE productos SET imagen_file = 'Producto14.png' WHERE id = 12;
-UPDATE productos SET imagen_file = 'Producto15.png' WHERE id = 13;
+UPDATE productos SET img_file = 'Producto2.png' WHERE id = 1;
+UPDATE productos SET img_file = 'Producto1.png' WHERE id = 2;
+UPDATE productos SET img_file = 'Producto16.png' WHERE id = 3;
+UPDATE productos SET img_file = 'Producto4.png' WHERE id = 4;
+UPDATE productos SET img_file = 'Producto5.png' WHERE id = 5;
+UPDATE productos SET img_file = 'Producto7.png' WHERE id = 6;
+UPDATE productos SET img_file = 'Producto8.png' WHERE id = 7;
+UPDATE productos SET img_file = 'Producto10.png' WHERE id = 8;
+UPDATE productos SET img_file = 'Producto11.png' WHERE id = 9;
+UPDATE productos SET img_file = 'Producto12.png' WHERE id = 10;
+UPDATE productos SET img_file = 'Producto13.png' WHERE id = 11;
+UPDATE productos SET img_file = 'Producto14.png' WHERE id = 12;
+UPDATE productos SET img_file = 'Producto15.png' WHERE id = 13;

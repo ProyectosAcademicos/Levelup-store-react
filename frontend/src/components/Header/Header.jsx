@@ -35,14 +35,8 @@ const Header = () => {
 
       {/* Menú lateral */}
       <nav className={`${style.sideMenu} ${menuOpen ? style.active : ""}`}>
-        <ul>
-          <li><a href="/home">Inicio</a></li>
-          <li><a href="/productos">Productos</a></li>
-          <li><a href="/contacto">Contacto</a></li>
-        </ul>
 
         <div className={style.authButtons}>
-
           {/* Si NO hay usuario → muestra login y registro */}
           {!user ? (
             <>

@@ -40,7 +40,7 @@ const Sidebar = () => {
               Inicio
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="perfil" className="nav-link text-white">
               <svg
                 className="bi pe-none me-2"
@@ -52,7 +52,7 @@ const Sidebar = () => {
               </svg>
               Perfil
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link to="usuarios" className="nav-link text-white">
               <svg
