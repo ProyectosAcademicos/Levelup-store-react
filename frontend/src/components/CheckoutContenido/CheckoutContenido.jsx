@@ -3,15 +3,24 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import * as apiService from '../../services/api';
+import './CheckoutContenido.css';
 
 const CheckoutContenido = () => {
+
+    // Carrito y función para limpiarlo
     const { cartItems, clearCart } = useCart();
+
+    // Usuario autenticado
     const { user } = useAuth();
+
+    // Para redirecciones
     const navigate = useNavigate();
 
+    // Estados de carga y error
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // Formulario del checkout
     const [formData, setFormData] = useState({
         direccionEnvio: '',
         telefono: '',
@@ -19,18 +28,20 @@ const CheckoutContenido = () => {
         notas: ''
     });
 
-    // Si no hay usuario logueado, puedes mostrar un aviso o redirigir
+    // Si el usuario no está logueado, puedes bloquear o permitir vista con mensaje
     useEffect(() => {
         if (!user) {
-            // navigate('/login');
+            // navigate('/login');  <— opcional
         }
     }, [user, navigate]);
 
+    // Total del carrito
     const total = cartItems.reduce(
         (acc, item) => acc + (item.precio * item.quantity),
         0
     );
 
+    // Manejo de cambios del formulario
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -39,20 +50,24 @@ const CheckoutContenido = () => {
         }));
     };
 
+    // === Confirmar compra ===
     const handleConfirmarCompra = async (e) => {
         e.preventDefault();
 
+        // Validación de usuario
         if (!user || !user.token) {
             alert('Debes iniciar sesión para completar la compra.');
             navigate('/login');
             return;
         }
 
+        // Validación de carrito vacío
         if (cartItems.length === 0) {
             alert('El carrito está vacío.');
             return;
         }
 
+        // Validación de datos obligatorios
         if (!formData.direccionEnvio || !formData.telefono) {
             alert('Por favor completa dirección y teléfono.');
             return;
@@ -62,12 +77,14 @@ const CheckoutContenido = () => {
             setLoading(true);
             setError(null);
 
+            // Convertir items al formato que espera el backend
             const items = cartItems.map(item => ({
                 productoId: item.productoId || item.id,
                 cantidad: item.quantity,
                 precioUnitario: item.precio
             }));
 
+            // Objeto de orden
             const ordenRequest = {
                 items,
                 direccionEnvio: formData.direccionEnvio,
@@ -77,6 +94,7 @@ const CheckoutContenido = () => {
                 total
             };
 
+            // Enviar orden al backend
             const respuesta = await apiService.crearOrden(user.token, ordenRequest);
 
             if (!respuesta.success) {
@@ -87,6 +105,7 @@ const CheckoutContenido = () => {
 
             alert(`¡Compra N° ${orden.id} realizada exitosamente!`);
 
+            // Vaciar carrito y redirigir
             await clearCart();
             navigate('/cliente');
 
@@ -95,14 +114,18 @@ const CheckoutContenido = () => {
 
             let errorMessage = 'Error al procesar la compra. Inténtalo de nuevo.';
 
+            // Respuesta de API con error
             if (err.response) {
                 errorMessage = err.response.data.message || err.response.data.error || errorMessage;
 
+                // Error de autenticación
                 if (err.response.status === 401 || err.response.status === 403) {
                     alert("Tu sesión ha expirado. Inicia sesión nuevamente.");
                     navigate("/login");
                 }
-            } else if (err.message.includes('Network Error')) {
+            }
+            // Problema de conexión
+            else if (err.message.includes('Network Error')) {
                 errorMessage = 'No se pudo conectar con el servidor.';
             }
 
@@ -112,7 +135,7 @@ const CheckoutContenido = () => {
         }
     };
 
-    // Vista si el usuario NO está logueado
+    // === Vista si el usuario NO está logueado ===
     if (!user) {
         return (
             <div className="container my-5 text-center">
@@ -128,17 +151,22 @@ const CheckoutContenido = () => {
     }
 
     return (
-        <div className="container my-5">
-            <h2 className="mb-4">Checkout</h2>
+        <div className="checkout-container container my-5">
 
+            {/* Título principal */}
+            <h2 className="checkout-title mb-4">Checkout</h2>
+
+            {/* Mensaje de error del backend */}
             {error && (
                 <div className="alert alert-danger">{error}</div>
             )}
 
             <div className="row">
-                {/* Formulario */}
-                <div className="col-md-6">
+
+                {/* === Formulario de compra === */}
+                <div className="col-md-6 checkout-form">
                     <form onSubmit={handleConfirmarCompra}>
+
                         <div className="mb-3">
                             <label className="form-label">Dirección de envío</label>
                             <input
@@ -190,37 +218,40 @@ const CheckoutContenido = () => {
 
                         <button
                             type="submit"
-                            className="btn btn-success w-100"
+                            className="checkout-btn w-100"
                             disabled={loading || cartItems.length === 0}
                         >
                             {loading ? 'Procesando...' : 'Confirmar compra'}
                         </button>
+
                     </form>
                 </div>
 
-                {/* Resumen de compra */}
+                {/* === Resumen de la compra === */}
                 <div className="col-md-6">
-                    <div className="border p-4 rounded bg-light">
+                    <div className="checkout-summary">
+
                         <h5 className="mb-3">Resumen de la orden</h5>
 
-                        {cartItems && cartItems.length > 0 ? (
+                        {cartItems.length > 0 ? (
                             cartItems.map((item, index) => (
-                                <div key={index} className="d-flex justify-content-between mb-2">
+                                <div key={index} className="checkout-item">
                                     <span>{item.nombre} x{item.quantity}</span>
                                     <span>${(item.precio * item.quantity).toLocaleString()}</span>
                                 </div>
                             ))
                         ) : (
-                            <p>Tu carrito está vacío.</p>
+                            <p className="empty-cart">Tu carrito está vacío.</p>
                         )}
 
-                        <hr />
-                        <div className="d-flex justify-content-between fw-bold fs-5">
+                        <div className="checkout-total">
                             <span>Total:</span>
                             <span>${total.toLocaleString()}</span>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
     );

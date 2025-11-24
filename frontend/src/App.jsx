@@ -29,6 +29,8 @@ import MediosPago from "./components/UsuariosContenido/Cliente/ContentMP/Content
 import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
+import CheckoutContenido from "./components/CheckoutContenido/CheckoutContenido.jsx";
+
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
@@ -47,6 +49,8 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
             <Route path="/carrito" element={<CarritoPage />} />
+            <Route path="/checkout" element={<CheckoutContenido />} />
+
 
             {/* CRUD (puede ser pública o protegida, según lo que quieran) */}
             <Route path="/crud-productos" element={<CrudProductos />} />
