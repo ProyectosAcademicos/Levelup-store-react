@@ -1,0 +1,104 @@
+/* ===== Inputs y Labels ===== */
+.form-control,
+.form-select {
+    background: #0c0c0c !important;
+    border: 1px solid var(--blue) !important;
+    color: var(--text) !important;
+    border-radius: 10px !important;
+    padding: 12px !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #178005 !important;
+    box-shadow: 0 0 10px #178005 !important;
+    outline: none !important;
+}
+
+.form-label {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+/* ===== Alertas ===== */
+.alert-danger {
+    background: rgba(255, 0, 0, 0.15) !important;
+    border: 1px solid #FF4444 !important;
+    color: #FF6666 !important;
+    border-radius: 10px !important;
+}
+
+/* ===== Carrito vacío ===== */
+.empty-cart {
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+}
+
+/* ===== Items del checkout ===== */
+.checkout-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30, 144, 255, 0.3);
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+}
+
+/* ===== Total ===== */
+.checkout-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2ab611f3;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid #2ab611;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
+/* ===== Botón de Confirmar Compra (.checkout-btn) ===== */
+.checkout-btn {
+    background: linear-gradient(45deg, #185a0c); /* Degradado usando tus verdes */
+    color: #ffffff;
+    border: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px; /* Mismo radio que tus inputs */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(23, 128, 5, 0.3); /* Sombra sutil verde */
+    margin-top: 15px;
+}
+
+/* Efecto Hover (al pasar el mouse) */
+.checkout-btn:hover {
+    background: linear-gradient(45deg, #185a0c); /* Un verde más brillante */
+    box-shadow: 0 0 20px #1d6314; /* Efecto Neón */
+    transform: translateY(-2px); /* Se levanta un poco */
+}
+
+/* Efecto Active (al hacer clic) */
+.checkout-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 10px rgba(33, 218, 0, 0.4);
+}
+
+/* Estado Deshabilitado (cuando loading es true o carrito vacío) */
+.checkout-btn:disabled {
+    background: #333333;
+    color: #777777;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    border: 1px solid #444;
+}
