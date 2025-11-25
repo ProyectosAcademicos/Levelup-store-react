@@ -14,40 +14,32 @@ const ContentHC = () => {
     // });
 
     useEffect(() =>{
-        const fetchHistorial = async () => {
-            try {
-                const storedUser = localStorage.getItem("user");
-                const token = storedUser ? JSON.parse(storedUser).token : null;
+    const fetchHistorial = async () => {
+        try {
+            const storedUser = localStorage.getItem("user");
+            const token = storedUser ? JSON.parse(storedUser).token : null;
 
-
-                const response = await fetch("http://localhost:8080/api/historial", {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
+            const response = await fetch("http://localhost:8080/api/ordenes", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
                 }
+            });
 
-                const data = await response.json();
-                setHistoriales(data); // GUARDAMOS LA LISTA COMPLETA
-
-
-                // setFormData({
-                //     id: data.id || "",
-                //     accion: data.accion || "",
-                //     fecha: data.fecha || "",
-                //     usuario_id: data.usuario_id || ""
-                // });
-
-            } catch (error) {
-                console.error("Error al obtener los datos del usuario:", error);
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
             }
-        };
 
-        fetchHistorial();
-    }, []);
+            const result = await response.json();
+            setHistoriales(result.data);
+
+        } catch (error) {
+            console.error("Error al obtener los datos del usuario:", error);
+        }
+    };
+
+    fetchHistorial();
+}, []);
+
 
     // const handleChange = (e) => {
     //     setFormData({
@@ -76,13 +68,14 @@ const ContentHC = () => {
                 <tbody>
                     {historiales.map((item) => (
                         <tr key={item.id}>
-                            <td>{item.id}</td>
-                            <td>{item.accion}</td>
-                            <td>{new Date(item.fecha).toLocaleString()}</td>
-                            <td>{item.usuarioId}</td>
+                        <td>{item.id}</td>
+                        <td>{item.estado}</td>
+                        <td>{new Date(item.creadoEn).toLocaleString()}</td>
+                        <td>{item.usuarioNombre}</td>
                         </tr>
                     ))}
                 </tbody>
+
             </table>
         </div>
 
