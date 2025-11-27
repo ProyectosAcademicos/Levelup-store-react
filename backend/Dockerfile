@@ -1,12 +1,16 @@
-# Build con Java 21
-FROM maven:3.9.6-amazoncorretto-21 AS build
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
+FROM eclipse-temurin:21-jdk-alpine
 
-# Run con Java 21
-FROM amazoncorretto:21
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+# Copiar el jar generado por Spring Boot
+COPY target/*.jar app.jar
+
+# Copiar script wait-for-it (opcional, para esperar a MySQL)
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+# Exponer puerto 8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+
+# Arrancar la app y esperar a MySQL
+ENTRYPOINT ["/wait-for-it.sh", "mysql:3306", "--timeout=30", "--", "java", "-jar", "app.jar"]
