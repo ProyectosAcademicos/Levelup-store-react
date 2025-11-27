@@ -170,6 +170,7 @@ export default function CatalogoContenido() {
                     />
                     <div className="card-body d-flex flex-column">
                       <h3 className="h6">{p.nombre}</h3>
+                      <p className="text-info small mb-1">{p.descripcion}</p>
                       <div className="precio mb-2">
                         ${typeof p.precio === 'string' 
                           ? parseFloat(p.precio).toLocaleString() 

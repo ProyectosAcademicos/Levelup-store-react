@@ -13,7 +13,8 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import NotFoundPage from "./pages/404Page/NotFound.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import CatalogoPage from "./pages/CatalogoPage/CatalogoPage.jsx";
-import CrudProductos from "./components/CrudProductos/CrudProductos.jsx";
+import CrudProductosPage from "./pages/AdminProfile/CrudProductos.jsx";
+
 
 import CarritoPage from "./pages/CarritoPage/CarritoPage.jsx";
 import ContentGP from "./components/UsuariosContenido/Administrador/ContentGP/ContentGP.jsx";
@@ -30,6 +31,7 @@ import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistor
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 import CheckoutContenido from "./components/CheckoutContenido/CheckoutContenido.jsx";
+
 
 
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -50,10 +52,6 @@ function App() {
             <Route path="/catalogo" element={<CatalogoPage />} />
             <Route path="/carrito" element={<CarritoPage />} />
             <Route path="/checkout" element={<CheckoutContenido />} />
-
-
-            {/* CRUD (puede ser pública o protegida, según lo que quieran) */}
-            <Route path="/crud-productos" element={<CrudProductos />} />
 
             {/* CLIENTE - LAYOUT PROTEGIDO */}
             <Route
@@ -89,6 +87,7 @@ function App() {
               <Route path="productos" element={<ContentGP />} />
               <Route path="inventario" element={<ContentIV />} />
               <Route path="compartir" element={<ContentRS />} />
+              <Route path="modificar" element={<CrudProductosPage />} />
             </Route>
 
             {/* VENDEDOR - LAYOUT PROTEGIDO */}
