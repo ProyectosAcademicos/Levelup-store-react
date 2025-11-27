@@ -107,8 +107,21 @@ const Sidebar = () => {
               Compartir
             </Link>
           </li>
-        </ul>
 
+          <li>
+            <Link to="modificar" className="nav-link text-white">
+             <svg
+             className="bi pe-none me-2"
+             width="16"
+             height="16"
+             aria-hidden="true"
+            >
+              <use xlinkHref="#speedometer2"></use>
+            </svg>
+            Modificar productos
+            </Link>
+          </li>
+        </ul>
         <hr />
       </div>
 

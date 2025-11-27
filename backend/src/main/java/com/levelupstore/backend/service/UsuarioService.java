@@ -68,7 +68,7 @@ public class UsuarioService {
             throw new Exception("El formato del correo electrónico no es válido.");
         }
 
-        usuario.setRol("CLIENTE"); // Asigna el rol por defecto
+        usuario.setRol("ADMIN"); // Asigna el rol por defecto
 
         // --- CIFRADO DE CONTRASEÑA ---
 
