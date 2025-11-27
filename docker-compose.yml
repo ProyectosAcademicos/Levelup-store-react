@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: levelup_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: levelup_store_db
+      MYSQL_USER: levelup
+      MYSQL_PASSWORD: level123
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./backend
+    container_name: levelup_backend
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/levelup_store_db
+      SPRING_DATASOURCE_USERNAME: levelup
+      SPRING_DATASOURCE_PASSWORD: level123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: levelup_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
