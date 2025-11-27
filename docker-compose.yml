@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   mysql:
     image: mysql:8
@@ -37,9 +35,7 @@ services:
       dockerfile: Dockerfile
     container_name: levelup_frontend
     ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - "80:80" # acceso público
     networks:
       - levelup-network
 
