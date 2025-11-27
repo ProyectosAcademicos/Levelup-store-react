@@ -1,14 +1,5 @@
-FROM eclipse-temurin:21-jdk-alpine
-
+FROM eclipse-temurin:20-jdk-alpine
 WORKDIR /app
-
-# Copiar el jar generado por Spring Boot
-COPY target/*.jar app.jar
-
-# Copiar script wait-for-it
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
+COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-ENTRYPOINT ["/wait-for-it.sh", "mysql:3306", "--timeout=30", "--", "java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
