@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
+import styles from "./CrudProductos.module.css";
 
 const API_URL = "http://localhost:8080/api/productos";
 
@@ -8,7 +8,6 @@ export default function CrudProductos() {
   const [productos, setProductos] = useState([]);
   const [modoEdicion, setModoEdicion] = useState(false);
 
-  // Estado del formulario, basado en tu entidad Producto
   const [form, setForm] = useState({
     id: null,
     nombre: "",
@@ -20,7 +19,6 @@ export default function CrudProductos() {
     activo: true,
   });
 
-  // Cargar productos al iniciar
   useEffect(() => {
     cargarProductos();
   }, []);
@@ -34,7 +32,6 @@ export default function CrudProductos() {
     }
   };
 
-  // Manejo de inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -57,7 +54,6 @@ export default function CrudProductos() {
     setModoEdicion(false);
   };
 
-  // Crear / Actualizar
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -69,10 +65,8 @@ export default function CrudProductos() {
 
     try {
       if (modoEdicion && form.id) {
-        // PUT /api/productos/{id}
         await axios.put(`${API_URL}/${form.id}`, dataParaEnviar);
       } else {
-        // POST /api/productos
         await axios.post(API_URL, dataParaEnviar);
       }
 
@@ -83,7 +77,6 @@ export default function CrudProductos() {
     }
   };
 
-  // Cargar datos al formulario para editar
   const handleEditar = (prod) => {
     setForm({
       id: prod.id,
@@ -98,13 +91,11 @@ export default function CrudProductos() {
     setModoEdicion(true);
   };
 
-  // Eliminar
   const handleEliminar = async (id) => {
     const confirmar = window.confirm("¿Seguro que quieres eliminar este producto?");
     if (!confirmar) return;
 
     try {
-      // DELETE /api/productos/{id}
       await axios.delete(`${API_URL}/${id}`);
       await cargarProductos();
     } catch (err) {
@@ -113,15 +104,15 @@ export default function CrudProductos() {
   };
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Productos</h2>
+    <div className={styles.containerGP}>
+      <h2>Gestión de productos</h2>
 
       {/* FORMULARIO */}
-      <form onSubmit={handleSubmit} style={{ marginBottom: "2rem" }}>
+      <div className={styles.formContainerGP}>
         <h3>{modoEdicion ? "Editar producto" : "Crear producto"}</h3>
 
-        <div>
-          <label>Nombre: </label>
+        <form onSubmit={handleSubmit}>
+          <label>Nombre</label>
           <input
             type="text"
             name="nombre"
@@ -129,19 +120,16 @@ export default function CrudProductos() {
             onChange={handleChange}
             required
           />
-        </div>
 
-        <div>
-          <label>Descripción: </label>
-          <textarea
+          <label>Descripción</label>
+          <input
+            type="text"
             name="descripcion"
             value={form.descripcion}
             onChange={handleChange}
           />
-        </div>
 
-        <div>
-          <label>Precio: </label>
+          <label>Precio</label>
           <input
             type="number"
             step="0.01"
@@ -150,10 +138,8 @@ export default function CrudProductos() {
             onChange={handleChange}
             required
           />
-        </div>
 
-        <div>
-          <label>Stock: </label>
+          <label>Stock</label>
           <input
             type="number"
             name="stock"
@@ -161,58 +147,56 @@ export default function CrudProductos() {
             onChange={handleChange}
             required
           />
-        </div>
 
-        <div>
-          <label>Categoría: </label>
+          <label>Categoría</label>
           <input
             type="text"
             name="categoria"
             value={form.categoria}
             onChange={handleChange}
           />
-        </div>
 
-        <div>
-          <label>URL Imagen: </label>
+          <label>URL Imagen</label>
           <input
             type="text"
             name="imagenUrl"
             value={form.imagenUrl}
             onChange={handleChange}
           />
-        </div>
 
-        <div>
           <label>
             <input
               type="checkbox"
               name="activo"
               checked={form.activo}
               onChange={handleChange}
-            />
+            />{" "}
             Activo
           </label>
-        </div>
 
-        <button type="submit">
-          {modoEdicion ? "Actualizar" : "Crear"}
-        </button>
-
-        {modoEdicion && (
-          <button type="button" onClick={limpiarFormulario} style={{ marginLeft: "0.5rem" }}>
-            Cancelar
+          <button type="submit" className={styles.btnGuardarGP}>
+            {modoEdicion ? "Actualizar" : "Crear"}
           </button>
-        )}
-      </form>
 
-      {/* TABLA SIMPLE */}
-      <h3>Listado de productos</h3>
-      <table border="1" cellPadding="6" cellSpacing="0">
+          {modoEdicion && (
+            <button
+              type="button"
+              onClick={limpiarFormulario}
+              className={styles.btnCancelarGP}
+            >
+              Cancelar
+            </button>
+          )}
+        </form>
+      </div>
+
+      {/* TABLA */}
+      <table className={styles.tablaGP}>
         <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Descripción</th>
             <th>Categoría</th>
             <th>Precio</th>
             <th>Stock</th>
@@ -226,25 +210,42 @@ export default function CrudProductos() {
             <tr key={p.id}>
               <td>{p.id}</td>
               <td>{p.nombre}</td>
+              <td className={styles.descripcionGP}>{p.descripcion}</td>
               <td>{p.categoria}</td>
               <td>{p.precio}</td>
               <td>{p.stock}</td>
               <td>{p.activo ? "Sí" : "No"}</td>
               <td>
                 {p.imagenUrl && (
-                  <img src={p.imagenUrl} alt={p.nombre} style={{ width: "50px" }} />
+                  <img
+                    src={p.imagenUrl}
+                    alt={p.nombre}
+                    className={styles.imagenTablaGP}
+                  />
                 )}
               </td>
               <td>
-                <button onClick={() => handleEditar(p)}>Editar</button>
-                <button onClick={() => handleEliminar(p.id)}>Eliminar</button>
+                <button
+                  type="button"
+                  className={styles.btnEditarGP}
+                  onClick={() => handleEditar(p)}
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  className={styles.btnEliminarGP}
+                  onClick={() => handleEliminar(p.id)}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
 
           {productos.length === 0 && (
             <tr>
-              <td colSpan="8">No hay productos.</td>
+              <td colSpan="9">No hay productos.</td>
             </tr>
           )}
         </tbody>
