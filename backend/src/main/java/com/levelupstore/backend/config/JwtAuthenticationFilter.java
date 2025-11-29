@@ -1,59 +1,68 @@
 package com.levelupstore.backend.config;
 
-import com.levelupstore.backend.service.UsuarioService;
 import com.levelupstore.backend.controller.JwtUtil;
+import com.levelupstore.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.List;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+@Autowired
+private JwtUtil jwtUtil;
 
-    @Autowired
-    private UsuarioService usuarioService;
+@Autowired
+private UsuarioService usuarioService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+@Override
+protected void doFilterInternal(HttpServletRequest request,
+                                HttpServletResponse response,
+                                FilterChain filterChain)
+        throws ServletException, IOException {
 
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            String correo = jwtUtil.getRolDesdeToken(token);
+    if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
 
-            if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Puedes obtener el Usuario desde el servicio para validar existencia/rol
-                var usuario = usuarioService.findByCorreo(correo);
-                if (usuario != null) {
-                    // Crear Authentication simple con el rol (si existe)
-                    String rol = jwtUtil.getRolDesdeToken(token);
-                    if (rol == null)
-                        rol = usuario.getRol();
-                    var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol));
-                    var auth = new UsernamePasswordAuthenticationToken(correo, null, authorities);
+        String token = header.substring(7);
 
-                    // Colocar en el contexto de seguridad
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                }
+        // CORRECCIÓN: obtener CORREO desde el token
+        String correo = jwtUtil.getCorreoDesdeToken(token);
+
+        if (correo != null &&
+                SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            var usuario = usuarioService.findByCorreo(correo);
+
+            if (usuario != null) {
+                var authorities = List.of(
+                        new SimpleGrantedAuthority("ROLE_" + usuario.getRol())
+                );
+
+                var auth = new UsernamePasswordAuthenticationToken(
+                        usuario,
+                        null,
+                        authorities
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-
+    }
         filterChain.doFilter(request, response);
     }
+
 }

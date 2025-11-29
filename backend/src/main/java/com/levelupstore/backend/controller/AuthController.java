@@ -4,6 +4,9 @@ import com.levelupstore.backend.model.Usuario;
 import com.levelupstore.backend.model.Region;
 import com.levelupstore.backend.model.Comuna;
 import com.levelupstore.backend.service.UsuarioService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import com.levelupstore.backend.repository.RegionRepository;
 import com.levelupstore.backend.repository.ComunaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,7 @@ public class AuthController {
     // OBTENER DATOS DEL USUARIO AUTENTICADO  ( /me )
     // ---------------------------------------------------------------------
     @GetMapping("/me")
+    @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<?> obtenerDatosUsuario(@RequestHeader("Authorization") String authHeader) {
 
         Usuario usuario = validarTokenYObtenerUsuario(authHeader, false);
