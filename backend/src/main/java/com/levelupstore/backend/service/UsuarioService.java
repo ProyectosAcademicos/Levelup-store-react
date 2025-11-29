@@ -25,7 +25,8 @@ public class UsuarioService {
      * Registra un nuevo usuario en la base de datos.
      * Incluye validaciones de RUT, correo, contraseña y cifrado de seguridad.
      *
-     * @param usuario Objeto recibido desde el controlador con los datos del nuevo usuario.
+     * @param usuario Objeto recibido desde el controlador con los datos del nuevo
+     *                usuario.
      * @return Usuario guardado en la base de datos (con la contraseña encriptada).
      * @throws Exception si alguna validación falla.
      */
@@ -33,11 +34,11 @@ public class UsuarioService {
     /**
      * Autentica a un usuario verificando su correo y contraseña.
      * 
-     * @param correo correo del usuario
+     * @param correo     correo del usuario
      * @param contrasena contraseña en texto plano
-     * @return el usuario autenticado si las credenciales son correctas, o null si no lo son
+     * @return el usuario autenticado si las credenciales son correctas, o null si
+     *         no lo son
      */
-
 
     public Usuario registrarUsuario(Usuario usuario) throws Exception {
 
@@ -68,14 +69,18 @@ public class UsuarioService {
             throw new Exception("El formato del correo electrónico no es válido.");
         }
 
-        usuario.setRol("CLIENTE"); // Asigna el rol por defecto
+        // --- ASIGNACIÓN DE ROL ---
+        if (usuario.getRol() != null && usuario.getRol().equalsIgnoreCase("ADMIN")) {
+            usuario.setRol("ADMIN");
+        } else {
+            usuario.setRol("CLIENTE");
+        }
 
         // --- CIFRADO DE CONTRASEÑA ---
 
         // Tomamos la contraseña en texto plano
         String contrasenaPlana = usuario.getContrasena();
         usuario.setContrasena(passwordEncoder.encode(contrasenaPlana));
-
 
         // --- GUARDADO EN BASE DE DATOS ---
 
@@ -84,15 +89,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-        public Usuario findByCorreo(String correo) {
+    public Usuario findByCorreo(String correo) {
         return usuarioRepository.findByCorreo(correo).orElse(null);
     }
-
 
     public Usuario obtenerPorId(Long id) {
         return usuarioRepository.findById(id).orElse(null);
     }
-
 
     public Usuario actualizarUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
@@ -114,7 +117,8 @@ public class UsuarioService {
             rut = rut.replace(".", "").replace("-", "").trim();
 
             // Si es demasiado corto, es inválido
-            if (rut.length() < 8) return false;
+            if (rut.length() < 8)
+                return false;
 
             // 2. Separar cuerpo y dígito verificador
             String cuerpo = rut.substring(0, rut.length() - 1);
@@ -164,11 +168,8 @@ public class UsuarioService {
         return null; // Contraseña incorrecta
     }
 
-    
     public List<Usuario> obtenerTodos() {
         return usuarioRepository.findAll();
     }
 
-
-    
 }
