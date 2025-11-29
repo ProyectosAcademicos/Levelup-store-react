@@ -27,22 +27,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            String correo = jwtUtil.getCorreoDesdeToken(token);
+            String correo = jwtUtil.getRolDesdeToken(token);
 
             if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Puedes obtener el Usuario desde el servicio para validar existencia/rol
                 var usuario = usuarioService.findByCorreo(correo);
                 if (usuario != null) {
                     // Crear Authentication simple con el rol (si existe)
-                    String rol = usuario.getRol() != null ? usuario.getRol() : "CLIENTE";
+                    String rol = jwtUtil.getRolDesdeToken(token);
+                    if (rol == null)
+                        rol = usuario.getRol();
                     var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol));
                     var auth = new UsernamePasswordAuthenticationToken(correo, null, authorities);
 
