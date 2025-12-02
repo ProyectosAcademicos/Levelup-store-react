@@ -90,7 +90,7 @@ const ContentGP = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:8080/api/productos/${editProducto}`, {
+      const res = await fetch(`http://18.233.237.152:8080/api/productos/${editProducto}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -115,7 +115,7 @@ const ContentGP = () => {
     if (!confirmar) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/productos/${id}`, {
+      const res = await fetch(`http://18.233.237.152:8080/api/productos/${id}`, {
         method: "DELETE",
       });
 
