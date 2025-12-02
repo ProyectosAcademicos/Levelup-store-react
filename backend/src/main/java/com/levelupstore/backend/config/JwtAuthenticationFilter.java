@@ -1,6 +1,7 @@
 package com.levelupstore.backend.config;
 
 import com.levelupstore.backend.controller.JwtUtil;
+import com.levelupstore.backend.model.Usuario;
 import com.levelupstore.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,48 +22,36 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-@Autowired
-private JwtUtil jwtUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
-@Autowired
-private UsuarioService usuarioService;
+    @Autowired
+    private UsuarioService usuarioService;
 
-@Override
-protected void doFilterInternal(HttpServletRequest request,
-                                HttpServletResponse response,
-                                FilterChain filterChain)
-        throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-    if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
+        if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            String correo = jwtUtil.getCorreoDesdeToken(token);
 
-        String token = header.substring(7);
+            if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                Usuario usuario = usuarioService.findByCorreo(correo);
 
-        // CORRECCIÓN: obtener CORREO desde el token
-        String correo = jwtUtil.getCorreoDesdeToken(token);
-
-        if (correo != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            var usuario = usuarioService.findByCorreo(correo);
-
-            if (usuario != null) {
-                var authorities = List.of(
-                        new SimpleGrantedAuthority("ROLE_" + usuario.getRol())
-                );
-
-                var auth = new UsernamePasswordAuthenticationToken(
-                        usuario,
-                        null,
-                        authorities
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                if (usuario != null) {
+                    // Poner el usuario completo en Authentication
+                    var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
+                    var auth = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         }
-    }
+
         filterChain.doFilter(request, response);
     }
-
 }
