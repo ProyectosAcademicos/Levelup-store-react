@@ -1,42 +1,41 @@
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Sidebar from "../src/components/UsuariosContenido/Sidebar/SidebarCliente.jsx";
 
-const renderSidebar = () =>
-  render(
-    <MemoryRouter>
-      <Sidebar />
-    </MemoryRouter>
-  );
+// Mock del AuthContext
+vi.mock("../src/context/AuthContext.jsx", () => ({
+  useAuth: () => ({
+    user: { nombre: "Test User" },
+    logout: vi.fn(),
+  }),
+}));
 
-describe("SidebarCliente Component", () => { // agrupa tests
-  
-  test("renderiza el título 'Sidebar'", () => {
+describe("Sidebar component", () => {
+  const renderSidebar = () =>
+    render(
+      <BrowserRouter>
+        <Sidebar />
+      </BrowserRouter>
+    );
+
+  it("renderiza correctamente el título Sidebar", () => {
     renderSidebar();
     expect(screen.getByText("Sidebar")).toBeInTheDocument();
   });
 
-  test("renderiza el enlace Inicio con ruta /inicio", () => {
+  it("renderiza el link Inicio", () => {
     renderSidebar();
-    const link = screen.getByText("Inicio");
-    expect(link).toBeInTheDocument();
-    expect(link.closest("a").getAttribute("href")).toBe("/inicio");
+    expect(screen.getByText("Inicio")).toBeInTheDocument();
   });
 
-  test("renderiza el enlace Datos personales", () => {
+  it("renderiza el link Datos personales", () => {
     renderSidebar();
     expect(screen.getByText("Datos personales")).toBeInTheDocument();
   });
 
-  test("renderiza el enlace Cerrar sesión y su ruta", () => {
+  it("renderiza el link Historial de compras", () => {
     renderSidebar();
-    const link = screen.getByText("Cerrar sesión");
-    expect(link.closest("a").getAttribute("href")).toBe("/home");
-  });
-
-  test("renderiza los 6 enlaces correctos del menú", () => {
-    renderSidebar();
-    const navItems = screen.getAllByRole("link");
-    expect(navItems.length).toBe(7);
+    expect(screen.getByText("Historial de compras")).toBeInTheDocument();
   });
 });

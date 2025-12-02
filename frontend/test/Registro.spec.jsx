@@ -1,58 +1,67 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import RegisterPage from "../src/pages/RegisterPage/RegisterPage.jsx";
+import React from "react";
 
-// 🛠️ MOCK para evitar que el Header falle por useCart()
-vi.mock("../src/context/CartContext", () => ({
-  useCart: () => ({
-    cartItems: [], // evita el error
-  }),
+// 🚫 Mock completo de axios (evita llamadas reales al backend)
+vi.mock("axios", () => ({
+  default: {
+    create: () => ({
+      get: vi.fn().mockResolvedValue({ data: [] }),
+      post: vi.fn().mockResolvedValue({ data: {} }),
+    }),
+  },
 }));
 
-const renderRegister = () =>
-  render(
-    <MemoryRouter>
-      <RegisterPage />
-    </MemoryRouter>
-  );
+// 🚫 Mock de react-router-dom
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+}));
 
-describe("RegisterPage Component", () => {
-  test("renderiza el título 'Registro de Usuario'", () => {
-    renderRegister();
-    expect(screen.getByText("Registro de Usuario")).toBeInTheDocument();
-  });
+// IMPORTA TU COMPONENTE (Ajusta la ruta según tu estructura)
+import RegisterPage from "../src/components/RegisterContenido.jsx/RegisterContenido.jsx";
 
-  test("renderiza el campo RUT", () => {
-    renderRegister();
-    expect(screen.getByLabelText("RUT")).toBeInTheDocument();
-  });
-
-  test("renderiza el campo Nombre", () => {
-    renderRegister();
-    expect(screen.getByLabelText("Nombre")).toBeInTheDocument();
-  });
-
-  test("renderiza el campo Apellido", () => {
-    renderRegister();
-    expect(screen.getByLabelText("Apellido")).toBeInTheDocument();
-  });
-
-  test("renderiza el campo Correo", () => {
-    renderRegister();
-    expect(screen.getByLabelText("Correo")).toBeInTheDocument();
-  });
-
-  test("renderiza el campo Contraseña", () => {
-    renderRegister();
-    expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
-  });
-
-  test("renderiza el botón 'Registrarse'", () => {
-  renderRegister();
-  const botones = screen.getAllByRole("button", { name: "Registrarse" });
-  // El botón del formulario es el que tiene type="submit"
-  const botonFormulario = botones.find(btn => btn.type === "submit");
-  expect(botonFormulario).toBeInTheDocument();
+beforeEach(() => {
+  vi.clearAllMocks();
 });
 
+describe("Renderizado del componente RegisterPage", () => {
+  it("renderiza el título principal", () => {
+    render(<RegisterPage />);
+    expect(
+      screen.getByText("Registro de Usuario")
+    ).toBeInTheDocument();
+  });
+
+  it("renderiza todos los campos del formulario", () => {
+    render(<RegisterPage />);
+
+    // Inputs y selects
+    expect(screen.getByLabelText("RUT")).toBeInTheDocument();
+    expect(screen.getByLabelText("Nombre")).toBeInTheDocument();
+    expect(screen.getByLabelText("Apellido")).toBeInTheDocument();
+    expect(screen.getByLabelText("Correo")).toBeInTheDocument();
+    expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
+    expect(screen.getByLabelText("Teléfono (opcional)")).toBeInTheDocument();
+    expect(screen.getByLabelText("Dirección")).toBeInTheDocument();
+    expect(screen.getByLabelText("Región")).toBeInTheDocument();
+    expect(screen.getByLabelText("Comuna")).toBeInTheDocument();
+  });
+
+  it("renderiza el botón de registro", () => {
+    render(<RegisterPage />);
+    expect(
+      screen.getByRole("button", { name: "Registrarse" })
+    ).toBeInTheDocument();
+  });
+
+  it("renderiza el formulario sin errores iniciales", () => {
+    render(<RegisterPage />);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("renderiza correctamente el contenedor principal", () => {
+    render(<RegisterPage />);
+    expect(screen.getByText("Registro de Usuario").closest("div")).toBeTruthy();
+  });
 });
