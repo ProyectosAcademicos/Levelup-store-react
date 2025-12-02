@@ -35,20 +35,17 @@ const CheckoutContenido = () => {
     const handleConfirmarCompra = async (e) => {
         e.preventDefault();
 
-        // Validación de usuario
         if (!user || !user.token) {
             alert("Debes iniciar sesión para completar la compra.");
             navigate("/login");
             return;
         }
 
-        // Validación de carrito vacío
         if (cartItems.length === 0) {
             alert("El carrito está vacío.");
             return;
         }
 
-        // Validación de datos obligatorios
         if (!formData.direccionEnvio || !formData.telefono) {
             alert("Por favor completa dirección y teléfono.");
             return;
@@ -58,9 +55,15 @@ const CheckoutContenido = () => {
             setLoading(true);
             setError(null);
 
-            // Solo enviar los datos que el backend necesita:
-            // items se genera en el backend desde el carrito
+            // Convertir items al formato que espera el backend
+            const items = cartItems.map((item) => ({
+                productoId: item.productoId || item.id,
+                cantidad: item.quantity,
+                precioUnitario: item.precio,
+            }));
+
             const ordenRequest = {
+                items, // <— ahora sí se envían al backend
                 direccionEnvio: formData.direccionEnvio,
                 telefono: formData.telefono,
                 metodoPago: formData.metodoPago.toUpperCase(),
@@ -71,38 +74,32 @@ const CheckoutContenido = () => {
                 ),
             };
 
-            // Llamada al backend
-            const respuesta = await apiService.checkout(user.token, ordenRequest);
+            // Llamada al backend usando crearOrden
+            const respuesta = await apiService.crearOrden(user.token, ordenRequest);
 
             if (!respuesta.success) {
                 throw new Error(respuesta.message);
             }
 
             const orden = respuesta.data;
-
             alert(`¡Compra N° ${orden.id} realizada exitosamente!`);
 
-            // Vaciar carrito y redirigir
             await clearCart();
             navigate("/cliente");
         } catch (err) {
-            console.error("Error en checkout:", err);
+            console.error("Error creando orden:", err);
 
             let errorMessage = "Error al procesar la compra. Inténtalo de nuevo.";
 
-            // Respuesta de API con error
             if (err.response) {
                 errorMessage =
                     err.response.data.message || err.response.data.error || errorMessage;
 
-                // Error de autenticación
                 if (err.response.status === 401 || err.response.status === 403) {
                     alert("Tu sesión ha expirado. Inicia sesión nuevamente.");
                     navigate("/login");
                 }
-            }
-            // Problema de conexión
-            else if (err.message.includes("Network Error")) {
+            } else if (err.message.includes("Network Error")) {
                 errorMessage = "No se pudo conectar con el servidor.";
             }
 
