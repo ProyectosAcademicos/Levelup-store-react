@@ -34,6 +34,7 @@ export default function CatalogoContenido() {
       try {
         setLoading(true);
         const data = await apiService.getProductos();
+        console.log("EC2 respondió:", data);
         setProductos(data);
         setError(null);
       } catch (err) {
