@@ -1,7 +1,6 @@
 import style from "./ContentDP.module.css";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../../../config/api.js";
-import { API_URL } from "../../../../config/api.js";
 
 const ContentDP = () => {
     
