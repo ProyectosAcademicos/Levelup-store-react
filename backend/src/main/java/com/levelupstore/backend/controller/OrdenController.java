@@ -136,11 +136,26 @@ public class OrdenController {
     /**
      * Helper: Obtener usuario autenticado
      */
-    private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
-        String email = authentication.getName();
-        return usuarioRepository.findByCorreo(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    private Usuario obtenerUsuarioAutenticado(Authentication authentication){
+        // 1 - Obtener el principal (que es el objeto Usuario que se coloco en el filtro)
+        Object principal = authentication.getPrincipal();
+
+        // 2. Verificar que el principal sea una instancia de Usuario (seguridad)
+        if (principal instanceof Usuario) {
+            return (Usuario) principal;
+        } else {
+
+            // Esto deberia ser un error grave si el filtro esta bien implementado
+            throw new RuntimeException("Usuario no autenticado");
+        }
     }
+
+
+    // private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
+    //     String email = authentication.getName();
+    //     return usuarioRepository.findByCorreo(email)
+    //             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    // }
 
     @GetMapping("/historial")
     public ResponseEntity<?> obtenerHistorialCompras(Authentication authentication) {
