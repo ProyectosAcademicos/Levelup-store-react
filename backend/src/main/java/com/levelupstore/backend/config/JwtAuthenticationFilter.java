@@ -41,18 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String correo = jwtUtil.getCorreoDesdeToken(token);
 
             if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Para obtener los roles del usuario, SÍ necesitamos cargarlo o tener un DTO de roles.
-                // Si `usuarioService.findByCorreo` carga los roles, úsalo:
                 Usuario usuario = usuarioService.findByCorreo(correo);
 
                 if (usuario != null) {
-                    // Poner el CORREO como Principal
+                    // Poner el usuario completo en Authentication
                     var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
-                    
-                    // El primer parámetro DEBE ser el correo, no el objeto usuario,
-                    // para que authentication.getName() devuelva el correo.
-                    var auth = new UsernamePasswordAuthenticationToken(correo, null, authorities); 
-                    
+                    var auth = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
