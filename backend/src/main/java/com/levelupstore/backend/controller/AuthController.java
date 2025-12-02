@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import com.levelupstore.backend.dto.UsuarioDTO;
 import java.util.Map;
 
-
-
-
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173") // Permite peticiones desde Vite (React)
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "http://18.233.237.152:5174"}) // Permite peticiones desde Vite (React)
+    
 public class AuthController {
 
     @Autowired
@@ -42,63 +42,6 @@ public class AuthController {
      * Endpoint para registrar un nuevo usuario.
      * Escucha en la URL: POST /api/auth/register
      */
-
-    @GetMapping("/me")
-    public ResponseEntity<?> obtenerDatosUsuario(@RequestHeader("Authorization") String authHeader) {
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(401)
-        .body(Map.of("error", "Token no proporcionado."));
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-
-        // Obtener el correo desde el JWT
-        String correo = jwtUtil.getCorreoDesdeToken(token);
-
-        if (correo == null) {
-            return ResponseEntity
-            .status(403)
-            .body(Map.of("error", "Token inválido"));
-        }
-
-        Usuario usuario = usuarioService.findByCorreo(correo);
-
-        if (usuario == null) {
-            return ResponseEntity.status(404).body("Usuario no encontrado.");
-        }
-
-        usuario.setContrasena(null); // 👈 nunca enviar contraseñas
-
-        return ResponseEntity.ok(usuario);
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<?> obtenerTodosLosUsuarios(@RequestHeader("Authorization") String authHeader) {
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(401)
-                    .body(Map.of("error", "Token no proporcionado."));
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-        String correo = jwtUtil.getCorreoDesdeToken(token);
-
-        if (correo == null) {
-            return ResponseEntity.status(403)
-                    .body(Map.of("error", "Token inválido"));
-        }
-
-        // Aquí verificas si el usuario existe y tiene permiso
-        Usuario usuario = usuarioService.findByCorreo(correo);
-
-        if (usuario == null) {
-            return ResponseEntity.status(404).body("Usuario no encontrado.");
-        }
-
-        return ResponseEntity.ok(usuarioService.obtenerTodos());
-    }
-
     @PostMapping("/register")
     public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
@@ -115,7 +58,7 @@ public class AuthController {
             usuario.setApellido(usuarioDTO.getApellido());
             usuario.setCorreo(usuarioDTO.getCorreo());
 
-            usuario.setContrasena(usuarioDTO.getContrasena()); 
+            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
             usuario.setTelefono(usuarioDTO.getTelefono());
             usuario.setDireccion(usuarioDTO.getDireccion());
             usuario.setRol(usuarioDTO.getRol());
@@ -140,83 +83,28 @@ public class AuthController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credentials) {
 
-        Usuario usuario = usuarioService.autenticarUsuario(
-                request.getEmail(),
-                request.getPassword()
-        );
+    String correo = credentials.get("email");
+    String contrasena = credentials.get("password");
 
-        if (usuario == null) {
-            return ResponseEntity.status(401).body("Credenciales incorrectas");
-        }
+    Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
 
-        String token = jwtUtil.generarToken(usuario.getCorreo());
-
-        return ResponseEntity.ok(new LoginResponse(token, usuario));
+    if (usuario == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo o contraseña incorrectos.");
     }
 
-    // DTOs internos
-    static class LoginRequest {
-        private String email;
-        private String password;
+    usuario.setContrasena(null);
 
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
+    // 🔥 Generar el token JWT
+    String token = jwtUtil.generarToken(usuario.getCorreo(), usuario.getRol());
 
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
-    }
+    // 🔥 Devolver el token + datos del usuario
+    Map<String, Object> response = Map.of(
+            "token", token,
+            "usuario", usuario
+    );
 
-    static class LoginResponse {
-        public String token;
-        public Usuario usuario;
-
-        public LoginResponse(String token, Usuario usuario) {
-            this.token = token;
-            this.usuario = usuario;
-            this.usuario.setContrasena(null);
-        }
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuario) 
-    {
-        try {
-            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
-            if (usuarioExistente == null) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
-
-            // Actualizar los campos del usuario existente
-            usuarioExistente.setNombre(usuario.getNombre());
-            usuarioExistente.setCorreo(usuario.getCorreo());
-            if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
-                usuarioExistente.setContrasena(usuario.getContrasena());
-            }
-
-            // Guardar los cambios
-            Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuarioExistente);
-            usuarioActualizado.setContrasena(null); // Nunca enviar contraseñas
-            return new ResponseEntity<>(usuarioActualizado, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
-        try {
-            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
-            if (usuarioExistente == null) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
-
-            usuarioService.eliminarUsuario(id);
-            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
+    return ResponseEntity.ok(response);
+}
 }

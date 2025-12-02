@@ -8,7 +8,7 @@ const ContentInventario = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const res = await fetch("http://localhost:8080/api/productos");
+                const res = await fetch("http://18.233.237.152:8080/api/productos");
                 const data = await res.json();
                 setProductos(data);
             } catch (error) {

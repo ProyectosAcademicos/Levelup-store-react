@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./CrudProductos.module.css";
 
-const API_URL = "http://localhost:8080/api/productos";
+// const API_URL = "http://localhost:8080/api/productos";
+const API_URL = "http://18.233.237.152:8080/api/productos";
 
 export default function CrudProductos() {
   const [productos, setProductos] = useState([]);

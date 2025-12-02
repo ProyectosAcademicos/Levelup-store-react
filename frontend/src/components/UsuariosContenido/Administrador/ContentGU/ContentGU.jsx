@@ -12,7 +12,7 @@ const ContentGU = () => {
     const storedUser = localStorage.getItem("user");
     const token = storedUser ? JSON.parse(storedUser).token : null;
 
-    const res = await fetch("http://localhost:8080/api/auth/all", {
+    const res = await fetch("http://18.233.237.152/api/auth/all", {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
@@ -46,7 +46,7 @@ const ContentGU = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:8080/api/auth/update/${editUser}`, {
+      const res = await fetch(`http://18.233.237.152/api/auth/update/${editUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -67,7 +67,7 @@ const ContentGU = () => {
     if (!confirmar) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/auth/delete/${id}`, {
+      const res = await fetch(`http://18.233.237.152/api/auth/delete/${id}`, {
         method: "DELETE",
       });
 

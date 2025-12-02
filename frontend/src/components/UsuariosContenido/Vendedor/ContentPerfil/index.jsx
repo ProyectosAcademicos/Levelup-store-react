@@ -17,7 +17,7 @@ const DetallePerfilV = () => {
                     const storedUser = localStorage.getItem("user");
                     const token = storedUser ? JSON.parse(storedUser).token : null;
     
-                    const response = await fetch("http://localhost:8080/api/auth/me", {
+                    const response = await fetch("http://18.233.237.152:8080/api/auth/me", {
                         headers: {
                             "Authorization": `Bearer ${token}`
                         }
