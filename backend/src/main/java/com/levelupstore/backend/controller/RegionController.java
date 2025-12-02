@@ -9,8 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/regiones")
-@CrossOrigin(origins = {"http://localhost:5173", "http://10.0.2.2:8080"})
-
 public class RegionController {
 
     @Autowired

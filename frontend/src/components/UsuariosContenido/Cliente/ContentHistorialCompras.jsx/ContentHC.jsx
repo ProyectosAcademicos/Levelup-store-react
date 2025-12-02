@@ -1,6 +1,7 @@
 import React from 'react';
 import style from './ContentHC.module.css';
 import { useEffect, useState } from "react";
+import { API_URL } from "../../../../config/api.js";
 
 const ContentHC = () => {
 
@@ -19,7 +20,7 @@ const ContentHC = () => {
             const storedUser = localStorage.getItem("user");
             const token = storedUser ? JSON.parse(storedUser).token : null;
 
-            const response = await fetch("http://localhost:8080/api/ordenes", {
+            const response = await fetch(`${API_URL}/api/ordenes`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
