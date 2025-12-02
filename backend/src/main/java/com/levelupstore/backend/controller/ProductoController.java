@@ -21,12 +21,14 @@ import com.levelupstore.backend.service.ProductoService;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "http://18.233.237.152:5174" })
 public class ProductoController {
-    
+
     @Autowired
     private ProductoService productoService;
-    
+
     /**
      * GET /api/productos
      * Listar todos los productos activos
@@ -36,7 +38,7 @@ public class ProductoController {
         List<ProductoDTO> productos = productoService.listarProductos();
         return ResponseEntity.ok(productos);
     }
-    
+
     /**
      * GET /api/productos/{id}
      * Obtener producto por ID
@@ -44,10 +46,10 @@ public class ProductoController {
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerProducto(@PathVariable Long id) {
         return productoService.buscarPorId(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-    
+
     /**
      * GET /api/productos/categoria/{categoria}
      * Filtrar productos por categoría
@@ -57,7 +59,7 @@ public class ProductoController {
         List<ProductoDTO> productos = productoService.buscarPorCategoria(categoria);
         return ResponseEntity.ok(productos);
     }
-    
+
     /**
      * GET /api/productos/buscar?nombre=xxx
      * Buscar productos por nombre
@@ -68,7 +70,7 @@ public class ProductoController {
         return ResponseEntity.ok(productos);
     }
 
-        /**
+    /**
      * POST /api/productos
      * Crear un nuevo producto
      */

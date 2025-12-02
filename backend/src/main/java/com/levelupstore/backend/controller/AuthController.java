@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import com.levelupstore.backend.dto.UsuarioDTO;
 import java.util.Map;
 
-
-
-
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = {
