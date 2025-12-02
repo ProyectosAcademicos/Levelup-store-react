@@ -6,7 +6,7 @@ import logo from "../../assets/img/logo.png";
 
 
 const loginUser = async ({ email, password }) => { //llamada al backend
-  const response = await fetch(`${iAPI_URL}/api/auth/login`, {
+  const response = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
