@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { API_URL } from "../../config/api.js";
+import { API_URL } from "../../../src/config/api.js";
 import logo from "../../assets/img/logo.png";
 
 
