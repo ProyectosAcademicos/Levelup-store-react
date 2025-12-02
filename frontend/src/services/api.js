@@ -98,6 +98,13 @@ export const obtenerOrden = async (token, ordenId) => {
   return res.data;
 };
 
+// ============= CHECKOUT =============
+export const checkout = async (token, ordenData) => {
+  if (!token) throw new Error("Token no proporcionado");
+  const res = await axios.post(`${API_URL}/ordenes/checkout`, ordenData, configAuth(token));
+  return res.data;
+};
+
 
 // import axios from "axios";
 
