@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import * as apiService from '../../services/api';
-import './CheckoutContenido.css';
+import React, { useState, useEffect } from "react";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import * as apiService from "../../services/api";
+import "./CheckoutContenido.css";
 
 const CheckoutContenido = () => {
     const { cartItems, clearCart } = useCart();
@@ -14,10 +14,10 @@ const CheckoutContenido = () => {
     const [error, setError] = useState(null);
 
     const [formData, setFormData] = useState({
-        direccionEnvio: '',
-        telefono: '',
-        metodoPago: 'tarjeta',
-        notas: ''
+        direccionEnvio: "",
+        telefono: "",
+        metodoPago: "tarjeta",
+        notas: "",
     });
 
     useEffect(() => {
@@ -29,25 +29,28 @@ const CheckoutContenido = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleConfirmarCompra = async (e) => {
         e.preventDefault();
 
+        // Validación de usuario
         if (!user || !user.token) {
-            alert('Debes iniciar sesión para completar la compra.');
-            navigate('/login');
+            alert("Debes iniciar sesión para completar la compra.");
+            navigate("/login");
             return;
         }
 
+        // Validación de carrito vacío
         if (cartItems.length === 0) {
-            alert('El carrito está vacío.');
+            alert("El carrito está vacío.");
             return;
         }
 
+        // Validación de datos obligatorios
         if (!formData.direccionEnvio || !formData.telefono) {
-            alert('Por favor completa dirección y teléfono.');
+            alert("Por favor completa dirección y teléfono.");
             return;
         }
 
@@ -55,14 +58,20 @@ const CheckoutContenido = () => {
             setLoading(true);
             setError(null);
 
-            // Solo enviamos los datos de envío, teléfono, método de pago y notas
+            // Solo enviar los datos que el backend necesita:
+            // items se genera en el backend desde el carrito
             const ordenRequest = {
                 direccionEnvio: formData.direccionEnvio,
                 telefono: formData.telefono,
                 metodoPago: formData.metodoPago.toUpperCase(),
-                notas: formData.notas
+                notas: formData.notas,
+                total: cartItems.reduce(
+                    (acc, item) => acc + item.precio * item.quantity,
+                    0
+                ),
             };
 
+            // Llamada al backend
             const respuesta = await apiService.checkout(user.token, ordenRequest);
 
             if (!respuesta.success) {
@@ -70,23 +79,31 @@ const CheckoutContenido = () => {
             }
 
             const orden = respuesta.data;
+
             alert(`¡Compra N° ${orden.id} realizada exitosamente!`);
 
+            // Vaciar carrito y redirigir
             await clearCart();
-            navigate('/cliente');
-
+            navigate("/cliente");
         } catch (err) {
-            console.error('Error en checkout:', err);
-            let errorMessage = 'Error al procesar la compra. Inténtalo de nuevo.';
+            console.error("Error en checkout:", err);
 
+            let errorMessage = "Error al procesar la compra. Inténtalo de nuevo.";
+
+            // Respuesta de API con error
             if (err.response) {
-                errorMessage = err.response.data.message || err.response.data.error || errorMessage;
+                errorMessage =
+                    err.response.data.message || err.response.data.error || errorMessage;
+
+                // Error de autenticación
                 if (err.response.status === 401 || err.response.status === 403) {
                     alert("Tu sesión ha expirado. Inicia sesión nuevamente.");
                     navigate("/login");
                 }
-            } else if (err.message.includes('Network Error')) {
-                errorMessage = 'No se pudo conectar con el servidor.';
+            }
+            // Problema de conexión
+            else if (err.message.includes("Network Error")) {
+                errorMessage = "No se pudo conectar con el servidor.";
             }
 
             setError(errorMessage);
@@ -99,7 +116,10 @@ const CheckoutContenido = () => {
         return (
             <div className="container my-5 text-center">
                 <h3>Necesitas iniciar sesión para finalizar la compra</h3>
-                <button className="btn btn-primary mt-3" onClick={() => navigate('/login')}>
+                <button
+                    className="btn btn-primary mt-3"
+                    onClick={() => navigate("/login")}
+                >
                     Iniciar Sesión
                 </button>
             </div>
@@ -107,7 +127,7 @@ const CheckoutContenido = () => {
     }
 
     const total = cartItems.reduce(
-        (acc, item) => acc + (item.precio * item.quantity),
+        (acc, item) => acc + item.precio * item.quantity,
         0
     );
 
@@ -173,7 +193,7 @@ const CheckoutContenido = () => {
                             className="checkout-btn w-100"
                             disabled={loading || cartItems.length === 0}
                         >
-                            {loading ? 'Procesando...' : 'Confirmar compra'}
+                            {loading ? "Procesando..." : "Confirmar compra"}
                         </button>
                     </form>
                 </div>
@@ -184,7 +204,9 @@ const CheckoutContenido = () => {
                         {cartItems.length > 0 ? (
                             cartItems.map((item, index) => (
                                 <div key={index} className="checkout-item">
-                                    <span>{item.nombre} x{item.quantity}</span>
+                                    <span>
+                                        {item.nombre} x{item.quantity}
+                                    </span>
                                     <span>${(item.precio * item.quantity).toLocaleString()}</span>
                                 </div>
                             ))
@@ -203,7 +225,6 @@ const CheckoutContenido = () => {
 };
 
 export default CheckoutContenido;
-
 
 // import React, { useState, useEffect } from 'react';
 // import { useCart } from '../../context/CartContext';
