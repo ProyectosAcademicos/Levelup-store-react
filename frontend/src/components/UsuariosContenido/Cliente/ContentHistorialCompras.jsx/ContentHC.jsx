@@ -14,13 +14,13 @@ const ContentHC = () => {
     //     usuario_id: "",
     // });
 
-    useEffect(() =>{
+useEffect(() => {
     const fetchHistorial = async () => {
         try {
             const storedUser = localStorage.getItem("user");
             const token = storedUser ? JSON.parse(storedUser).token : null;
 
-            const response = await fetch(`${API_URL}/api/ordenes`, {
+            const response = await fetch(`${API_URL}/api/historial`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -31,15 +31,18 @@ const ContentHC = () => {
             }
 
             const result = await response.json();
-            setHistoriales(result.data);
+            console.log("Historial recibido:", result);
+
+            setHistoriales(result);
 
         } catch (error) {
-            console.error("Error al obtener los datos del usuario:", error);
+            console.error("Error al obtener el historial:", error);
         }
     };
 
     fetchHistorial();
 }, []);
+
 
 
     // const handleChange = (e) => {
