@@ -1,5 +1,6 @@
 import style from "./ContentDP.module.css";
 import { useEffect, useState } from "react";
+import { API_URL } from "../../../../config/api.js";
 
 const ContentDP = () => {
     
@@ -18,7 +19,7 @@ const ContentDP = () => {
                 const token = storedUser ? JSON.parse(storedUser).token : null;
 
 
-                const response = await fetch("http://localhost:8080/api/auth/me", {
+                const response = await fetch(`${API_URL}/api/auth/me`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
