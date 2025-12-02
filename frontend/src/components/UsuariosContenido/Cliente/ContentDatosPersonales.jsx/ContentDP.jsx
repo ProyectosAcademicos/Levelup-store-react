@@ -31,14 +31,13 @@ const ContentDP = () => {
                 const data = await response.json().catch(() => {
                     throw new Error("Respuesta vacía del servidor");
                 });
-
-
+                console.log("Datos recibidos del backend:", data);
                 setFormData({
-                    nombre: data.nombre || "",
-                    apellido: data.apellido || "",
-                    email: data.correo || "",
-                    telefono: data.telefono || "",
-                    direccion: data.direccion || ""
+                    nombre: data.usuario.nombre || "",
+                    apellido: data.usuario.apellido || "",
+                    email: data.usuario.correo || "",
+                    telefono: data.usuario.telefono || "",
+                    direccion: data.usuario.direccion || ""
                 });
 
             } catch (error) {
