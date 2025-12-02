@@ -4,22 +4,25 @@ import com.levelupstore.backend.model.Usuario;
 import com.levelupstore.backend.model.Region;
 import com.levelupstore.backend.model.Comuna;
 import com.levelupstore.backend.service.UsuarioService;
-
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 import com.levelupstore.backend.repository.RegionRepository;
 import com.levelupstore.backend.repository.ComunaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.levelupstore.backend.dto.UsuarioDTO;
-
 import java.util.Map;
+
+
+
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "http://18.233.237.152:5174"}) // Permite peticiones desde Vite (React)
+    
 public class AuthController {
 
     @Autowired
@@ -32,203 +35,79 @@ public class AuthController {
     private ComunaRepository comunaRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
-    // ---------------------------------------------------------------------
-    // VALIDACIÓN GENERAL DEL TOKEN
-    // ---------------------------------------------------------------------
-    private Usuario validarTokenYObtenerUsuario(String authHeader, boolean requiereAdmin) {
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null; // Se manejará afuera
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-
-        String correo = jwtUtil.getCorreoDesdeToken(token);
-        String rol = jwtUtil.getRolDesdeToken(token);
-
-        if (correo == null || rol == null) {
-            return null;
-        }
-
-        if (requiereAdmin && !"ADMIN".equals(rol)) {
-            return new Usuario(); // Marcamos usuario vacío como señal de "sin permisos"
-        }
-
-        return usuarioService.findByCorreo(correo);
-    }
-
-    // ---------------------------------------------------------------------
-    // OBTENER DATOS DEL USUARIO AUTENTICADO  ( /me )
-    // ---------------------------------------------------------------------
-    @GetMapping("/me")
-    @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<?> obtenerDatosUsuario(@RequestHeader("Authorization") String authHeader) {
-
-        Usuario usuario = validarTokenYObtenerUsuario(authHeader, false);
-
-        if (usuario == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Token inválido o no proporcionado"));
-        }
-
-        usuario.setContrasena(null);
-
-        String token = authHeader.replace("Bearer ", "");
-        return ResponseEntity.ok(
-                Map.of(
-                        "usuario", usuario,
-                        "rol", jwtUtil.getRolDesdeToken(token)
-                )
-        );
-    }
-
-    // ---------------------------------------------------------------------
-    // ADMIN: OBTENER TODOS LOS USUARIOS ( /all )
-    // ---------------------------------------------------------------------
-    @GetMapping("/all")
-    public ResponseEntity<?> obtenerTodosLosUsuarios(@RequestHeader("Authorization") String authHeader) {
-
-        Usuario usuario = validarTokenYObtenerUsuario(authHeader, true);
-
-        if (usuario == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Token inválido o no proporcionado"));
-        }
-
-        if (usuario.getId() == null) { // Señal de "sin permisos"
-            return ResponseEntity.status(403).body(Map.of("error", "No tienes permisos de administrador"));
-        }
-
-        return ResponseEntity.ok(usuarioService.obtenerTodos());
-    }
-
-    // ---------------------------------------------------------------------
-    // REGISTRO DE USUARIO ( /register )
-    // ---------------------------------------------------------------------
+    /**
+     * Endpoint para registrar un nuevo usuario.
+     * Escucha en la URL: POST /api/auth/register
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
+            // Buscar la región y comuna en la base de datos
             Region region = regionRepository.findById(usuarioDTO.getRegionId())
                     .orElseThrow(() -> new Exception("Región no encontrada"));
-
             Comuna comuna = comunaRepository.findById(usuarioDTO.getComunaId())
                     .orElseThrow(() -> new Exception("Comuna no encontrada"));
 
+            // Crear el objeto Usuario y asignar datos
             Usuario usuario = new Usuario();
             usuario.setRut(usuarioDTO.getRut());
             usuario.setNombre(usuarioDTO.getNombre());
             usuario.setApellido(usuarioDTO.getApellido());
             usuario.setCorreo(usuarioDTO.getCorreo());
-            usuario.setContrasena(usuarioDTO.getContrasena());
+
+            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
             usuario.setTelefono(usuarioDTO.getTelefono());
             usuario.setDireccion(usuarioDTO.getDireccion());
+            usuario.setRol(usuarioDTO.getRol());
             usuario.setRegion(region);
             usuario.setComuna(comuna);
 
-            // Si no viene rol, asignar USER
-            usuario.setRol(usuarioDTO.getRol() != null ? usuarioDTO.getRol() : "USER");
-
+            // Registrar el usuario
             Usuario usuarioRegistrado = usuarioService.registrarUsuario(usuario);
             usuarioRegistrado.setContrasena(null);
 
+            // Retornar respuesta
             return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // ---------------------------------------------------------------------
-    // LOGIN ( /login )
-    // ---------------------------------------------------------------------
+    /**
+     * Endpoint para autenticar un usuario.
+     * Escucha en la URL: POST /api/auth/login
+     */
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credentials) {
 
-        Usuario usuario = usuarioService.autenticarUsuario(
-                request.getEmail(),
-                request.getPassword()
-        );
+    String correo = credentials.get("email");
+    String contrasena = credentials.get("password");
 
-        if (usuario == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Credenciales incorrectas"));
-        }
+    Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
 
-        String token = jwtUtil.generarToken(usuario.getCorreo(), usuario.getRol());
-
-        return ResponseEntity.ok(new LoginResponse(token, usuario));
+    if (usuario == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo o contraseña incorrectos.");
     }
 
-    // ---------------------------------------------------------------------
-    // ACTUALIZAR USUARIO ( /update/{id} )
-    // ---------------------------------------------------------------------
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuario) {
-        try {
-            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
+    usuario.setContrasena(null);
 
-            if (usuarioExistente == null) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
+    // 🔥 Generar el token JWT
+    String token = jwtUtil.generarToken(usuario.getCorreo(), usuario.getRol());
 
-            usuarioExistente.setNombre(usuario.getNombre());
-            usuarioExistente.setCorreo(usuario.getCorreo());
+    // 🔥 Devolver el token + datos del usuario
+    Map<String, Object> response = Map.of(
+            "token", token,
+            "usuario", usuario
+    );
 
-            if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
-                usuarioExistente.setContrasena(usuario.getContrasena());
-            }
-
-            Usuario actualizado = usuarioService.actualizarUsuario(usuarioExistente);
-            actualizado.setContrasena(null);
-
-            return new ResponseEntity<>(actualizado, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // ---------------------------------------------------------------------
-    // ELIMINAR USUARIO
-    // ---------------------------------------------------------------------
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
-        try {
-            Usuario usuarioExistente = usuarioService.obtenerPorId(id);
-
-            if (usuarioExistente == null) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
-
-            usuarioService.eliminarUsuario(id);
-            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // ---------------------------------------------------------------------
-    // DTOs internos
-    // ---------------------------------------------------------------------
-    static class LoginRequest {
-        private String email;
-        private String password;
-
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
-
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
-    }
-
-    static class LoginResponse {
-        public String token;
-        public Usuario usuario;
-
-        public LoginResponse(String token, Usuario usuario) {
-            this.token = token;
-            this.usuario = usuario;
-            this.usuario.setContrasena(null);
-        }
-    }
+    return ResponseEntity.ok(response);
+}
 }
