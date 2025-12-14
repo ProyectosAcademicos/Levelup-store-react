@@ -19,7 +19,7 @@ const WebpayContenido = () => {
     useEffect(() => {
         const cargarOrden = async () => {
             try {
-                const res = await apiService.obtenerOrdenPorId(user.token, ordenId);
+                const res = await apiService.obtenerOrden(user.token, ordenId);
                 setOrden(res.data);
             } catch (error) {
                 console.error("Error cargando orden:", error);
