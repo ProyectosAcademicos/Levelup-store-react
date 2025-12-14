@@ -1,0 +1,81 @@
+.webpay-bg {
+    background-color: #ffffffe1;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.webpay-card {
+    background: #ffffffa6;
+    width: 360px;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.webpay-logo {
+    width: 140px;
+    margin-bottom: 20px;
+}
+
+.webpay-card h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+}
+
+.webpay-card input {
+    background-color: #d1d4d3bb;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.webpay-row {
+    display: flex;
+    gap: 10px;
+}
+
+.webpay-row input {
+    flex: 1;
+}
+
+.webpay-card button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00a650;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.webpay-card button:disabled {
+    background-color: #8fd3b1;
+    cursor: not-allowed;
+}
+
+.procesando {
+    margin-top: 10px;
+    color: #a73b3b;
+    font-size: 14px;
+}
+
+.ok {
+    color: #00a650;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.error {
+    color: #d32f2f;
+    margin-top: 10px;
+    font-weight: bold;
+}

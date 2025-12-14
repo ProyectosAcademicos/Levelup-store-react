@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import * as apiService from "../../services/api";
 import "./CheckoutContenido.css";
 
 const CheckoutContenido = () => {
-    const { cartItems, clearCart } = useCart();
+    const { cartItems } = useCart();
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -16,16 +16,13 @@ const CheckoutContenido = () => {
     const [formData, setFormData] = useState({
         direccionEnvio: "",
         telefono: "",
-        metodoPago: "tarjeta",
         notas: "",
     });
 
-    useEffect(() => {
-        if (!user) {
-            // Si no está logueado, opcional: redirigir al login
-            // navigate('/login');
-        }
-    }, [user, navigate]);
+    const total = cartItems.reduce(
+        (acc, item) => acc + item.precio * item.quantity,
+        0
+    );
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,19 +32,18 @@ const CheckoutContenido = () => {
     const handleConfirmarCompra = async (e) => {
         e.preventDefault();
 
-        if (!user || !user.token) {
-            alert("Debes iniciar sesión para completar la compra.");
+        if (!user?.token) {
             navigate("/login");
             return;
         }
 
         if (cartItems.length === 0) {
-            alert("El carrito está vacío.");
+            setError("El carrito está vacío.");
             return;
         }
 
         if (!formData.direccionEnvio || !formData.telefono) {
-            alert("Por favor completa dirección y teléfono.");
+            setError("Completa dirección y teléfono.");
             return;
         }
 
@@ -55,7 +51,6 @@ const CheckoutContenido = () => {
             setLoading(true);
             setError(null);
 
-            // Convertir items al formato que espera el backend
             const items = cartItems.map((item) => ({
                 productoId: item.productoId || item.id,
                 cantidad: item.quantity,
@@ -63,47 +58,24 @@ const CheckoutContenido = () => {
             }));
 
             const ordenRequest = {
-                items, // <— ahora sí se envían al backend
+                items,
                 direccionEnvio: formData.direccionEnvio,
                 telefono: formData.telefono,
-                metodoPago: formData.metodoPago.toUpperCase(),
+                metodoPago: "TARJETA",
                 notas: formData.notas,
-                total: cartItems.reduce(
-                    (acc, item) => acc + item.precio * item.quantity,
-                    0
-                ),
+                total,
             };
 
-            // Llamada al backend usando crearOrden
             const respuesta = await apiService.crearOrden(user.token, ordenRequest);
 
             if (!respuesta.success) {
                 throw new Error(respuesta.message);
             }
 
-            const orden = respuesta.data;
-            alert(`¡Compra N° ${orden.id} realizada exitosamente!`);
-
-            await clearCart();
-            navigate("/cliente");
+            navigate(`/webpay/orden/${respuesta.data.id}`);
         } catch (err) {
-            console.error("Error creando orden:", err);
-
-            let errorMessage = "Error al procesar la compra. Inténtalo de nuevo.";
-
-            if (err.response) {
-                errorMessage =
-                    err.response.data.message || err.response.data.error || errorMessage;
-
-                if (err.response.status === 401 || err.response.status === 403) {
-                    alert("Tu sesión ha expirado. Inicia sesión nuevamente.");
-                    navigate("/login");
-                }
-            } else if (err.message.includes("Network Error")) {
-                errorMessage = "No se pudo conectar con el servidor.";
-            }
-
-            setError(errorMessage);
+            console.error(err);
+            setError("No se pudo procesar la compra. Inténtalo nuevamente.");
         } finally {
             setLoading(false);
         }
@@ -112,30 +84,27 @@ const CheckoutContenido = () => {
     if (!user) {
         return (
             <div className="container my-5 text-center">
-                <h3>Necesitas iniciar sesión para finalizar la compra</h3>
+                <h4>Debes iniciar sesión para continuar</h4>
                 <button
                     className="btn btn-primary mt-3"
                     onClick={() => navigate("/login")}
                 >
-                    Iniciar Sesión
+                    Iniciar sesión
                 </button>
             </div>
         );
     }
 
-    const total = cartItems.reduce(
-        (acc, item) => acc + item.precio * item.quantity,
-        0
-    );
-
     return (
         <div className="checkout-container container my-5">
             <h2 className="checkout-title mb-4">Checkout</h2>
+
             {error && <div className="alert alert-danger">{error}</div>}
 
             <div className="row">
-                <div className="col-md-6 checkout-form">
-                    <form onSubmit={handleConfirmarCompra}>
+                {/* FORMULARIO */}
+                <div className="col-md-6">
+                    <form onSubmit={handleConfirmarCompra} className="checkout-form">
                         <div className="mb-3">
                             <label className="form-label">Dirección de envío</label>
                             <input
@@ -162,57 +131,54 @@ const CheckoutContenido = () => {
 
                         <div className="mb-3">
                             <label className="form-label">Método de pago</label>
-                            <select
-                                className="form-select"
-                                name="metodoPago"
-                                value={formData.metodoPago}
-                                onChange={handleChange}
-                            >
-                                <option value="tarjeta">Tarjeta de crédito</option>
-                                <option value="transferencia">Transferencia bancaria</option>
-                                <option value="efectivo">Efectivo contra entrega</option>
-                            </select>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value="Tarjeta de crédito (Webpay)"
+                                disabled
+                            />
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label">Notas adicionales</label>
+                            <label className="form-label">Notas</label>
                             <textarea
                                 className="form-control"
                                 name="notas"
                                 value={formData.notas}
                                 onChange={handleChange}
                                 rows="3"
-                            ></textarea>
+                            />
                         </div>
 
                         <button
                             type="submit"
                             className="checkout-btn w-100"
-                            disabled={loading || cartItems.length === 0}
+                            disabled={loading}
                         >
-                            {loading ? "Procesando..." : "Confirmar compra"}
+                            {loading ? "Procesando..." : "Ir a Webpay"}
                         </button>
                     </form>
                 </div>
 
+                {/* RESUMEN */}
                 <div className="col-md-6">
                     <div className="checkout-summary">
-                        <h5 className="mb-3">Resumen de la orden</h5>
-                        {cartItems.length > 0 ? (
-                            cartItems.map((item, index) => (
-                                <div key={index} className="checkout-item">
-                                    <span>
-                                        {item.nombre} x{item.quantity}
-                                    </span>
-                                    <span>${(item.precio * item.quantity).toLocaleString()}</span>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="empty-cart">Tu carrito está vacío.</p>
-                        )}
+                        <h5>Resumen de la orden</h5>
+
+                        {cartItems.map((item, index) => (
+                            <div key={index} className="checkout-item">
+                                <span>
+                                    {item.nombre} x{item.quantity}
+                                </span>
+                                <span>
+                                    ${(item.precio * item.quantity).toLocaleString()}
+                                </span>
+                            </div>
+                        ))}
+
                         <div className="checkout-total">
-                            <span>Total:</span>
-                            <span>${total.toLocaleString()}</span>
+                            <strong>Total:</strong>
+                            <strong>${total.toLocaleString()}</strong>
                         </div>
                     </div>
                 </div>

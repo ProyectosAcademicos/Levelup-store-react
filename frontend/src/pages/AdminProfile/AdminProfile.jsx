@@ -4,14 +4,14 @@ import SidebarAdmin from "../../components/UsuariosContenido/Sidebar/SideBarAdmi
 import { Outlet } from "react-router-dom";
 
 const AdminProfile = () => {
-    return(
+    return (
         <div className="d-flex flex-row p-0 m-0">
             <SidebarAdmin />
             <main className="flex-grow-1 p-3">
-                 <Outlet /> 
+                <Outlet />
             </main>
         </div>
-    )
+    );
 };
 
 export default AdminProfile;
