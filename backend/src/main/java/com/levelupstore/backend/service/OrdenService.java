@@ -14,26 +14,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrdenService {
-    
+
     @Autowired
     private OrdenRepository ordenRepository;
-    
+
     @Autowired
     private ProductoRepository productoRepository;
-    
+
     @Autowired
     private ProductoService productoService;
-    
+
     @Autowired
     private CarritoService carritoService;
-    
+
     @Transactional
     public OrdenDTO crearOrden(Usuario usuario, OrdenRequest request) {
         // Validaciones
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new RuntimeException("La orden debe contener al menos un producto");
         }
-        
+
         // Validar stock
         for (OrdenItemRequest item : request.getItems()) {
             if (!productoService.verificarStock(item.getProductoId(), item.getCantidad())) {
@@ -41,7 +41,7 @@ public class OrdenService {
                 throw new RuntimeException("Stock insuficiente para: " + prod.getNombre());
             }
         }
-        
+
         // Crear orden
         Orden orden = new Orden();
         orden.setUsuario(usuario);
@@ -53,99 +53,120 @@ public class OrdenService {
         orden.setNotas(request.getNotas());
         orden.setCreadoEn(LocalDateTime.now());
         orden.setActualizadoEn(LocalDateTime.now());
-        
+
         // Agregar detalles
         for (OrdenItemRequest itemReq : request.getItems()) {
             Producto producto = productoService.obtenerProductoOThrow(itemReq.getProductoId());
-            
+
             OrdenDetalle detalle = new OrdenDetalle();
             detalle.setOrden(orden);
             detalle.setProducto(producto);
             detalle.setCantidad(itemReq.getCantidad());
             detalle.setPrecioUnitario(itemReq.getPrecioUnitario());
-            
+
             BigDecimal subtotal = itemReq.getPrecioUnitario()
-                .multiply(BigDecimal.valueOf(itemReq.getCantidad()));
+                    .multiply(BigDecimal.valueOf(itemReq.getCantidad()));
             detalle.setSubtotal(subtotal);
-            
+
             orden.getDetalles().add(detalle);
-            
+
             // Reducir stock
             productoService.reducirStock(producto.getId(), itemReq.getCantidad());
         }
-        
+
         Orden ordenGuardada = ordenRepository.save(orden);
         carritoService.limpiarCarrito(usuario);
-        
+
         return convertirADTO(ordenGuardada);
     }
-    
+
     public List<OrdenDTO> obtenerOrdenesUsuario(Usuario usuario) {
         return ordenRepository.findByUsuarioOrderByCreadoEnDesc(usuario)
-            .stream()
-            .map(this::convertirADTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
     }
-    
+
     public OrdenDTO obtenerOrdenPorId(Long ordenId, Usuario usuario) {
         Orden orden = ordenRepository.findById(ordenId)
-            .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-        
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
         if (!orden.getUsuario().getId().equals(usuario.getId())) {
             throw new RuntimeException("No autorizado para ver esta orden");
         }
-        
+
         return convertirADTO(orden);
     }
-    
+
     @Transactional
     public OrdenDTO cambiarEstado(Long ordenId, EstadoOrden nuevoEstado, Usuario usuario) {
         Orden orden = ordenRepository.findById(ordenId)
-            .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-        
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
         if (!orden.getUsuario().getId().equals(usuario.getId())) {
             throw new RuntimeException("No autorizado");
         }
-        
+
         orden.setEstado(nuevoEstado);
         orden.setActualizadoEn(LocalDateTime.now());
         Orden ordenActualizada = ordenRepository.save(orden);
-        
+
         return convertirADTO(ordenActualizada);
     }
-    
+
     @Transactional
     public OrdenDTO cancelarOrden(Long ordenId, Usuario usuario) {
         Orden orden = ordenRepository.findById(ordenId)
-            .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-        
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
         if (!orden.getUsuario().getId().equals(usuario.getId())) {
             throw new RuntimeException("No autorizado");
         }
-        
+
         if (!orden.getEstado().equals(EstadoOrden.PENDIENTE)) {
             throw new RuntimeException("Solo se pueden cancelar órdenes en estado PENDIENTE");
         }
-        
+
         // Restaurar stock
         for (OrdenDetalle detalle : orden.getDetalles()) {
             productoService.aumentarStock(detalle.getProducto().getId(), detalle.getCantidad());
         }
-        
+
         orden.setEstado(EstadoOrden.CANCELADA);
         orden.setActualizadoEn(LocalDateTime.now());
         Orden ordenCancelada = ordenRepository.save(orden);
-        
+
         return convertirADTO(ordenCancelada);
     }
-    
+
+    @Transactional
+    public OrdenDTO confirmarPago(Long ordenId, Usuario usuario) {
+
+        Orden orden = ordenRepository.findById(ordenId)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        if (!orden.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("No autorizado para confirmar esta orden");
+        }
+
+        if (orden.getEstado() != EstadoOrden.PENDIENTE) {
+            throw new RuntimeException("La orden no se puede pagar en su estado actual");
+        }
+
+        orden.setEstado(EstadoOrden.PAGADA);
+        orden.setActualizadoEn(LocalDateTime.now());
+
+        Orden ordenPagada = ordenRepository.save(orden);
+        return convertirADTO(ordenPagada);
+    }
+
     public List<OrdenDTO> obtenerOrdenesPorestado(EstadoOrden estado) {
         return ordenRepository.findByEstado(estado)
-            .stream()
-            .map(this::convertirADTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
     }
-    
+
     private OrdenDTO convertirADTO(Orden orden) {
         OrdenDTO dto = new OrdenDTO();
         dto.setId(orden.getId());
@@ -158,15 +179,15 @@ public class OrdenService {
         dto.setTelefono(orden.getTelefono());
         dto.setNotas(orden.getNotas());
         dto.setCreadoEn(orden.getCreadoEn());
-        
+
         List<OrdenDetalleDTO> detalles = orden.getDetalles().stream()
-            .map(this::convertirDetalleADTO)
-            .collect(Collectors.toList());
+                .map(this::convertirDetalleADTO)
+                .collect(Collectors.toList());
         dto.setDetalles(detalles);
-        
+
         return dto;
     }
-    
+
     private OrdenDetalleDTO convertirDetalleADTO(OrdenDetalle detalle) {
         OrdenDetalleDTO dto = new OrdenDetalleDTO();
         dto.setProductoId(detalle.getProducto().getId());
@@ -178,12 +199,12 @@ public class OrdenService {
         return dto;
     }
 
-    //Se arregla el metodo para obtener el historial de compras del usuario
+    // Se arregla el metodo para obtener el historial de compras del usuario
     public List<OrdenDTO> obtenerHistorialCompras(Usuario usuario) {
-    return ordenRepository.findByUsuarioOrderByCreadoEnDesc(usuario)
-            .stream()
-            .map(this::convertirADTO)
-            .collect(Collectors.toList());
+        return ordenRepository.findByUsuarioOrderByCreadoEnDesc(usuario)
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
     }
 
 }

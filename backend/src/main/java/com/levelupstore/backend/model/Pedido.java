@@ -18,7 +18,7 @@ public class Pedido {
     private Long id;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallePedido> detalles;
+    private List<OrdenDetalle> detalles;
     
     private Double total;
     private String estado; // "PENDIENTE", "CONFIRMADO", "ENVIADO"
