@@ -12,25 +12,25 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrdenDetalle {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id", nullable = false)
     private Orden orden;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
-    
+
     @Column(nullable = false)
     private Integer cantidad;
-    
+
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
-    
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 }
