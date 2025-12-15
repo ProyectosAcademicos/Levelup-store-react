@@ -98,6 +98,20 @@ export const obtenerOrden = async (token, ordenId) => {
   return res.data;
 };
 
+// ============= PAGOS / WEBPAY =============
+export const confirmarPago = async (token, ordenId) => {
+  if (!token || !ordenId) {
+    throw new Error("Datos inválidos para confirmar pago");
+  }
+
+  const res = await axios.put(
+    `${API_URL}/ordenes/${ordenId}/confirmar-pago`,
+    {},
+    configAuth(token)
+  );
+
+  return res.data;
+};
 
 
 

@@ -79,3 +79,11 @@
     margin-top: 10px;
     font-weight: bold;
 }
+
+.webpay-card p,
+.webpay-card h4 {
+    color: #000;
+    margin-top: 15px;
+}
+
+
