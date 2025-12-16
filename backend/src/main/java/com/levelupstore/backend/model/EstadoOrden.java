@@ -2,7 +2,7 @@ package com.levelupstore.backend.model;
 
 public enum EstadoOrden {
     PENDIENTE,
-    CONFIRMADA,
+    PAGADA,
     EN_PREPARACION,
     ENVIADA,
     ENTREGADA,

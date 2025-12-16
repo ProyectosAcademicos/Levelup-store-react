@@ -16,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ordenes")
 @CrossOrigin(origins = {
-    "http://localhost:5173",
-    "http://18.233.237.152:5174"})
-    
+        "http://localhost:5173",
+        "http://18.233.237.152:5174" })
+
 public class OrdenController {
 
     @Autowired
@@ -28,9 +28,9 @@ public class OrdenController {
     private UsuarioRepository usuarioRepository;
 
     /**
-    * GET /api/ordenes
-    * Obtener listado de órdenes del usuario autenticado
-    */
+     * GET /api/ordenes
+     * Obtener listado de órdenes del usuario autenticado
+     */
     @GetMapping
     public ResponseEntity<?> listarOrdenes(Authentication authentication) {
         try {
@@ -42,7 +42,6 @@ public class OrdenController {
                     .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
-
 
     /**
      * POST /api/ordenes/crear
@@ -115,6 +114,21 @@ public class OrdenController {
         }
     }
 
+    @PutMapping("/{id}/confirmar-pago")
+    public ResponseEntity<?> confirmarPago(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        try {
+            Usuario usuario = obtenerUsuarioAutenticado(authentication);
+            OrdenDTO orden = ordenService.confirmarPago(id, usuario);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pago confirmado", orden));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
+
     /**
      * DELETE /api/ordenes/{id}/cancelar
      * Cancelar una orden
@@ -136,8 +150,9 @@ public class OrdenController {
     /**
      * Helper: Obtener usuario autenticado
      */
-    private Usuario obtenerUsuarioAutenticado(Authentication authentication){
-        // 1 - Obtener el principal (que es el objeto Usuario que se coloco en el filtro)
+    private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
+        // 1 - Obtener el principal (que es el objeto Usuario que se coloco en el
+        // filtro)
         Object principal = authentication.getPrincipal();
 
         // 2. Verificar que el principal sea una instancia de Usuario (seguridad)
@@ -150,11 +165,10 @@ public class OrdenController {
         }
     }
 
-
     // private Usuario obtenerUsuarioAutenticado(Authentication authentication) {
-    //     String email = authentication.getName();
-    //     return usuarioRepository.findByCorreo(email)
-    //             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    // String email = authentication.getName();
+    // return usuarioRepository.findByCorreo(email)
+    // .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     // }
 
     @GetMapping("/historial")

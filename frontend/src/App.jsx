@@ -31,7 +31,7 @@ import PedidosCliente from "./components/UsuariosContenido/Cliente/ContentHistor
 import HistorialCliente from "./components/UsuariosContenido/Cliente/ContentHistorialCompras.jsx/ContentHC.jsx";
 import ContentGU from "./components/UsuariosContenido/Administrador/ContentGU/ContentGU.jsx";
 import CheckoutContenido from "./components/CheckoutContenido/CheckoutContenido.jsx";
-
+import WebpayPage from "./pages/WebpayPage/WebpayPage.jsx";
 
 
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -51,6 +51,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/catalogo" element={<CatalogoPage />} />
             <Route path="/carrito" element={<CarritoPage />} />
+            <Route path="/webpay/orden/:ordenId" element={<WebpayPage />} />
             <Route path="/checkout" element={<CheckoutContenido />} />
 
             {/* CLIENTE - LAYOUT PROTEGIDO */}
